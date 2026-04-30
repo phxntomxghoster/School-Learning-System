@@ -6,37 +6,41 @@
     <title>System Diagnostic v1.0.8</title>
     <style>
         body {
-            background-color: #0d1117;
-            color: #58a6ff;
+            background-color: #ffffff;
+            color: #0d1117;
             font-family: 'Courier New', Courier, monospace;
             padding: 40px;
             line-height: 1.6;
         }
-        h1 { color: #58a6ff; font-size: 24px; margin-bottom: 5px; }
-        .status { color: #7ee787; font-weight: bold; margin-bottom: 20px; }
-        .log-entry { margin: 5px 0; font-size: 14px; }
+        h1 { color: #1f6feb; font-size: 24px; margin-bottom: 5px; }
+        .status { color: #1a7f37; font-weight: bold; margin-bottom: 20px; }
+        .log-entry { margin: 5px 0; font-size: 14px; color: #57606a; }
         .btn {
             display: inline-block;
             padding: 10px 20px;
             margin: 10px 5px 10px 0;
-            background: #21262d;
-            color: #c9d1d9;
+            background: #f6f8fa;
+            color: #24292f;
             text-decoration: none;
-            border: 1px solid #30363d;
+            border: 1px solid #d0d7de;
             border-radius: 6px;
             font-size: 14px;
             transition: 0.2s;
         }
-        .btn:hover { background: #30363d; border-color: #8b949e; color: #ffffff; }
+        .btn:hover { background: #eaeef2; border-color: #afb8c1; }
         .return-btn {
             background: #1f6feb;
             color: #ffffff;
-            border-color: #388bfd;
+            border-color: #1f6feb;
         }
-        hr { border: 0; border-top: 1px solid #30363d; margin: 25px 0; }
+        .return-btn:hover {
+            background: #1a62d4;
+            color: #ffffff;
+        }
+        hr { border: 0; border-top: 1px solid #d0d7de; margin: 25px 0; }
         ul { list-style-type: none; padding: 0; }
         li { margin-bottom: 10px; }
-        li::before { content: "• "; color: #58a6ff; }
+        li::before { content: "• "; color: #1f6feb; }
     </style>
 </head>
 <body>
@@ -60,8 +64,10 @@
     </ul>
 
     <hr>
-    <!-- New Return Button -->
+    
     <div class="log-entry">> System navigation options:</div>
     <a href="index.html" class="btn return-btn">Return to Primary Hub</a>
 </body>
 </html>
+
+   
