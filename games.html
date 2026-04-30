@@ -1,12 +1,12 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Diagnostic v1.0.9</title>
+    <title>System Diagnostic v1.1.0</title>
     <style>
         body {
-            background-color: #0d1117;
+            background-color: #000000; /* Pure Black */
             color: #58a6ff;
             font-family: 'Courier New', Courier, monospace;
             padding: 40px;
@@ -19,7 +19,7 @@
             display: inline-block;
             padding: 10px 20px;
             margin: 10px 5px 10px 0;
-            background: #21262d;
+            background: #161b22;
             color: #c9d1d9;
             text-decoration: none;
             border: 1px solid #30363d;
@@ -29,15 +29,15 @@
         }
         .btn:hover { background: #30363d; border-color: #8b949e; color: #ffffff; }
         
-        /* Stealth return button - blends into the dark background */
+        /* Stealth return button - invisible on pure black */
         .return-btn {
-            background: #0d1117;
-            color: #0d1117;
-            border: 1px solid #0d1117; 
+            background: #000000;
+            color: #000000;
+            border: 1px solid #000000; 
             cursor: default;
         }
         .return-btn:hover {
-            background: #21262d;
+            background: #161b22;
             color: #c9d1d9;
             border-color: #30363d;
         }
@@ -49,7 +49,7 @@
     </style>
 </head>
 <body>
-    <h1>> SYSTEM_DIAGNOSTIC_v1.0.9</h1>
+    <h1>> SYSTEM_DIAGNOSTIC_v1.1.0</h1>
     <div class="status">Status: ENCRYPTED_CONNECTION_ACTIVE</div>
     
     <div class="log-entry">> Initializing local environment...</div>
@@ -71,7 +71,7 @@
     <hr>
     
     <div class="log-entry">> System navigation options:</div>
-    <!-- Hidden return button - hover over the blank space below to see it! -->
+    <!-- Hover over the empty space below to find your way back -->
     <a href="index.html" class="btn return-btn">Return to Primary Hub</a>
 </body>
 </html>
