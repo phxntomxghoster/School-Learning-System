@@ -31,6 +31,16 @@
         }
         .btn:hover { background: #30363d; border-color: #8b949e; color: #ffffff; }
         
+        .btn-custom {
+            border-color: #58a6ff;
+            color: #58a6ff;
+        }
+        .btn-custom:hover {
+            background: #1f6feb;
+            color: #ffffff;
+            border-color: #58a6ff;
+        }
+
         .btn-stream {
             border-color: #238636;
             color: #3fb950;
@@ -141,6 +151,7 @@
     
     <p>// BROWSER GAME MODULES //</p>
     <ul>
+        <li><a href="https://pixel-play-app.base44.app" class="btn btn-custom" target="_blank">Launch Priority Module (Pixel Play / Base44)</a></li>
         <li><a href="https://now.gg/apps/roblox-corporation/5349/roblox.html" class="btn" target="_blank">Launch Module_01 (Roblox / JJS Protocol)</a></li>
         <li><a href="https://now.gg/apps/roblox-corporation/5349/roblox.html" class="btn" target="_blank">Launch Module_02 (The Strongest Battlegrounds)</a></li>
         <li><a href="https://slope3unblocked.github.io/" class="btn" target="_blank">Launch Module_03 (Physics Engine)</a></li>
@@ -212,14 +223,12 @@
             const user = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value.trim();
 
-            // Accepts any non-empty user handle and access code
             if (user !== "" && pass !== "") {
                 currentUser = user;
                 document.getElementById('authContainer').style.display = 'none';
                 document.getElementById('activeUserDisplay').innerText = currentUser;
                 document.getElementById('userStatus').style.display = 'block';
                 
-                // Enable chat inputs
                 document.getElementById('msgInput').disabled = false;
                 document.getElementById('sendBtn').disabled = false;
 
