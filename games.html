@@ -327,3 +327,22 @@
     </script>
 </body>
 </html>
+// Moderation filter list
+const badWords = [
+    "ass", "bastard", "bitch", "cock", "crap", "cunt", 
+    "dick", "fuck", "hoe", "nigga", "nigger", "piss", 
+    "pussy", "shit", "shitstain", "slut", "wench"
+];
+
+function filterText(text) {
+    if (!text) return "";
+    let filtered = text;
+
+    badWords.forEach(word => {
+        // \b matches exact word boundaries, 'gi' handles case-insensitivity
+        const regex = new RegExp(`\\b${word}\\b`, "gi");
+        filtered = filtered.replace(regex, match => "*".repeat(match.length));
+    });
+
+    return filtered;
+}
