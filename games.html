@@ -348,6 +348,14 @@
                 > ROOT_PRIVILEGES_GRANTED // Active Admin: <span id="adminUserDisplay"></span>
             </div>
 
+            <p style="color: #c9d1d9; font-size: 12px; margin-bottom: 5px;">User Permission Management (Grant Admin):</p>
+            <div class="auth-group">
+                <input type="text" id="promoteUserInput" class="term-input" style="flex: 1;" placeholder="Enter Handle to promote (e.g., guest1)">
+                <button class="btn btn-custom" style="margin: 0;" onclick="grantAdmin()">Promote to Admin</button>
+            </div>
+
+            <hr style="margin: 12px 0;">
+
             <p style="color: #c9d1d9; font-size: 12px; margin-bottom: 5px;">Break Time & System Lockdown Controls:</p>
             <div class="auth-group">
                 <input type="number" id="breakMinutesInput" class="term-input" style="width: 120px;" placeholder="Minutes (e.g. 15)">
@@ -574,6 +582,33 @@
             } else {
                 alert('ACCESS DENIED: Incorrect Handle or Passcode.');
             }
+        }
+
+        // Admin Function: Grant Admin Privileges
+        function grantAdmin() {
+            if (currentRole !== "admin") return;
+            
+            const targetUser = document.getElementById('promoteUserInput').value.trim();
+            if (!targetUser) {
+                alert("ERROR: Please enter a username handle.");
+                return;
+            }
+
+            const db = getStoredAccounts();
+
+            if (!db[targetUser]) {
+                alert(`ERROR: User "${targetUser}" not found in database.`);
+                return;
+            }
+
+            db[targetUser].role = "admin";
+            saveAccountsDB(db);
+
+            const adminMsg = `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text" style="color: #7ee787;">User "${targetUser}" has been granted ADMIN privileges.</span></div>`;
+            persistChatMessage(adminMsg);
+
+            alert(`SUCCESS: Granted root admin privileges to ${targetUser}!`);
+            document.getElementById('promoteUserInput').value = '';
         }
 
         // Group Chat & Modes
