@@ -366,13 +366,13 @@
             <button class="nav-btn" onclick="loadDirectChat()">💬 Direct Secure Messages (DM)</button>
 
             <div class="group-title">Unified Console Emulators</div>
-            <button class="nav-btn" onclick="loadEmulatorHub('sony')">🎮 Sony PlayStation Hub (PS1/PS2/PSP/PS3)</button>
-            <button class="nav-btn" onclick="loadEmulatorHub('xbox')">🟢 Microsoft Xbox Hub (Original/360/One)</button>
+            <button class="nav-btn" onclick="loadEmulatorHub('sony')">🎮 Sony PlayStation Hub (PS1-PS3)</button>
+            <button class="nav-btn" onclick="loadEmulatorHub('xbox')">🟢 Microsoft Xbox Hub (Original-One)</button>
 
-            <div class="group-title">Native 120FPS FPS Engines</div>
-            <button class="nav-btn" onclick="loadFPS('2d')">🎯 2D Retro Arcade Shooter (120 FPS)</button>
-            <button class="nav-btn" onclick="loadFPS('pseudo')">🕹️ Pseudo-3D Raycaster FPS (120 FPS)</button>
-            <button class="nav-btn" onclick="loadFPS('3d')">🚀 Full 3D Vector Arena FPS (120 FPS)</button>
+            <div class="group-title">Native 120FPS 5th Grader Arcade</div>
+            <button class="nav-btn" onclick="loadFPS('brawl')">🔥 Brawler Arena (120 FPS)</button>
+            <button class="nav-btn" onclick="loadFPS('zombie')">🧟 Zombie Survival Shooter (120 FPS)</button>
+            <button class="nav-btn" onclick="loadFPS('parkour')">🏃‍♂️ 3D Neon Parkour (120 FPS)</button>
 
             <div class="group-title">Admin AI Integration Hub</div>
             <button class="nav-btn" onclick="loadAiIntegrationHub()">⚡ Submit Ideas & AI Integration</button>
@@ -424,7 +424,7 @@
             doc.write(`
                 <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
                     <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">Game Terminal // v1.7.5</h1>
-                    <p style="color:#64748b;max-width:550px;line-height:1.5;">TRAINING WHEELS PROTOCOL • Made by Phantom Enterprises LLC. Launch unified console hubs, 120FPS FPS games, or switch group messaging channels on the sidebar.</p>
+                    <p style="color:#64748b;max-width:550px;line-height:1.5;">TRAINING WHEELS PROTOCOL • Made by Phantom Enterprises LLC. Choose an arcade game, console emulator, or custom engraved room on the sidebar!</p>
                 </body>
             `);
             doc.close();
@@ -482,7 +482,7 @@
             doc.close();
         }
 
-        // --- GROUP MESSAGING WITH SELECTABLE ROOMS ---
+        // --- ENCRYPTED GROUP ROOMS (ENGRAVED GAME ROOMS + HOMEWORK/LIFE) ---
         function loadGroupChat() {
             const frame = document.getElementById('viewport');
             document.getElementById('hud-status').innerText = "STATUS: ENCRYPTED GROUP ROOMS";
@@ -497,8 +497,10 @@
                     <div style="display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap;">
                         <button onclick="switchRoom('#homework')" style="background:rgba(0,255,204,0.1);border:1px solid #00ffcc;color:#00ffcc;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#homework</button>
                         <button onclick="switchRoom('#life')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#life</button>
-                        <button onclick="switchRoom('#fortnite')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#(that game)</button>
-                        <button onclick="switchRoom('#helldivers')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#(this game)</button>
+                        <button onclick="switchRoom('#fortnite')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#fortnite</button>
+                        <button onclick="switchRoom('#roblox')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#roblox</button>
+                        <button onclick="switchRoom('#minecraft')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#minecraft</button>
+                        <button onclick="switchRoom('#brawlstars')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#brawlstars</button>
                     </div>
 
                     <div id="room-banner" style="color:#00ffcc;font-size:0.85rem;margin-bottom:8px;">Active Room: #homework</div>
@@ -565,7 +567,7 @@
             doc.close();
         }
 
-        // --- UNIFIED SONY CONSOLE HUB (PS1, PS2, PSP, PS3) ---
+        // --- UNIFIED SONY & XBOX HUBS ---
         function loadEmulatorHub(brand) {
             const frame = document.getElementById('viewport');
             updateNav(event.currentTarget);
@@ -577,7 +579,7 @@
                 doc.write(`
                     <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:30px;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;">
                         <h2 style="color:#00ffcc;margin-bottom:10px;">PlayStation Unified Matrix (PS1 • PS2 • PSP • PS3)</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Training Wheels protocol active: E-rated hardware bin mount ready for Cell & Emotion Engine matrices.</p>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Training Wheels protocol active: E-rated hardware bin mount ready.</p>
                         <div style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-bottom:25px;">
                             <button onclick="alert('Mounting PS1 ISO Image...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">💿 PS1 Core</button>
                             <button onclick="alert('Mounting PS2 ISO Image...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">📀 PS2 Core</button>
@@ -596,7 +598,7 @@
                 doc.write(`
                     <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:30px;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;">
                         <h2 style="color:#00ffcc;margin-bottom:10px;">Microsoft Xbox Unified Hub (Original • 360 • One)</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Note on Xbox One: Runs via browser hypervisor simulation layer. Xenon & XAPI bridge active.</p>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Hypervisor cloud simulation layer active for Xbox One containers.</p>
                         <div style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-bottom:25px;">
                             <button onclick="alert('Mounting Original Xbox XISO...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">🟢 Xbox Original</button>
                             <button onclick="alert('Mounting Xbox 360 Title...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">💚 Xbox 360</button>
@@ -610,64 +612,142 @@
             }
         }
 
-        // --- NATIVE 120 FPS FPS ENGINES ---
+        // --- NATIVE 120 FPS 5TH GRADER ARCADE GAMES ---
         function loadFPS(type) {
             const frame = document.getElementById('viewport');
             updateNav(event.currentTarget);
             let doc = frame.contentDocument || frame.contentWindow.document;
 
-            if (type === '2d') {
-                document.getElementById('hud-status').innerText = "STATUS: 2D RETRO ARCADE SHOOTER [120 FPS]";
+            if (type === 'brawl') {
+                document.getElementById('hud-status').innerText = "STATUS: 5TH GRADER BRAWLER ARENA [120 FPS]";
                 doc.open();
                 doc.write(`
                     <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:10px;">🎯 2D RETRO ARCADE SHOOTER (120 FPS Native)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:15px;">Use Left/Right Arrow keys to move, Spacebar to fire lasers.</p>
-                        <canvas id="c" width="800" height="450" style="border:1px solid #1a2230;background:#05070a;"></canvas>
+                        <h3 style="margin-bottom:5px;">🔥 5TH GRADER BRAWLER ARENA (120 FPS Native)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Use Arrow Keys to move, Spacebar to slash brawler sword!</p>
+                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
                         <script>
                             const canvas = document.getElementById('c');
                             const ctx = canvas.getContext('2d');
-                            let shipX = 370;
-                            let bullets = [];
-                            let enemies = [{x: 100, y: 50}, {x: 300, y: 50}, {x: 500, y: 50}, {x: 700, y: 50}];
+                            let p = {x: 400, y: 210, size: 20, speed: 4};
                             let keys = {};
+                            let enemies = [{x: 100, y: 100}, {x: 700, y: 300}, {x: 200, y: 350}];
+                            let score = 0;
 
                             window.addEventListener('keydown', e => keys[e.code] = true);
                             window.addEventListener('keyup', e => keys[e.code] = false);
                             window.addEventListener('keydown', e => {
                                 if(e.code === 'Space') {
-                                    bullets.push({x: shipX + 18, y: 390});
+                                    enemies.forEach((en, i) => {
+                                        let dist = Math.hypot(p.x - en.x, p.y - en.y);
+                                        if(dist < 50) {
+                                            enemies.splice(i, 1);
+                                            score += 100;
+                                            enemies.push({x: Math.random() * 700 + 50, y: Math.random() * 350 + 30});
+                                        }
+                                    });
                                 }
                             });
 
                             function loop() {
-                                if(keys['ArrowLeft']) shipX = Math.max(10, shipX - 6);
-                                if(keys['ArrowRight']) shipX = Math.min(750, shipX + 6);
+                                if(keys['ArrowLeft']) p.x = Math.max(20, p.x - p.speed);
+                                if(keys['ArrowRight']) p.x = Math.min(780, p.x + p.speed);
+                                if(keys['ArrowUp']) p.y = Math.max(20, p.y - p.speed);
+                                if(keys['ArrowDown']) p.y = Math.min(400, p.y + p.speed);
 
                                 ctx.fillStyle = '#05070a';
                                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                                // Draw ship
+                                // HUD score
                                 ctx.fillStyle = '#00ffcc';
-                                ctx.fillRect(shipX, 390, 40, 20);
+                                ctx.font = '14px monospace';
+                                ctx.fillText('BRAWL SCORE: ' + score, 20, 30);
 
-                                // Draw bullets
+                                // Draw Player
+                                ctx.fillStyle = '#00ffcc';
+                                ctx.fillRect(p.x - 10, p.y - 10, 20, 20);
+
+                                // Draw Enemies
                                 ctx.fillStyle = '#ff3366';
-                                bullets.forEach((b, index) => {
-                                    b.y -= 8;
-                                    ctx.fillRect(b.x, b.y, 4, 12);
-                                    if(b.y < 0) bullets.splice(index, 1);
+                                enemies.forEach(en => {
+                                    ctx.fillRect(en.x - 12, en.y - 12, 24, 24);
                                 });
 
-                                // Draw enemies & collision
+                                requestAnimationFrame(loop);
+                            }
+                            loop();
+                        <\/script>
+                    </body>
+                `);
+                doc.close();
+            } else if (type === 'zombie') {
+                document.getElementById('hud-status').innerText = "STATUS: ZOMBIE SURVIVAL SHOOTER [120 FPS]";
+                doc.open();
+                doc.write(`
+                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
+                        <h3 style="margin-bottom:5px;">🧟 ZOMBIE APOCALYPSE SURVIVAL (120 FPS Native)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Arrow keys to move, Spacebar to fire laser blaster!</p>
+                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
+                        <script>
+                            const canvas = document.getElementById('c');
+                            const ctx = canvas.getContext('2d');
+                            let hero = {x: 400, y: 210};
+                            let bullets = [];
+                            let zombies = [{x: 50, y: 50}, {x: 750, y: 350}, {x: 700, y: 80}];
+                            let keys = {};
+                            let zScore = 0;
+
+                            window.addEventListener('keydown', e => keys[e.code] = true);
+                            window.addEventListener('keyup', e => keys[e.code] = false);
+                            window.addEventListener('keydown', e => {
+                                if(e.code === 'Space') {
+                                    bullets.push({x: hero.x, y: hero.y, vx: 8, vy: 0});
+                                }
+                            });
+
+                            function loop() {
+                                if(keys['ArrowLeft']) hero.x = Math.max(15, hero.x - 5);
+                                if(keys['ArrowRight']) hero.x = Math.min(785, hero.x + 5);
+                                if(keys['ArrowUp']) hero.y = Math.max(15, hero.y - 5);
+                                if(keys['ArrowDown']) hero.y = Math.min(405, hero.y + 5);
+
+                                ctx.fillStyle = '#05070a';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
                                 ctx.fillStyle = '#ff3366';
-                                enemies.forEach((en, eIdx) => {
-                                    ctx.fillRect(en.x, en.y, 30, 30);
+                                ctx.font = '14px monospace';
+                                ctx.fillText('ZOMBIES ELIMINATED: ' + zScore, 20, 30);
+
+                                // Bullets
+                                ctx.fillStyle = '#00ffcc';
+                                bullets.forEach((b, idx) => {
+                                    b.x += b.vx;
+                                    ctx.fillRect(b.x, b.y - 2, 8, 4);
+                                    if(b.x > canvas.width) bullets.splice(idx, 1);
+                                });
+
+                                // Hero
+                                ctx.fillStyle = '#00ffcc';
+                                ctx.fillRect(hero.x - 10, hero.y - 10, 20, 20);
+
+                                // Zombies
+                                ctx.fillStyle = '#00b388';
+                                zombies.forEach((z, zIdx) => {
+                                    // Move towards hero slowly
+                                    if(z.x < hero.x) z.x += 0.8;
+                                    if(z.x > hero.x) z.x -= 0.8;
+                                    if(z.y < hero.y) z.y += 0.8;
+                                    if(z.y > hero.y) z.y -= 0.8;
+
+                                    ctx.fillRect(z.x - 10, z.y - 10, 20, 20);
+
+                                    // Bullet collision
                                     bullets.forEach((b, bIdx) => {
-                                        if(b.x > en.x && b.x < en.x + 30 && b.y > en.y && b.y < en.y + 30) {
-                                            enemies.splice(eIdx, 1);
+                                        if(Math.hypot(b.x - z.x, b.y - z.y) < 20) {
+                                            zombies.splice(zIdx, 1);
                                             bullets.splice(bIdx, 1);
-                                            enemies.push({x: Math.random() * 700 + 50, y: 50});
+                                            zScore++;
+                                            zombies.push({x: Math.random() > 0.5 ? 20 : 780, y: Math.random() * 400});
                                         }
                                     });
                                 });
@@ -679,94 +759,69 @@
                     </body>
                 `);
                 doc.close();
-            } else if (type === 'pseudo') {
-                document.getElementById('hud-status').innerText = "STATUS: PSEUDO-3D RAYCASTER FPS [120 FPS]";
+            } else {
+                document.getElementById('hud-status').innerText = "STATUS: 3D NEON PARKOUR [120 FPS]";
                 doc.open();
                 doc.write(`
                     <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:10px;">🕹️ PSEUDO-3D RAYCASTER ENGINE (120 FPS Native)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:15px;">Use A/D or Left/Right arrows to rotate camera view.</p>
-                        <canvas id="c" width="800" height="450" style="border:1px solid #1a2230;background:#05070a;"></canvas>
+                        <h3 style="margin-bottom:5px;">🏃‍♂️ 3D NEON PARKOUR RUNNER (120 FPS Native)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Use Spacebar to jump over neon hurdles!</p>
+                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
                         <script>
                             const canvas = document.getElementById('c');
                             const ctx = canvas.getContext('2d');
-                            let angle = 0;
-                            let keys = {};
+                            let runnerY = 320;
+                            let isJumping = false;
+                            let jumpVelocity = 0;
+                            let obstacleX = 800;
+                            let distanceRun = 0;
 
-                            window.addEventListener('keydown', e => keys[e.code] = true);
-                            window.addEventListener('keyup', e => keys[e.code] = false);
+                            window.addEventListener('keydown', e => {
+                                if(e.code === 'Space' && !isJumping) {
+                                    isJumping = true;
+                                    jumpVelocity = -12;
+                                }
+                            });
 
                             function loop() {
-                                if(keys['ArrowLeft'] || keys['KeyA']) angle -= 0.04;
-                                if(keys['ArrowRight'] || keys['KeyD']) angle += 0.04;
-
-                                ctx.fillStyle = '#020406';
-                                ctx.fillRect(0, 0, canvas.width, canvas.height/2);
-                                ctx.fillStyle = '#0f131c';
-                                ctx.fillRect(0, canvas.height/2, canvas.width, canvas.height/2);
-
-                                // Raycaster simulation pillars
-                                let numRays = 80;
-                                let stripW = canvas.width / numRays;
-                                for(let i=0; i<numRays; i++) {
-                                    let rayAngle = angle - 0.5 + (i / numRays);
-                                    let distance = 120 + Math.sin(rayAngle * 3) * 60;
-                                    let wallH = Math.min(400, 15000 / distance);
-
-                                    ctx.fillStyle = i % 2 === 0 ? '#00ffcc' : '#00b388';
-                                    ctx.fillRect(i * stripW, (canvas.height/2) - (wallH/2), stripW - 1, wallH);
+                                if(isJumping) {
+                                    runnerY += jumpVelocity;
+                                    jumpVelocity += 0.6;
+                                    if(runnerY >= 320) {
+                                        runnerY = 320;
+                                        isJumping = false;
+                                    }
                                 }
 
-                                requestAnimationFrame(loop);
-                            }
-                            loop();
-                        <\/script>
-                    </body>
-                `);
-                doc.close();
-            } else {
-                document.getElementById('hud-status').innerText = "STATUS: FULL 3D VECTOR ARENA FPS [120 FPS]";
-                doc.open();
-                doc.write(`
-                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:10px;">🚀 FULL 3D VECTOR ARENA FPS (120 FPS Native)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:15px;">Rotating wireframe 3D target simulation lock.</p>
-                        <canvas id="c" width="800" height="450" style="border:1px solid #1a2230;background:#05070a;"></canvas>
-                        <script>
-                            const canvas = document.getElementById('c');
-                            const ctx = canvas.getContext('2d');
-                            let a = 0;
-                            function loop() {
-                                ctx.fillStyle = '#020406';
-                                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                                ctx.strokeStyle = '#ff3366';
-                                ctx.lineWidth = 2;
-                                
-                                let p = [[-60,-60,-60],[60,-60,-60],[60,60,-60],[-60,60,-60],[-60,-60,60],[60,-60,60],[60,60,60],[-60,70,60]];
-                                let proj = p.map(v => {
-                                    let x = v[0], y = v[1], z = v[2];
-                                    let x1 = x * Math.cos(a) - z * Math.sin(a);
-                                    let z1 = x * Math.sin(a) + z * Math.cos(a);
-                                    let y2 = y * Math.cos(a) - z1 * Math.sin(a);
-                                    let z2 = y * Math.sin(a) + z1 * Math.cos(a);
-                                    let f = 350, s = f / (f + z2 + 200);
-                                    return [canvas.width/2 + x1 * s, canvas.height/2 + y2 * s];
-                                });
-                                let e = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-                                e.forEach(edge => {
-                                    ctx.beginPath();
-                                    ctx.moveTo(proj[edge[0]][0], proj[edge[0]][1]);
-                                    ctx.lineTo(proj[edge[1]][0], proj[edge[1]][1]);
-                                    ctx.stroke();
-                                });
+                                obstacleX -= 6;
+                                if(obstacleX < -30) {
+                                    obstacleX = 820;
+                                    distanceRun += 50;
+                                }
 
-                                // Draw crosshair
-                                ctx.strokeStyle = '#00ffcc';
+                                ctx.fillStyle = '#05070a';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                                ctx.fillStyle = '#00ffcc';
+                                ctx.font = '14px monospace';
+                                ctx.fillText('PARKOUR DISTANCE: ' + distanceRun + 'm', 20, 30);
+
+                                // Floor
+                                ctx.strokeStyle = '#1a2230';
+                                ctx.lineWidth = 2;
                                 ctx.beginPath();
-                                ctx.arc(canvas.width/2, canvas.height/2, 15, 0, Math.PI * 2);
+                                ctx.moveTo(0, 350);
+                                ctx.lineTo(800, 350);
                                 ctx.stroke();
 
-                                a += 0.03;
+                                // Runner
+                                ctx.fillStyle = '#00ffcc';
+                                ctx.fillRect(100, runnerY, 25, 30);
+
+                                // Obstacle
+                                ctx.fillStyle = '#ff3366';
+                                ctx.fillRect(obstacleX, 320, 20, 30);
+
                                 requestAnimationFrame(loop);
                             }
                             loop();
@@ -777,7 +832,7 @@
             }
         }
 
-        // --- AI INTEGRATION HUB WITH IDEA SUBMISSION & COUNTDOWN ---
+        // --- AI INTEGRATION HUB ---
         function loadAiIntegrationHub() {
             const frame = document.getElementById('viewport');
             document.getElementById('hud-status').innerText = "STATUS: AI IDEA INTEGRATION";
