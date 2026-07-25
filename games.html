@@ -27,19 +27,34 @@
             z-index: -1; transition: all 0.8s ease;
         }
 
-        /* --- 1. BOOT SEQUENCE (PRO EXTENDED) --- */
+        /* --- POWER BUTTON SCREEN --- */
+        #power-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000;
+            z-index: 999999; display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .power-btn {
+            background: transparent; border: 2px solid var(--ps-blue); color: var(--ps-blue);
+            padding: 20px 40px; font-size: 1.2rem; font-weight: bold; letter-spacing: 3px;
+            border-radius: 50px; cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(46, 107, 245, 0.3);
+        }
+        .power-btn:hover {
+            background: var(--ps-blue); color: #fff; box-shadow: 0 0 40px rgba(46, 107, 245, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* --- BOOT SEQUENCE --- */
         #boot-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000;
-            z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 1.2s ease-in-out;
         }
-        
         .ps-spark {
             width: 2px; height: 2px; border-radius: 50%; background: #fff;
             box-shadow: 0 0 50px 20px rgba(106, 161, 250, 0), 0 0 100px 50px rgba(46, 107, 245, 0);
             animation: spark-ignite 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
-        
         .boot-logo {
             position: absolute; font-size: 2.5rem; font-weight: 300; letter-spacing: 10px; color: #fff;
             opacity: 0; transform: scale(0.9); animation: logo-reveal 4s 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -57,13 +72,14 @@
             100% { opacity: 0; transform: scale(1.05); filter: blur(5px); }
         }
 
-        /* --- 2. USER SELECTION SCREEN --- */
+        /* --- USER SELECTION & REGISTRATION --- */
         #user-select {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99990;
             display: none; flex-direction: column; align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.8s ease;
         }
         .user-title { font-size: 1.5rem; font-weight: 300; margin-bottom: 40px; letter-spacing: 2px; }
+        .user-grid { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; max-width: 800px; }
         
         .profile-card {
             display: flex; flex-direction: column; align-items: center; gap: 15px; cursor: pointer;
@@ -77,29 +93,41 @@
             border: 3px solid transparent; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
             font-size: 3rem; color: rgba(255,255,255,0.8);
         }
+        .add-user-btn { background: transparent; border: 2px dashed var(--text-muted); color: var(--text-muted); }
         .profile-name { font-size: 1.2rem; font-weight: 500; color: var(--text-muted); transition: all 0.3s; }
 
-        /* --- 3. PS5 PRO DASHBOARD --- */
+        #register-modal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(25, 25, 30, 0.9); backdrop-filter: blur(20px); padding: 40px; border-radius: 15px;
+            border: 1px solid var(--glass-border); z-index: 99995; flex-direction: column; gap: 20px; text-align: center;
+        }
+        #register-modal input {
+            padding: 12px; font-size: 1.2rem; border-radius: 8px; border: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.5); color: #fff; outline: none; width: 100%; text-align: center;
+        }
+        #register-modal button {
+            padding: 12px; background: #fff; color: #000; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; transition: all 0.2s;
+        }
+        #register-modal button:hover { background: var(--ps-light-blue); color: #fff; }
+
+        /* --- DASHBOARD & NAVIGATION --- */
         #dashboard { display: none; flex-direction: column; height: 100vh; padding: 40px; opacity: 0; transition: opacity 1s ease; }
-        
-        /* Top Navigation Bar */
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px; }
         .nav-links { display: flex; gap: 30px; }
-        .nav-item { 
-            font-size: 1.2rem; font-weight: 500; color: var(--text-muted); cursor: pointer; 
-            padding-bottom: 5px; transition: all 0.2s; position: relative;
-        }
+        .nav-item { font-size: 1.2rem; font-weight: 500; color: var(--text-muted); cursor: pointer; padding-bottom: 5px; transition: all 0.2s; position: relative; }
         .nav-item:hover, .nav-item.active { color: #fff; }
-        .nav-item.active::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; 
-            background: #fff; box-shadow: 0 0 10px #fff;
-        }
-        
-        /* Top Right System Icons */
+        .nav-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: #fff; box-shadow: 0 0 10px #fff; }
         .sys-icons { display: flex; align-items: center; gap: 20px; font-size: 1.1rem; color: var(--text-main); }
-        .sys-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--ps-blue); border: 2px solid #fff; }
+        .sys-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--ps-blue); border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: bold;}
 
-        /* Horizontal Game/App Grid */
+        /* --- CONTENT VIEWS --- */
+        .view-section { display: none; flex-direction: column; flex: 1; }
+        .view-section.active { display: flex; animation: fade-in 0.5s ease forwards; }
+
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* GAMES VIEW (Horizontal Grid) */
         .content-row { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: none; }
         .content-row::-webkit-scrollbar { display: none; }
         
@@ -110,8 +138,7 @@
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .app-tile:hover {
-            transform: scale(1.1) translateY(-10px);
-            border-color: rgba(255,255,255,0.5);
+            transform: scale(1.1) translateY(-10px); border-color: rgba(255,255,255,0.5);
             box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 20px rgba(106, 161, 250, 0.2);
             z-index: 10; background: rgba(40, 40, 50, 0.6);
         }
@@ -119,7 +146,7 @@
         .app-title { font-size: 0.9rem; font-weight: 500; opacity: 0; transition: opacity 0.3s; }
         .app-tile:hover .app-title { opacity: 1; }
 
-        /* Detail Panel (Bottom) */
+        /* Detail Panel */
         .detail-panel {
             margin-top: 40px; padding: 30px; border-radius: 15px; background: linear-gradient(to right, rgba(0,0,0,0.6), transparent);
             max-width: 600px; opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
@@ -133,72 +160,124 @@
         }
         .play-btn:hover { background: var(--ps-light-blue); color: #fff; box-shadow: 0 0 15px var(--ps-blue); }
 
-        /* --- GOOGLE CLASSROOM PANIC MASK --- */
-        #panic-mask {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 999999;
-            display: none; font-family: Arial, sans-serif; color: #202124; padding: 40px;
+        /* --- GAME ENGINE (IFRAME OVERLAY) --- */
+        #game-engine {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 999999; flex-direction: column;
         }
+        .engine-header {
+            height: 50px; background: #111; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; border-bottom: 1px solid #333;
+        }
+        .engine-title { color: var(--text-muted); font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; }
+        .exit-btn {
+            background: rgba(255, 51, 102, 0.2); border: 1px solid #ff3366; color: #ff3366; padding: 5px 15px;
+            border-radius: 15px; cursor: pointer; font-weight: bold; transition: all 0.2s;
+        }
+        .exit-btn:hover { background: #ff3366; color: #fff; }
+        #game-frame { flex: 1; border: none; width: 100%; height: 100%; background: #000; }
+
+        /* --- PANIC MASK --- */
+        #panic-mask { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 9999999; display: none; padding: 40px; }
     </style>
 </head>
 <body>
 
     <div id="dynamic-bg"></div>
 
-    <!-- 1. BOOT SCREEN -->
+    <!-- SOUND ENGINE FILES (REPLACE WITH YOUR OWN MP3s) -->
+    <audio id="sfx-boot" src="boot.mp3"></audio>
+    <audio id="sfx-hover" src="hover.mp3"></audio>
+    <audio id="sfx-select" src="select.mp3"></audio>
+    <audio id="sfx-launch" src="launch.mp3"></audio>
+
+    <!-- POWER SCREEN (BYPASSES BROWSER AUTOPLAY BLOCK) -->
+    <div id="power-screen">
+        <button class="power-btn" onclick="powerOnSystem()">POWER ON</button>
+    </div>
+
+    <!-- BOOT SCREEN -->
     <div id="boot-screen">
         <div class="ps-spark"></div>
         <div class="boot-logo">PHANTOM <span>PRO</span></div>
     </div>
 
-    <!-- 2. USER SELECTION -->
+    <!-- USER SELECTION -->
     <div id="user-select">
-        <div class="user-title">Welcome Back to Phantom Core</div>
-        <div class="profile-card" onclick="loginToDashboard()">
-            <div class="avatar-circle">P</div>
-            <div class="profile-name">phxntom</div>
-        </div>
+        <div class="user-title">Who is playing?</div>
+        <div class="user-grid" id="user-grid"></div>
     </div>
 
-    <!-- 3. MAIN DASHBOARD -->
+    <!-- REGISTER MODAL -->
+    <div id="register-modal">
+        <h2>Create Profile</h2>
+        <input type="text" id="new-username" placeholder="Enter Username..." autocomplete="off">
+        <button onclick="createNewUser()">Register</button>
+        <button onclick="closeRegister()" style="background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted);">Cancel</button>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
     <div id="dashboard">
         <div class="top-bar">
             <div class="nav-links">
-                <div class="nav-item active">Games</div>
-                <div class="nav-item">Chat Mesh</div>
-                <div class="nav-item">AI Core</div>
-                <div class="nav-item">Admin</div>
+                <div class="nav-item active" onclick="switchTab('games', this)">Games</div>
+                <div class="nav-item" onclick="switchTab('chat', this)">Chat Mesh</div>
+                <div class="nav-item" onclick="switchTab('ai', this)">AI Core</div>
+                <div class="nav-item" onclick="switchTab('admin', this)">Admin</div>
             </div>
             <div class="sys-icons">
                 <span id="clock">12:00 PM</span>
                 <span>⚙️</span>
-                <div class="sys-avatar"></div>
+                <div class="sys-avatar" id="current-user-avatar">?</div>
             </div>
         </div>
 
-        <div class="content-row">
-            <div class="app-tile" onmouseover="showDetails('SAO: Fatal Bullet', 'Dive back into GGO. Last played: Yesterday.', '#e3342f')" onmouseout="hideDetails()">
-                <div class="app-icon">⚔️</div>
-                <div class="app-title">Sword Art Online</div>
+        <!-- GAMES VIEW -->
+        <div id="view-games" class="view-section active">
+            <div class="content-row">
+                <div class="app-tile" onmouseover="showDetails('Retro Asteroids', 'Classic space shooter. Play instantly.', '#e3342f', 'https://playcanv.as/p/2OlkUaxF/')" onmouseout="hideDetails()">
+                    <div class="app-icon">🚀</div>
+                    <div class="app-title">Asteroids</div>
+                </div>
+                <div class="app-tile" onmouseover="showDetails('JJK: Cursed Clash Info', 'Mockup tile. Awaiting full web build.', '#6f42c1', '')" onmouseout="hideDetails()">
+                    <div class="app-icon">🤞</div>
+                    <div class="app-title">Jujutsu Kaisen</div>
+                </div>
+                <div class="app-tile" onmouseover="showDetails('2048', 'Brain puzzle. Fully functional.', '#d4af37', 'https://play2048.co/')" onmouseout="hideDetails()">
+                    <div class="app-icon">🧩</div>
+                    <div class="app-title">2048</div>
+                </div>
             </div>
-            <div class="app-tile" onmouseover="showDetails('JJK: Cursed Clash', 'Domain Expansion ready. 4 friends online.', '#6f42c1')" onmouseout="hideDetails()">
-                <div class="app-icon">🤞</div>
-                <div class="app-title">Jujutsu Kaisen</div>
-            </div>
-            <div class="app-tile" onmouseover="showDetails('Phantom Terminal', 'Developer override active. Access backend systems.', '#00ffcc')" onmouseout="hideDetails()">
-                <div class="app-icon">💻</div>
-                <div class="app-title">Terminal</div>
-            </div>
-            <div class="app-tile" onmouseover="showDetails('Discord Node', '3 unread messages in #coding. Stay connected.', '#5865F2')" onmouseout="hideDetails()">
-                <div class="app-icon">💬</div>
-                <div class="app-title">Channels</div>
+
+            <div class="detail-panel" id="detail-panel">
+                <div class="detail-title" id="d-title">Game Title</div>
+                <div class="detail-desc" id="d-desc">Game description goes here.</div>
+                <button class="play-btn" id="d-launch-btn">Launch</button>
             </div>
         </div>
 
-        <div class="detail-panel" id="detail-panel">
-            <div class="detail-title" id="d-title">Game Title</div>
-            <div class="detail-desc" id="d-desc">Game description goes here.</div>
-            <button class="play-btn">Launch</button>
+        <!-- PLACEHOLDER VIEWS -->
+        <div id="view-chat" class="view-section">
+            <h2>💬 Chat Mesh</h2>
+            <p style="color: var(--text-muted); margin-top: 10px;">Channels and comms are offline. Awaiting Phase 3 drop...</p>
         </div>
+        <div id="view-ai" class="view-section">
+            <h2>🤖 AI Core</h2>
+            <p style="color: var(--text-muted); margin-top: 10px;">Neural net calibrating. Awaiting Phase 4 drop...</p>
+        </div>
+        <div id="view-admin" class="view-section">
+            <h2>💻 Admin Terminal</h2>
+            <p style="color: var(--text-muted); margin-top: 10px;">Access denied. Override protocols required...</p>
+        </div>
+    </div>
+
+    <!-- GAME ENGINE OVERLAY -->
+    <div id="game-engine">
+        <div class="engine-header">
+            <div class="engine-title" id="engine-title">PHANTOM ENGINE // RUNNING</div>
+            <button class="exit-btn" onclick="exitGame()">EXIT GAME</button>
+        </div>
+        <iframe id="game-frame" src=""></iframe>
     </div>
 
     <!-- PANIC MASK -->
@@ -208,23 +287,94 @@
     </div>
 
     <script>
-        // BOOT LOGIC
-        setTimeout(() => {
-            const boot = document.getElementById('boot-screen');
-            boot.style.opacity = '0';
-            setTimeout(() => {
-                boot.style.display = 'none';
-                showUserSelect();
-            }, 1200);
-        }, 5500); // Wait for the spark and logo animations
+        // --- SOUND ENGINE ---
+        function playSound(id) {
+            const audio = document.getElementById(id);
+            if(audio) {
+                audio.currentTime = 0; // Reset so rapid hovers work
+                audio.volume = 0.4;
+                audio.play().catch(e => console.log("Sound missing or blocked:", id));
+            }
+        }
 
-        function showUserSelect() {
+        // --- BOOT LOGIC ---
+        let currentUser = null;
+        let activeGameUrl = "";
+        let activeGameTitle = "";
+
+        function powerOnSystem() {
+            document.getElementById('power-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('power-screen').style.display = 'none', 500);
+            
+            const boot = document.getElementById('boot-screen');
+            boot.style.display = 'flex';
+            playSound('sfx-boot'); // 🔥 BOOT SOUND TRIGGERS HERE
+
+            setTimeout(() => {
+                boot.style.opacity = '0';
+                setTimeout(() => {
+                    boot.style.display = 'none';
+                    loadUsers();
+                }, 1200);
+            }, 5500);
+        }
+
+        function loadUsers() {
+            const userGrid = document.getElementById('user-grid');
+            userGrid.innerHTML = '';
+            
+            let users = JSON.parse(localStorage.getItem('phantom_users')) || [];
+            users.forEach(user => {
+                const initial = user.charAt(0).toUpperCase();
+                userGrid.innerHTML += `
+                    <div class="profile-card" onclick="loginToDashboard('${user}')" onmouseover="playSound('sfx-hover')">
+                        <div class="avatar-circle">${initial}</div>
+                        <div class="profile-name">${user}</div>
+                    </div>
+                `;
+            });
+
+            userGrid.innerHTML += `
+                <div class="profile-card" onclick="showRegister()" onmouseover="playSound('sfx-hover')">
+                    <div class="avatar-circle add-user-btn">+</div>
+                    <div class="profile-name">Add Profile</div>
+                </div>
+            `;
+
             const userScreen = document.getElementById('user-select');
             userScreen.style.display = 'flex';
             setTimeout(() => userScreen.style.opacity = '1', 100);
         }
 
-        function loginToDashboard() {
+        function showRegister() { 
+            playSound('sfx-select');
+            document.getElementById('register-modal').style.display = 'flex'; 
+            document.getElementById('new-username').focus(); 
+        }
+        function closeRegister() { 
+            document.getElementById('register-modal').style.display = 'none'; 
+            document.getElementById('new-username').value = ''; 
+        }
+
+        function createNewUser() {
+            playSound('sfx-select');
+            const nameInput = document.getElementById('new-username').value.trim();
+            if (nameInput === "") return;
+
+            let users = JSON.parse(localStorage.getItem('phantom_users')) || [];
+            if (!users.includes(nameInput)) {
+                users.push(nameInput);
+                localStorage.setItem('phantom_users', JSON.stringify(users));
+            }
+            closeRegister();
+            loadUsers();
+        }
+
+        function loginToDashboard(username) {
+            playSound('sfx-select');
+            currentUser = username;
+            document.getElementById('current-user-avatar').innerText = username.charAt(0).toUpperCase();
+            
             const userScreen = document.getElementById('user-select');
             userScreen.style.opacity = '0';
             
@@ -236,30 +386,67 @@
             }, 800);
         }
 
-        // DYNAMIC UI HOVER EFFECTS
-        function showDetails(title, desc, color) {
+        function switchTab(tabId, el) {
+            playSound('sfx-select');
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(view => {
+                view.classList.remove('active');
+                view.style.display = 'none';
+            });
+            
+            el.classList.add('active');
+            const targetView = document.getElementById(`view-${tabId}`);
+            targetView.style.display = 'flex';
+            setTimeout(() => targetView.classList.add('active'), 10);
+        }
+
+        function showDetails(title, desc, color, url) {
+            playSound('sfx-hover');
             document.getElementById('d-title').innerText = title;
             document.getElementById('d-desc').innerText = desc;
             
+            activeGameUrl = url;
+            activeGameTitle = title;
+
+            const btn = document.getElementById('d-launch-btn');
+            if (url === "") {
+                btn.style.opacity = "0.5";
+                btn.innerText = "Unavailable";
+                btn.onclick = null;
+            } else {
+                btn.style.opacity = "1";
+                btn.innerText = "Launch";
+                btn.onclick = launchGame;
+            }
+            
             const panel = document.getElementById('detail-panel');
             panel.classList.add('visible');
-            
-            // Shift background color slightly based on hovered item (PS5 style)
             document.getElementById('dynamic-bg').style.background = `radial-gradient(circle at 50% 30%, ${color} 0%, var(--ps-dark) 70%)`;
         }
 
-        function hideDetails() {
-            document.getElementById('detail-panel').classList.remove('visible');
-            document.getElementById('dynamic-bg').style.background = `radial-gradient(circle at 50% 30%, rgba(46, 107, 245, 0.15) 0%, var(--ps-dark) 70%)`;
+        function hideDetails() {}
+
+        function launchGame() {
+            if (!activeGameUrl) return;
+            playSound('sfx-launch');
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('engine-title').innerText = `PHANTOM ENGINE // RUNNING: ${activeGameTitle.toUpperCase()}`;
+            document.getElementById('game-frame').src = activeGameUrl;
+            document.getElementById('game-engine').style.display = 'flex';
         }
 
-        // LIVE CLOCK
+        function exitGame() {
+            playSound('sfx-select');
+            document.getElementById('game-engine').style.display = 'none';
+            document.getElementById('game-frame').src = ""; 
+            document.getElementById('dashboard').style.display = 'flex';
+        }
+
         setInterval(() => {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }, 1000);
 
-        // PANIC KEY
         window.addEventListener('keydown', e => {
             if (e.key === 'Escape') {
                 const mask = document.getElementById('panic-mask');
