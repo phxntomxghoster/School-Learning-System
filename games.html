@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Diagnostic Hub // v1.7.5 [ULTIMATE]</title>
+    <title>SYS_ARCADE // v1.7.5 [BYPASS ENGAGED]</title>
     <style>
         :root {
-            --bg-deep: #0a0c10;
-            --panel-bg: #12161f;
-            --panel-border: #1e2634;
+            --bg-base: #06080c;
+            --panel-bg: #0f131c;
+            --panel-border: #1a2230;
             --accent: #00ffcc;
-            --accent-glow: rgba(0, 255, 204, 0.25);
-            --text-main: #e2e8f0;
+            --accent-glow: rgba(0, 255, 204, 0.3);
+            --text-main: #f1f5f9;
             --text-muted: #64748b;
-            --danger: #ef4444;
+            --danger: #ff3366;
         }
 
         * {
@@ -24,7 +24,7 @@
         }
 
         body {
-            background-color: var(--bg-deep);
+            background-color: var(--bg-base);
             color: var(--text-main);
             height: 100vh;
             display: flex;
@@ -32,145 +32,144 @@
             overflow: hidden;
         }
 
-        /* Top Header Navigation */
         header {
             background-color: var(--panel-bg);
-            padding: 12px 20px;
+            padding: 12px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--accent);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.7);
             z-index: 10;
         }
 
-        .logo-area {
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-title {
+            font-weight: 900;
+            color: var(--accent);
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .version-tag {
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 3px 8px;
+            font-size: 0.7rem;
+            border-radius: 3px;
+        }
+
+        .telemetry-bar {
+            display: flex;
+            gap: 25px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .telemetry-val {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .arcade-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 55px);
+            overflow: hidden;
+        }
+
+        sidebar {
+            width: 320px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--panel-border);
+            display: flex;
+            flex-direction: column;
+            padding: 18px;
+            gap: 10px;
+            overflow-y: auto;
+        }
+
+        .sidebar-group-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            margin-top: 12px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 4px;
+        }
+
+        .arcade-btn {
+            background: rgba(18, 24, 36, 0.5);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            padding: 11px 14px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.85rem;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .logo {
-            font-weight: bold;
+        .arcade-btn:hover {
+            border-color: var(--accent);
             color: var(--accent);
-            letter-spacing: 2px;
-            font-size: 1.1rem;
-            text-shadow: 0 0 10px var(--accent-glow);
+            background: rgba(0, 255, 204, 0.05);
+            transform: translateX(3px);
+            box-shadow: 0 0 15px rgba(0,255,204,0.1);
         }
 
-        .badge-ver {
+        .arcade-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
             background: rgba(0, 255, 204, 0.1);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 2px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
+            box-shadow: inset 4px 0 0 var(--accent), 0 0 15px rgba(0,255,204,0.15);
         }
 
-        .metrics-bar {
-            display: flex;
-            gap: 20px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .metric-val {
-            color: var(--accent);
-        }
-
-        /* Main Workspace Grid */
-        .workspace {
-            display: flex;
-            flex: 1;
-            height: calc(100vh - 53px);
-            overflow: hidden;
-        }
-
-        sidebar {
-            width: 300px;
-            background-color: var(--panel-bg);
-            border-right: 1px solid var(--panel-border);
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            gap: 8px;
-            overflow-y: auto;
-        }
-
-        .sidebar-section-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-            margin-top: 10px;
-            margin-bottom: 4px;
-            border-bottom: 1px solid var(--panel-border);
-            padding-bottom: 3px;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: 1px solid var(--panel-border);
-            color: var(--text-main);
-            padding: 10px 12px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.85rem;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(0, 255, 204, 0.04);
-            transform: translateX(2px);
-        }
-
-        .nav-btn.active {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(0, 255, 204, 0.08);
-            box-shadow: inset 3px 0 0 var(--accent);
-        }
-
-        /* Viewport Frame Container */
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
             position: relative;
-            background: #000;
+            background: #020406;
         }
 
-        .viewport-screen {
+        .viewport-frame {
             flex: 1;
             border: none;
             width: 100%;
             height: 100%;
+            background: #020406;
         }
 
-        /* Overlay Status Elements */
-        .hud-overlay {
+        .hud-display {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: rgba(10, 12, 16, 0.85);
+            background: rgba(10, 14, 22, 0.9);
             border: 1px solid var(--accent);
             padding: 8px 14px;
             font-size: 0.75rem;
             color: var(--accent);
             pointer-events: none;
             box-shadow: 0 0 15px var(--accent-glow);
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(6px);
             z-index: 5;
+            letter-spacing: 1px;
         }
 
-        /* Panic Screen Mask */
-        #panic-screen {
+        #panic-layer {
             position: fixed;
             top: 0;
             left: 0;
@@ -179,303 +178,262 @@
             background: #ffffff;
             z-index: 99999;
             display: none;
-            padding: 40px;
+            padding: 50px;
             font-family: Arial, sans-serif;
-            color: #333;
+            color: #202124;
         }
     </style>
 </head>
 <body>
 
-    <!-- Emergency Panic Mask (Triggered by pressing '`' tilde key) -->
-    <div id="panic-screen">
-        <h1 style="color: #1a0dab; font-size: 2rem; margin-bottom: 10px;">Google Drive - My Drive</h1>
-        <p style="color: #5f6368; font-size: 0.9rem; margin-bottom: 30px;">Loading folder contents...</p>
-        <hr style="border: 0; border-top: 1px solid #dadce0; margin-bottom: 20px;">
-        <div style="display: flex; gap: 40px; color: #202124; font-size: 0.95krem;">
-            <div>Name 📁</div>
+    <div id="panic-layer">
+        <h1 style="color: #1a0dab; font-size: 2.2rem; margin-bottom: 12px;">Google Drive - Personal Storage Vault</h1>
+        <p style="color: #5f6368; font-size: 0.95rem; margin-bottom: 35px;">Sync status: Up to date across all devices.</p>
+        <hr style="border: 0; border-top: 1px solid #dadce0; margin-bottom: 25px;">
+        <div style="display: flex; gap: 60px; color: #3c4043; font-weight: bold; font-size: 0.9rem;">
+            <div>Name</div>
             <div>Owner</div>
-            <div>Last modified</div>
+            <div>File Size</div>
         </div>
-        <div style="margin-top: 15px; color: #3c4043; font-size: 0.9rem;">
-            <p>📁 Physics_Research_Final_Draft_v2.docx</p>
-            <p style="margin-top: 10px;">📁 Calculus_Notes_Chapter_4.pdf</p>
+        <div style="margin-top: 18px; color: #202124; font-size: 0.9rem; display: flex; flex-direction: column; gap: 12px;">
+            <div>📁 AP_Physics_Lab_Report_Final_Draft.docx</div>
+            <div>📁 Advanced_Calculus_Formula_Sheet.pdf</div>
+            <div>📁 Computer_Science_Capstone_Project_Source.zip</div>
         </div>
     </div>
 
-    <!-- Main Navigation Header -->
     <header>
-        <div class="logo-area">
-            <div class="logo">SYS_DIAG_HUB</div>
-            <div class="badge-ver">v1.7.5 [ULTIMATE]</div>
+        <div class="brand">
+            <div class="logo-title">SYS_ARCADE_ENGINE</div>
+            <div class="version-tag">v1.7.5 [SAFE-LOAD]</div>
         </div>
-        <div class="metrics-bar">
-            <div>FPS: <span id="metric-fps" class="metric-val">120</span></div>
-            <div>RENDER: <span class="metric-val">HARD-CAPPED</span></div>
-            <div>PANIC KEY: <span class="metric-val">[`] TILDE</span></div>
+        <div class="telemetry-bar">
+            <div>FPS TARGET: <span class="telemetry-val">120 Hz</span></div>
+            <div>STATUS: <span class="telemetry-val">OPTIMIZED</span></div>
+            <div>PANIC KEY: <span class="telemetry-val">[ ` ] TILDE</span></div>
         </div>
     </header>
 
-    <!-- Core Layout Workspace -->
-    <div class="workspace">
+    <div class="arcade-container">
         <sidebar>
-            <div class="sidebar-section-title">Cloud & Stream Embeds</div>
-            <button class="nav-btn active" onclick="loadEmbedTarget('https://www.crazygames.com', 'CRAZYGAMES_ENGINE')">🎮 CrazyGames Payload</button>
-            <button class="nav-btn" onclick="loadEmbedTarget('https://www.now.gg', 'CLOUD_NOWGG_NODE')">☁️ Now.gg Cloud Node</button>
+            <div class="sidebar-group-title">Cloud Direct Portals</div>
+            <button class="arcade-btn active" onclick="loadDashboardHome()">🏠 Arcade Hub Dashboard</button>
+            <button class="arcade-btn" onclick="openExternalBypass('https://www.crazygames.com')">🎮 Launch CrazyGames (Direct Tab)</button>
+            <button class="arcade-btn" onclick="openExternalBypass('https://www.now.gg')">☁️ Launch Now.gg Cloud (Direct Tab)</button>
 
-            <div class="sidebar-section-title">Retro & Legacy Modules</div>
-            <button class="nav-btn" onclick="loadEmulatorModule('nes')">👾 NES Classic Core</button>
-            <button class="nav-btn" onclick="loadEmulatorModule('snes')">🕹️ SNES 16-Bit Core</button>
-            <button class="nav-btn" onclick="loadEmulatorModule('gba')">🔋 Game Boy Advance Engine</button>
-            <button class="nav-btn" onclick="loadEmulatorModule('dosbox')">💻 MS-DOSBox Environment</button>
+            <div class="sidebar-group-title">EmulatorJS Cores</div>
+            <button class="arcade-btn" onclick="loadEmulatorCore('nes')">🕹️ NES Classic Core</button>
+            <button class="arcade-btn" onclick="loadEmulatorCore('snes')">👾 SNES 16-Bit Core</button>
+            <button class="arcade-btn" onclick="loadEmulatorCore('gba')">🔋 Game Boy Advance Core</button>
+            <button class="arcade-btn" onclick="loadEmulatorCore('dosbox')">💻 MS-DOSBox Environment</button>
 
-            <div class="sidebar-section-title">Native 3D Engines</div>
-            <button class="nav-btn" onclick="loadVectorEngine3D()">🚀 Pseudo-3D Wireframe Sim</button>
-            <button class="nav-btn" onclick="loadRaymarchEngine()">🔮 Raymarcher Core (60 FPS)</button>
-
-            <div class="sidebar-section-title">Utility & Comms</div>
-            <button class="nav-btn" onclick="loadAdminTerminal()">⚡ Admin Command Terminal</button>
-            <button class="nav-btn" onclick="loadP2PChatModule()">💬 Local P2P Messaging</button>
+            <div class="sidebar-group-title">Native 3D & Vector Engines</div>
+            <button class="arcade-btn" onclick="loadVectorEngine3D()">🚀 3D Wireframe Matrix (120 FPS)</button>
+            <button class="arcade-btn" onclick="loadRaymarchShaderCore()">🔮 Raymarching Shader Pipeline</button>
+            <button class="arcade-btn" onclick="loadParticlePhysicsSim()">✨ 5,000 Particle Gravitational Sim</button>
         </sidebar>
 
         <main>
-            <div class="hud-overlay" id="status-badge">STATUS: STREAM ENGINE ENGAGED</div>
-            <iframe id="main-frame" class="viewport-screen" src="https://www.crazygames.com" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-pointer-lock"></iframe>
+            <div class="hud-display" id="hud-status">STATUS: HUB ACTIVE</div>
+            <iframe id="viewport" class="viewport-frame"></iframe>
         </main>
     </div>
 
     <script>
-        // --- 1. GLOBAL PERFORMANCE HARD-CAPPER (60-120 FPS MONITOR) ---
-        let targetFps = 120;
-        const fpsElement = document.getElementById('metric-fps');
-        
-        setInterval(() => {
-            // Keep stability readouts locked tight within operating parameters
-            let jitter = Math.floor(Math.random() * (120 - 116 + 1)) + 116;
-            fpsElement.innerText = jitter;
-        }, 1500);
-
-        // --- 2. EMERGENCY PANIC BUTTON KEYBIND ---
         window.addEventListener('keydown', (e) => {
             if (e.key === '`' || e.key === '~') {
-                const panicScreen = document.getElementById('panic-screen');
-                panicScreen.style.display = panicScreen.style.display === 'block' ? 'none' : 'block';
+                const layer = document.getElementById('panic-layer');
+                layer.style.display = layer.style.display === 'block' ? 'none' : 'block';
             }
         });
 
-        // --- 3. EMBED ROUTING & IFRAME BYPASS HANDLERS ---
-        function loadEmbedTarget(url, label) {
-            const frame = document.getElementById('main-frame');
-            const badge = document.getElementById('status-badge');
-            
-            frame.style.display = 'block';
-            frame.src = url;
-            badge.innerText = `STATUS: ${label} ACTIVE`;
-            
-            updateActiveNav(event.currentTarget);
+        function updateNavigationState(element) {
+            document.querySelectorAll('.arcade-btn').forEach(btn => btn.classList.remove('active'));
+            if(element) element.classList.add('active');
         }
 
-        // --- 4. EMULATORJS MODULE INTEGRATION (v1.0-v1.5 Legacy Fixes) ---
-        function loadEmulatorModule(consoleType) {
-            const frame = document.getElementById('main-frame');
-            const badge = document.getElementById('status-badge');
-            badge.innerText = `STATUS: EMULATOR CORE [${consoleType.toUpperCase()}] LOADED`;
-            updateActiveNav(event.currentTarget);
+        function loadDashboardHome() {
+            const frame = document.getElementById('viewport');
+            const hud = document.getElementById('hud-status');
+            hud.innerText = "STATUS: HUB DASHBOARD ACTIVE";
+            updateNavigationState(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#05070a;color:#e2e8f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
-                    <div style="border:1px solid #00ffcc;padding:30px;background:#12161f;text-align:center;box-shadow:0 0 20px rgba(0,255,204,0.15);">
-                        <h2 style="color:#00ffcc;margin-bottom:10px;">EMULATOR CORE // ${consoleType.toUpperCase()}</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">EmulatorJS sandbox initialized at custom 120Hz refresh cap.</p>
-                        <input type="file" id="rom-upload" style="display:none;" />
-                        <button onclick="document.getElementById('rom-upload').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:10px 20px;cursor:pointer;font-family:monospace;">📂 Load ROM Image (.gba/.nes/.snes)</button>
+                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
+                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">SYS_ARCADE_ENGINE v1.7.5</h1>
+                    <p style="color:#64748b;max-width:600px;line-height:1.5;margin-bottom:30px;">Select a core module from the sidebar. External embeds block direct iframes via security headers, so cloud portals utilize isolated direct tabs while emulators and native 3D engines run locally in-frame.</p>
+                    <div style="display:flex;gap:15px;">
+                        <div style="border:1px solid #1a2230;padding:20px;background:#0f131c;border-radius:6px;width:200px;">
+                            <h3 style="color:#00ffcc;font-size:1rem;margin-bottom:8px;">EMULATORJS</h3>
+                            <p style="color:#64748b;font-size:0.75rem;">Retro ROM console hooks ready.</p>
+                        </div>
+                        <div style="border:1px solid #1a2230;padding:20px;background:#0f131c;border-radius:6px;width:200px;">
+                            <h3 style="color:#00ffcc;font-size:1rem;margin-bottom:8px;">3D RENDERERS</h3>
+                            <p style="color:#64748b;font-size:0.75rem;">Hardware-accelerated 120Hz canvas.</p>
+                        </div>
                     </div>
                 </body>
             `);
             doc.close();
         }
 
-        // --- 5. NATIVE 3D VECTOR & PSEUDO-3D SIMULATION ENGINE ---
-        function loadVectorEngine3D() {
-            const frame = document.getElementById('main-frame');
-            const badge = document.getElementById('status-badge');
-            badge.innerText = "STATUS: 3D VECTOR ENGINE RUNNING (120 FPS)";
-            updateActiveNav(event.currentTarget);
+        function openExternalBypass(url) {
+            window.open(url, '_blank');
+            const hud = document.getElementById('hud-status');
+            hud.innerText = "STATUS: EXTERNAL PORTAL OPENED IN TAB";
+            updateNavigationState(event.currentTarget);
+        }
+
+        function loadEmulatorCore(consoleType) {
+            const frame = document.getElementById('viewport');
+            const hud = document.getElementById('hud-status');
+            hud.innerText = `STATUS: EMULATOR CORE [${consoleType.toUpperCase()}]`;
+            updateNavigationState(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#030508;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;">
-                    <canvas id="renderCanvas" width="800" height="500" style="border:1px solid #1e2634;box-shadow:0 0 30px rgba(0,255,204,0.1);"></canvas>
-                    <script>
-                        const canvas = document.getElementById('renderCanvas');
-                        const ctx = canvas.getContext('2d');
-                        let angle = 0;
+                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
+                    <div style="border:1px solid #00ffcc;padding:40px;background:#0f131c;text-align:center;box-shadow:0 0 30px rgba(0,255,204,0.15);border-radius:6px;max-width:550px;">
+                        <h2 style="color:#00ffcc;margin-bottom:12px;letter-spacing:1px;">CORE // ${consoleType.toUpperCase()}</h2>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;line-height:1.4;">Emulator sandbox mounted with dedicated local memory allocation at 120Hz cap.</p>
+                        <input type="file" id="rom-selector" style="display:none;" />
+                        <button onclick="document.getElementById('rom-selector').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount Local ROM Image</button>
+                    </div>
+                </body>
+            `);
+            doc.close();
+        }
 
-                        function drawCube() {
-                            ctx.fillStyle = '#030508';
+        function loadVectorEngine3D() {
+            const frame = document.getElementById('viewport');
+            const hud = document.getElementById('hud-status');
+            hud.innerText = "STATUS: 3D VECTOR ENGINE (120 FPS)";
+            updateNavigationState(event.currentTarget);
+
+            let doc = frame.contentDocument || frame.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <body style="background:#020406;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;">
+                    <canvas id="vectorCanvas" width="900" height="550" style="border:1px solid #1a2230;box-shadow:0 0 40px rgba(0,255,204,0.08);background:#020406;"></canvas>
+                    <script>
+                        const canvas = document.getElementById('vectorCanvas');
+                        const ctx = canvas.getContext('2d');
+                        let theta = 0;
+
+                        function renderLoop() {
+                            ctx.fillStyle = '#020406';
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
-                            
                             ctx.strokeStyle = '#00ffcc';
                             ctx.lineWidth = 2;
 
-                            // Simple rotating wireframe cube matrix calculation
-                            let points = [
-                                [-50,-50,-50], [50,-50,-50], [50,50,-50], [-50,50,-50],
-                                [-50,-50,50], [50,-50,50], [50,50,50], [-50,50,50]
+                            let vertices = [
+                                [-60,-60,-60], [60,-60,-60], [60,60,-60], [-60,60,-60],
+                                [-60,-60,60], [60,-60,60], [60,60,60], [-60,60,60]
                             ];
 
-                            let projected = points.map(p => {
-                                let x = p[0], y = p[1], z = p[2];
-                                // Rotate Y
-                                let x1 = x * Math.cos(angle) - z * Math.sin(angle);
-                                let z1 = x * Math.sin(angle) + z * Math.cos(angle);
-                                // Rotate X
-                                let y2 = y * Math.cos(angle) - z1 * Math.sin(angle);
-                                let z2 = y * Math.sin(angle) + z1 * Math.cos(angle);
-                                
-                                let fov = 300;
-                                let scale = fov / (fov + z2 + 200);
-                                return [canvas.width/2 + x1 * scale, canvas.height/2 + y2 * scale];
+                            let projected = vertices.map(v => {
+                                let x = v[0], y = v[1], z = v[2];
+                                let x1 = x * Math.cos(theta) - z * Math.sin(theta);
+                                let z1 = x * Math.sin(theta) + z * Math.cos(theta);
+                                let y2 = y * Math.cos(theta) - z1 * Math.sin(theta);
+                                let z2 = y * Math.sin(theta) + z1 * Math.cos(theta);
+                                let fov = 350;
+                                let depthFactor = fov / (fov + z2 + 220);
+                                return [canvas.width/2 + x1 * depthFactor, canvas.height/2 + y2 * depthFactor];
                             });
 
-                            let edges = [
+                            let wireframes = [
                                 [0,1],[1,2],[2,3],[3,0],
                                 [4,5],[5,6],[6,7],[7,4],
                                 [0,4],[1,5],[2,6],[3,7]
                             ];
 
-                            edges.forEach(e => {
+                            wireframes.forEach(w => {
                                 ctx.beginPath();
-                                ctx.moveTo(projected[e[0]][0], projected[e[0]][1]);
-                                ctx.lineTo(projected[e[1]][0], projected[e[1]][1]);
+                                ctx.moveTo(projected[w[0]][0], projected[w[0]][1]);
+                                ctx.lineTo(projected[w[1]][0], projected[w[1]][1]);
                                 ctx.stroke();
                             });
 
-                            angle += 0.02;
-                            requestAnimationFrame(drawCube);
+                            theta += 0.025;
+                            requestAnimationFrame(renderLoop);
                         }
-                        drawCUBE();
+                        renderLoop();
                     <\/script>
                 </body>
             `);
             doc.close();
         }
 
-        // --- 6. RAYMARCHING 60-120 FPS ENGINE CORE ---
-        function loadRaymarchEngine() {
-            const frame = document.getElementById('main-frame');
-            const badge = document.getElementById('status-badge');
-            badge.innerText = "STATUS: RAYMARCHER CORE ENGAGED";
-            updateActiveNav(event.currentTarget);
+        function loadRaymarchShaderCore() {
+            const frame = document.getElementById('viewport');
+            const hud = document.getElementById('hud-status');
+            hud.innerText = "STATUS: RAYMARCHING PIPELINE ACTIVE";
+            updateNavigationState(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#0a0c10;color:#00ffcc;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
-                    <h2 style="letter-spacing:2px;">RAYMARCHING ACCELERATOR</h2>
-                    <p style="color:#64748b;margin-top:5px;">Shader pipeline active at optimized resolution scaling.</p>
-                    <div style="margin-top:20px;width:120px;height:120px;border:2px dashed #00ffcc;border-radius:50%;animation: pulse 1.5s ease-in-out infinite;"></div>
-                    <style>@keyframes pulse { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; box-shadow:0 0 30px #00ffcc; } 100% { transform: scale(0.9); opacity: 0.5; } }</style>
+                <body style="background:#020406;color:#00ffcc;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
+                    <h2 style="letter-spacing:2px;margin-bottom:8px;">RAYMARCH ACCELERATOR PIPELINE</h2>
+                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Signed Distance Field (SDF) evaluation loop executing at 120Hz sync.</p>
+                    <div style="width:140px;height:140px;border:2px dashed #00ffcc;border-radius:50%;animation: rotateRing 2s linear infinite;"></div>
+                    <style>@keyframes rotateRing { 0% { transform: rotate(0deg) scale(0.95); box-shadow: 0 0 10px rgba(0,255,204,0.2); } 50% { transform: rotate(180deg) scale(1.05); box-shadow: 0 0 35px rgba(0,255,204,0.4); } 100% { transform: rotate(360deg) scale(0.95); box-shadow: 0 0 10px rgba(0,255,204,0.2); } }</style>
                 </body>
             `);
             doc.close();
         }
 
-        // --- 7. ADMIN TERMINAL & CLI MODULE ---
-        function loadAdminTerminal() {
-            const frame = document.getElementById('main-frame');
-            const badge = document.getElementById('status-badge');
-            badge.innerText = "STATUS: ADMINISTRATIVE CLI ACTIVE";
-            updateActiveNav(event.currentTarget);
+        function loadParticlePhysicsSim() {
+            const frame = document.getElementById('viewport');
+            const hud = document.getElementById('hud-status');
+            hud.innerText = "STATUS: PARTICLE DYNAMICS SIMULATOR";
+            updateNavigationState(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#0a0c10;color:#00ffcc;font-family:monospace;padding:25px;margin:0;">
-                    <h3 style="margin-bottom:10px;">SYS_ADMIN // TERMINAL INTERFACE v1.7.5</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Type 'help' for available system commands.</p>
-                    <div id="terminal-output" style="height:calc(100vh - 140px);overflow-y:auto;font-size:0.9rem;line-height:1.5;margin-bottom:15px;">
-                        <div style="color:#64748b;">[System Boot Initialized...]</div>
-                        <div style="color:#64748b;">[Secure Storage Verified...]</div>
-                    </div>
-                    <div style="display:flex;gap:10px;border-top:1px solid #1e2634;padding-top:15px;">
-                        <span style="color:#00ffcc;">root@sys:~#</span>
-                        <input type="text" id="cli-input" autofocus style="background:transparent;border:none;color:#e2e8f0;font-family:monospace;flex:1;outline:none;font-size:0.95rem;" />
-                    </div>
+                <body style="background:#020406;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;">
+                    <canvas id="particleCanvas" width="900" height="550" style="border:1px solid #1a2230;background:#020406;"></canvas>
                     <script>
-                        const output = document.getElementById('terminal-output');
-                        const input = document.getElementById('cli-input');
+                        const canvas = document.getElementById('particleCanvas');
+                        const ctx = canvas.getContext('2d');
+                        let particles = [];
                         
-                        input.addEventListener('keydown', function(e) {
-                            if (e.key === 'Enter') {
-                                let cmd = input.value.trim();
-                                output.innerHTML += '<div style="color:#e2e8f0;">root@sys:~# ' + cmd + '</div>';
-                                
-                                if (cmd === 'help') {
-                                    output.innerHTML += '<div style="color:#64748b;">Available Commands: clear, fps, status, panic, reset</div>';
-                                } else if (cmd === 'clear') {
-                                    output.innerHTML = '';
-                                } else if (cmd === 'fps') {
-                                    output.innerHTML += '<div style="color:#00ffcc;">Current framerate locked at 120Hz hard-cap.</div>';
-                                } else if (cmd === 'panic') {
-                                    output.innerHTML += '<div style="color:#ef4444;">Press the tilde key [\` ] to mask viewport instantly.</div>';
-                                } else {
-                                    output.innerHTML += '<div style="color:#ef4444;">Command not recognized: ' + cmd + '</div>';
-                                }
-                                
-                                input.value = '';
-                                output.scrollTop = output.scrollHeight;
-                            }
-                        });
-                    <\/script>
-                </body>
-            `);
-            doc.close();
-        }
-
-        // --- 8. LOCAL STORAGE P2P MESSAGING SYSTEM ---
-        function loadP2PChatModule() {
-            const frame = document.getElementById('main-frame');
-            const badge = document.getElementById('status-badge');
-            badge.innerText = "STATUS: LOCAL STORAGE P2P CHAT";
-            updateActiveNav(event.currentTarget);
-
-            let doc = frame.contentDocument || frame.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <body style="background:#0a0c10;color:#e2e8f0;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
-                    <h3 style="color:#00ffcc;margin-bottom:5px;">P2P SECURE NODE CHAT</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Zero external server logging. Local storage packet routing.</p>
-                    <div id="chat-box" style="flex:1;border:1px solid #1e2634;background:#12161f;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;">
-                        <div style="color:#64748b;font-size:0.8rem;">[Node Connected Successfully]</div>
-                    </div>
-                    <div style="display:flex;gap:10px;">
-                        <input type="text" id="chat-input" placeholder="Type broadcast message..." style="flex:1;background:#12161f;border:1px solid #1e2634;color:#e2e8f0;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
-                        <button onclick="sendMsg()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;border-radius:4px;">SEND</button>
-                    </div>
-                    <script>
-                        function sendMsg() {
-                            let input = document.getElementById('chat-input');
-                            let box = document.getElementById('chat-box');
-                            if(input.value.trim() !== '') {
-                                box.innerHTML += '<div style="margin-top:8px;"><span style="color:#00ffcc;">[User]:</span> ' + input.value + '</div>';
-                                input.value = '';
-                                box.scrollTop = box.scrollHeight;
-                            }
+                        for(let i=0; i<300; i++) {
+                            particles.push({
+                                x: Math.random() * canvas.width,
+                                y: Math.random() * canvas.height,
+                                vx: (Math.random() - 0.5) * 3,
+                                vy: (Math.random() - 0.5) * 3
+                            });
                         }
+
+                        function updateParticles() {
+                            ctx.fillStyle = 'rgba(2, 4, 6, 0.25)';
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                            ctx.fillStyle = '#00ffcc';
+                            particles.forEach(p => {
+                                p.x += p.vx;
+                                p.y += p.vy;
+                                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                                ctx.fillRect(p.x, p.y, 2, 2);
+                            });
+                            requestAnimationFrame(updateParticles);
+                        }
+                        updateParticles();
                     <\/script>
                 </body>
             `);
             doc.close();
         }
 
-        function updateActiveNav(element) {
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            if(element) element.classList.add('active');
-        }
+        // Initialize default screen on load
+        window.onload = loadDashboardHome;
     </script>
 </body>
 </html>
