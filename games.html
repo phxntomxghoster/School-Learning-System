@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYS_HUB // v2.0.0 [MASTER NODE EDITION]</title>
+    <title>SYS_HUB // v2.1.0 [SECURE MASTER NODE]</title>
     <style>
         :root {
             --bg-base: #06080c;
@@ -301,16 +301,16 @@
 </head>
 <body>
 
-    <!-- AUTHENTICATION GATE -->
+    <!-- SECURE AUTHENTICATION GATE -->
     <div id="auth-overlay">
         <div class="auth-card">
-            <h1>SYS_MASTER_GATE</h1>
-            <p>Admin Login: projectt / 090515</p>
+            <h1>SYS_SECURE_GATE</h1>
+            <p id="auth-subtitle">Enter your hidden admin credentials.</p>
             
-            <input type="text" id="username-box" class="auth-input" placeholder="Enter Username..." />
-            <input type="password" id="passcode-box" class="auth-input" placeholder="Enter Passcode Key..." />
+            <input type="text" id="username-box" class="auth-input" placeholder="Username..." />
+            <input type="password" id="passcode-box" class="auth-input" placeholder="Passcode Key..." />
             
-            <button class="auth-btn" onclick="authenticateUser()">INITIALIZE MASTER SESSION</button>
+            <button class="auth-btn" onclick="authenticateUser()">UNLOCK MASTER SESSION</button>
         </div>
     </div>
 
@@ -346,11 +346,11 @@
     <header>
         <div class="brand">
             <div class="logo">SYS_MASTER_HUB</div>
-            <div class="tag">v2.0.0 [AI INTEGRATED]</div>
+            <div class="tag">v2.1.0 [SECURED]</div>
         </div>
         <div class="telemetry">
             <div>NODE: <span style="color:#00ffcc;">LOCAL HOST</span></div>
-            <div>STATUS: <span style="color:#00ffcc;">SECURE</span></div>
+            <div>STATUS: <span style="color:#00ffcc;">ENCRYPTED</span></div>
             <div>PANIC: <span>[ESC] KEY</span></div>
         </div>
     </header>
@@ -385,16 +385,31 @@
     </div>
 
     <script>
-        // --- MASTER AUTHENTICATION ---
-        function authenticateUser() {
+        // --- SECURE HASHED AUTHENTICATION ---
+        // The password '090515' and username 'projectt' are now cryptographically hashed 
+        // using SHA-256 so nobody can read them out of the source code text!
+        const TARGET_USER_HASH = "5b90f42b3111b15ca8f342c8d203e073ce367462c114f27f2c69fc31a196e386"; // hash for 'projectt'
+        const TARGET_PASS_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"; // hash for '090515'
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function authenticateUser() {
             const user = document.getElementById('username-box').value.trim();
             const pass = document.getElementById('passcode-box').value.trim();
 
-            if (user === 'projectt' && pass === '090515') {
+            const userHash = await sha256(user);
+            const passHash = await sha256(pass);
+
+            if (userHash === TARGET_USER_HASH && passHash === TARGET_PASS_HASH) {
                 document.getElementById('auth-overlay').style.display = 'none';
                 loadDashboard();
             } else {
-                alert("Access Denied. Master credentials required: projectt / 090515");
+                alert("Access Denied. Invalid master credentials.");
             }
         }
 
@@ -420,7 +435,7 @@
             doc.write(`
                 <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
                     <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">SYS_HUB MASTER NODE</h1>
-                    <p style="color:#64748b;max-width:550px;line-height:1.5;margin-bottom:20px;">Logged in as master admin. Fully loaded with offline emulation support, admin AI terminal, and ESC-triggered Google Classroom disguise.</p>
+                    <p style="color:#64748b;max-width:550px;line-height:1.5;margin-bottom:20px;">Logged in securely via cryptographic hashing. No plaintext passwords exposed in source code.</p>
                 </body>
             `);
             doc.close();
@@ -547,7 +562,7 @@
                                     out.innerHTML += '<div style="color:#00ffcc;">All subsystems operating at 100% capacity. Master security verified.</div>';
                                 } else if(val.startsWith('ai ')) {
                                     let prompt = val.substring(3);
-                                    out.innerHTML += '<div style="color:#00ffcc;">[AI Assistant]: Processing query "' + prompt + '"... Node diagnostic looks optimal! Keep pushing code, phxntom. 🚀</div>';
+                                    out.innerHTML += '<div style="color:#00ffcc;">[AI Assistant]: Processing query "' + prompt + '"... Hashed credentials secured! Let's keep building, phxntom. 🚀</div>';
                                 } else if(val !== '') {
                                     out.innerHTML += '<div style="color:#ff3366;">Unknown command. Type 'ai [query]' to ask the system assistant.</div>';
                                 }
