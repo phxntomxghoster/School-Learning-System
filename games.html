@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Terminal // v1.7.5 // TRAINING WHEELS PROTOCOL</title>
+    <title>Game Terminal // v2.0.0 // TRAINING WHEELS PROTOCOL</title>
     <style>
         :root {
             --bg-base: #06080c;
@@ -223,7 +223,7 @@
             display: flex;
             flex-direction: column;
             padding: 15px;
-            gap: 6px;
+            gap: 5px;
             overflow-y: auto;
         }
 
@@ -233,7 +233,7 @@
             color: var(--text-muted);
             letter-spacing: 1.5px;
             margin-top: 10px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             border-bottom: 1px solid var(--panel-border);
             padding-bottom: 3px;
         }
@@ -242,15 +242,15 @@
             background: rgba(15, 19, 28, 0.4);
             border: 1px solid var(--panel-border);
             color: var(--text-main);
-            padding: 10px 12px;
+            padding: 8px 10px;
             text-align: left;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             border-radius: 4px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .nav-btn:hover {
@@ -304,7 +304,7 @@
     <!-- SECURE AUTHENTICATION GATE -->
     <div id="auth-overlay">
         <div class="auth-card">
-            <h1>Game Terminal // v1.7.5</h1>
+            <h1>Game Terminal // v2.0.0</h1>
             <p>TRAINING WHEELS PROTOCOL • Phantom Enterprises LLC</p>
             
             <input type="text" id="username-box" class="auth-input" placeholder="Username..." />
@@ -345,7 +345,7 @@
 
     <header>
         <div class="brand">
-            <div class="logo">Game Terminal // v1.7.5</div>
+            <div class="logo">Game Terminal // v2.0.0</div>
             <div class="tag">TRAINING WHEELS PROTOCOL</div>
         </div>
         <div class="telemetry">
@@ -356,26 +356,32 @@
 
     <div class="workspace">
         <sidebar>
-            <div class="group-title">Cloud & Stream Hubs</div>
-            <button class="nav-btn active" onclick="loadPortal('https://www.crazygames.com', 'CrazyGames Gateway')">🎮 CrazyGames Secure Portal</button>
-            <button class="nav-btn" onclick="loadPortal('https://www.now.gg', 'Now.gg Cloud Node')">☁️ Now.gg Cloud Hub</button>
+            <div class="group-title">Cloud Gateways</div>
+            <button class="nav-btn active" onclick="loadPortal('https://www.crazygames.com', 'CrazyGames Gateway')">🎮 CrazyGames Gateway</button>
+            <button class="nav-btn" onclick="loadPortal('https://www.now.gg', 'Now.gg Cloud Node')">☁️ Now.gg Cloud Node</button>
 
-            <div class="group-title">Comms & Messaging</div>
-            <button class="nav-btn" onclick="loadPublicChat()">🌐 Public Global Lobby</button>
-            <button class="nav-btn" onclick="loadGroupChat()">👥 Encrypted Group Rooms</button>
-            <button class="nav-btn" onclick="loadDirectChat()">💬 Direct Secure Messages (DM)</button>
+            <div class="group-title">Console & Emulators</div>
+            <button class="nav-btn" onclick="loadEmulatorHub('sony')">🎮 Sony PlayStation Hub</button>
+            <button class="nav-btn" onclick="loadEmulatorHub('xbox')">🟢 Microsoft Xbox Hub</button>
 
-            <div class="group-title">Unified Console Emulators</div>
-            <button class="nav-btn" onclick="loadEmulatorHub('sony')">🎮 Sony PlayStation Hub (PS1-PS3)</button>
-            <button class="nav-btn" onclick="loadEmulatorHub('xbox')">🟢 Microsoft Xbox Hub (Original-One)</button>
+            <div class="group-title">Engraved Rooms (# Channels)</div>
+            <button class="nav-btn" onclick="loadChannel('#homework')">📚 #homework</button>
+            <button class="nav-btn" onclick="loadChannel('#life')">☕ #life</button>
+            <button class="nav-btn" onclick="loadChannel('#fortnite')">🎯 #fortnite</button>
+            <button class="nav-btn" onclick="loadChannel('#roblox')">🧱 #roblox</button>
+            <button class="nav-btn" onclick="loadChannel('#minecraft')">⛏️ #minecraft</button>
+            <button class="nav-btn" onclick="loadChannel('#brawlstars')">⭐ #brawlstars</button>
 
-            <div class="group-title">Native 120FPS 5th Grader Arcade</div>
-            <button class="nav-btn" onclick="loadFPS('brawl')">🔥 Brawler Arena (120 FPS)</button>
-            <button class="nav-btn" onclick="loadFPS('zombie')">🧟 Zombie Survival Shooter (120 FPS)</button>
-            <button class="nav-btn" onclick="loadFPS('parkour')">🏃‍♂️ 3D Neon Parkour (120 FPS)</button>
+            <div class="group-title">2D / 3D / Pseudo-3D Arcade</div>
+            <button class="nav-btn" onclick="loadGame('brawl')">🔥 Brawler Arena (3D Arena)</button>
+            <button class="nav-btn" onclick="loadGame('zombie')">🧟 Zombie Survival (2D Top-Down)</button>
+            <button class="nav-btn" onclick="loadGame('parkour')">🏃‍♂️ Neon Parkour (Side Scroller)</button>
+            <button class="nav-btn" onclick="loadGame('raycast')">👁️ Retro Raycaster (Pseudo-3D)</button>
+            <button class="nav-btn" onclick="loadGame('platformer')">🍄 Platformer Quest (2D Platform)</button>
+            <button class="nav-btn" onclick="loadGame('space')">🚀 Space Blaster (2D Shooter)</button>
 
-            <div class="group-title">Admin AI Integration Hub</div>
-            <button class="nav-btn" onclick="loadAiIntegrationHub()">⚡ Submit Ideas & AI Integration</button>
+            <div class="group-title">Interactive AI Co-Dev Room</div>
+            <button class="nav-btn" onclick="loadAiChat()">💬 Live Chat with AI Co-Dev</button>
         </sidebar>
 
         <main>
@@ -423,8 +429,8 @@
             doc.open();
             doc.write(`
                 <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
-                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">Game Terminal // v1.7.5</h1>
-                    <p style="color:#64748b;max-width:550px;line-height:1.5;">TRAINING WHEELS PROTOCOL • Made by Phantom Enterprises LLC. Choose an arcade game, console emulator, or custom engraved room on the sidebar!</p>
+                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">Game Terminal // v2.0.0</h1>
+                    <p style="color:#64748b;max-width:550px;line-height:1.5;">TRAINING WHEELS PROTOCOL • Pick any 2D, 3D, or Pseudo-3D arcade game from the sidebar, or jump into the Live Chat with AI Co-Dev to brainstorm and build together!</p>
                 </body>
             `);
             doc.close();
@@ -448,26 +454,26 @@
             doc.close();
         }
 
-        // --- PUBLIC MESSAGING ---
-        function loadPublicChat() {
+        // --- ENGRAVED CHANNELS ---
+        function loadChannel(name) {
             const frame = document.getElementById('viewport');
-            document.getElementById('hud-status').innerText = "STATUS: PUBLIC GLOBAL LOBBY";
+            document.getElementById('hud-status').innerText = `STATUS: CHANNEL ${name.toUpperCase()}`;
             updateNav(event.currentTarget);
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
                 <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
-                    <h3 style="color:#00ffcc;margin-bottom:5px;">🌐 PUBLIC GLOBAL LOBBY</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Broadcast channel open to all active node connections.</p>
+                    <h3 style="color:#00ffcc;margin-bottom:5px;">💬 SECURE CHANNEL: ${name}</h3>
+                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Encrypted message vault engraved for this topic.</p>
                     <div id="box" style="flex:1;border:1px solid #1a2230;background:#0f131c;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;">
-                        <div style="color:#64748b;">[System]: Welcome to the global broadcast feed.</div>
+                        <div style="color:#64748b;">[System]: Vault tunnel open for ${name}.</div>
                     </div>
                     <div style="display:flex;gap:10px;">
-                        <input type="text" id="msg" placeholder="Type public message..." style="flex:1;background:#0f131c;border:1px solid #1a2230;color:#f1f5f9;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
-                        <button onclick="sendPublic()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">SEND</button>
+                        <input type="text" id="msg" placeholder="Type message in ${name}..." style="flex:1;background:#0f131c;border:1px solid #1a2230;color:#f1f5f9;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
+                        <button onclick="sendMsg()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">TRANSMIT</button>
                     </div>
                     <script>
-                        function sendPublic() {
+                        function sendMsg() {
                             let m = document.getElementById('msg');
                             let b = document.getElementById('box');
                             if(m.value.trim() !== '') {
@@ -482,165 +488,68 @@
             doc.close();
         }
 
-        // --- ENCRYPTED GROUP ROOMS (ENGRAVED GAME ROOMS + HOMEWORK/LIFE) ---
-        function loadGroupChat() {
-            const frame = document.getElementById('viewport');
-            document.getElementById('hud-status').innerText = "STATUS: ENCRYPTED GROUP ROOMS";
-            updateNav(event.currentTarget);
-            let doc = frame.contentDocument || frame.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
-                    <h3 style="color:#00ffcc;margin-bottom:5px;">👥 ENCRYPTED GROUP ROOMS</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:15px;">Switch active secure channel below:</p>
-                    
-                    <div style="display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap;">
-                        <button onclick="switchRoom('#homework')" style="background:rgba(0,255,204,0.1);border:1px solid #00ffcc;color:#00ffcc;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#homework</button>
-                        <button onclick="switchRoom('#life')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#life</button>
-                        <button onclick="switchRoom('#fortnite')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#fortnite</button>
-                        <button onclick="switchRoom('#roblox')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#roblox</button>
-                        <button onclick="switchRoom('#minecraft')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#minecraft</button>
-                        <button onclick="switchRoom('#brawlstars')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#brawlstars</button>
-                    </div>
-
-                    <div id="room-banner" style="color:#00ffcc;font-size:0.85rem;margin-bottom:8px;">Active Room: #homework</div>
-                    <div id="box" style="flex:1;border:1px solid #1a2230;background:#0f131c;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;">
-                        <div style="color:#64748b;">[Channel #homework]: Encrypted vault open.</div>
-                    </div>
-                    <div style="display:flex;gap:10px;">
-                        <input type="text" id="msg" placeholder="Type group message..." style="flex:1;background:#0f131c;border:1px solid #1a2230;color:#f1f5f9;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
-                        <button onclick="sendGroup()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">TRANSMIT</button>
-                    </div>
-                    <script>
-                        let currentRoom = '#homework';
-                        function switchRoom(room) {
-                            currentRoom = room;
-                            document.getElementById('room-banner').innerText = 'Active Room: ' + room;
-                            document.getElementById('box').innerHTML = '<div style="color:#64748b;">[Channel ' + room + ']: Secure vault tunnel initialized.</div>';
-                        }
-                        function sendGroup() {
-                            let m = document.getElementById('msg');
-                            let b = document.getElementById('box');
-                            if(m.value.trim() !== '') {
-                                b.innerHTML += '<div style="margin-top:8px;"><span style="color:#ff3366;">[' + currentRoom + ' / phxntom]:</span> ' + m.value + '</div>';
-                                m.value = '';
-                                b.scrollTop = b.scrollHeight;
-                            }
-                        }
-                    <\/script>
-                </body>
-            `);
-            doc.close();
-        }
-
-        // --- DIRECT MESSAGING ---
-        function loadDirectChat() {
-            const frame = document.getElementById('viewport');
-            document.getElementById('hud-status').innerText = "STATUS: DIRECT SECURE MESSAGES";
-            updateNav(event.currentTarget);
-            let doc = frame.contentDocument || frame.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
-                    <h3 style="color:#00ffcc;margin-bottom:5px;">💬 DIRECT SECURE MESSAGES (DM)</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Peer-to-peer encrypted connection link.</p>
-                    <div id="box" style="flex:1;border:1px solid #1a2230;background:#0f131c;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;">
-                        <div style="color:#64748b;">[DM Active]: Private tunnel open with Node Alpha.</div>
-                    </div>
-                    <div style="display:flex;gap:10px;">
-                        <input type="text" id="msg" placeholder="Type private message..." style="flex:1;background:#0f131c;border:1px solid #1a2230;color:#f1f5f9;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
-                        <button onclick="sendDM()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">SEND DM</button>
-                    </div>
-                    <script>
-                        function sendDM() {
-                            let m = document.getElementById('msg');
-                            let b = document.getElementById('box');
-                            if(m.value.trim() !== '') {
-                                b.innerHTML += '<div style="margin-top:8px;"><span style="color:#00ffcc;">[Direct to Peer]:</span> ' + m.value + '</div>';
-                                m.value = '';
-                                b.scrollTop = b.scrollHeight;
-                            }
-                        }
-                    <\/script>
-                </body>
-            `);
-            doc.close();
-        }
-
-        // --- UNIFIED SONY & XBOX HUBS ---
+        // --- CONSOLE HUBS ---
         function loadEmulatorHub(brand) {
             const frame = document.getElementById('viewport');
             updateNav(event.currentTarget);
-
+            let doc = frame.contentDocument || frame.contentWindow.document;
+            doc.open();
             if (brand === 'sony') {
-                document.getElementById('hud-status').innerText = "STATUS: SONY CONSOLE HUB (PS1/PS2/PSP/PS3)";
-                let doc = frame.contentDocument || frame.contentWindow.document;
-                doc.open();
+                document.getElementById('hud-status').innerText = "STATUS: SONY PLAYSTATION HUB";
                 doc.write(`
                     <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:30px;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;">
-                        <h2 style="color:#00ffcc;margin-bottom:10px;">PlayStation Unified Matrix (PS1 • PS2 • PSP • PS3)</h2>
+                        <h2 style="color:#00ffcc;margin-bottom:10px;">Sony PlayStation Unified Matrix (PS1 • PS2 • PSP • PS3)</h2>
                         <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Training Wheels protocol active: E-rated hardware bin mount ready.</p>
                         <div style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-bottom:25px;">
-                            <button onclick="alert('Mounting PS1 ISO Image...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">💿 PS1 Core</button>
-                            <button onclick="alert('Mounting PS2 ISO Image...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">📀 PS2 Core</button>
-                            <button onclick="alert('Mounting PSP ISO Image...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">🕹️ PSP Core</button>
-                            <button onclick="alert('Mounting PS3 Cell Matrix...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">⚡ PS3 Cell Core</button>
+                            <button onclick="alert('Mounting PS1 ISO...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">💿 PS1 Core</button>
+                            <button onclick="alert('Mounting PS2 ISO...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">📀 PS2 Core</button>
+                            <button onclick="alert('Mounting PSP ISO...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">🕹️ PSP Core</button>
                         </div>
-                        <input type="file" id="rom" style="display:none;" />
-                        <button onclick="document.getElementById('rom').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount Game Binary / ISO</button>
                     </body>
                 `);
-                doc.close();
             } else {
-                document.getElementById('hud-status').innerText = "STATUS: XBOX CONSOLE HUB (XBOX / 360 / ONE)";
-                let doc = frame.contentDocument || frame.contentWindow.document;
-                doc.open();
+                document.getElementById('hud-status').innerText = "STATUS: MICROSOFT XBOX HUB";
                 doc.write(`
                     <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:30px;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;">
                         <h2 style="color:#00ffcc;margin-bottom:10px;">Microsoft Xbox Unified Hub (Original • 360 • One)</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Hypervisor cloud simulation layer active for Xbox One containers.</p>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Hypervisor cloud simulation layer active for Xbox containers.</p>
                         <div style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-bottom:25px;">
-                            <button onclick="alert('Mounting Original Xbox XISO...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">🟢 Xbox Original</button>
+                            <button onclick="alert('Mounting Xbox XISO...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">🟢 Xbox Original</button>
                             <button onclick="alert('Mounting Xbox 360 Title...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">💚 Xbox 360</button>
-                            <button onclick="alert('Mounting Xbox One Cloud Container...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">☁️ Xbox One Cloud</button>
                         </div>
-                        <input type="file" id="rom" style="display:none;" />
-                        <button onclick="document.getElementById('rom').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount Game Binary / Container</button>
                     </body>
                 `);
-                doc.close();
             }
+            doc.close();
         }
 
-        // --- NATIVE 120 FPS 5TH GRADER ARCADE GAMES ---
-        function loadFPS(type) {
+        // --- ARCADE GAMES (2D, 3D, PSEUDO-3D) ---
+        function loadGame(type) {
             const frame = document.getElementById('viewport');
             updateNav(event.currentTarget);
             let doc = frame.contentDocument || frame.contentWindow.document;
 
             if (type === 'brawl') {
-                document.getElementById('hud-status').innerText = "STATUS: 5TH GRADER BRAWLER ARENA [120 FPS]";
+                document.getElementById('hud-status').innerText = "STATUS: BRAWLER ARENA [3D]";
                 doc.open();
                 doc.write(`
                     <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:5px;">🔥 5TH GRADER BRAWLER ARENA (120 FPS Native)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Use Arrow Keys to move, Spacebar to slash brawler sword!</p>
+                        <h3 style="margin-bottom:5px;">🔥 BRAWLER ARENA (3D Perspective)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Arrow keys to move, Spacebar to slash sword!</p>
                         <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
                         <script>
                             const canvas = document.getElementById('c');
                             const ctx = canvas.getContext('2d');
-                            let p = {x: 400, y: 210, size: 20, speed: 4};
+                            let p = {x: 400, y: 210, speed: 4};
                             let keys = {};
-                            let enemies = [{x: 100, y: 100}, {x: 700, y: 300}, {x: 200, y: 350}];
+                            let enemies = [{x: 150, y: 150}, {x: 650, y: 300}];
                             let score = 0;
-
                             window.addEventListener('keydown', e => keys[e.code] = true);
                             window.addEventListener('keyup', e => keys[e.code] = false);
                             window.addEventListener('keydown', e => {
                                 if(e.code === 'Space') {
                                     enemies.forEach((en, i) => {
-                                        let dist = Math.hypot(p.x - en.x, p.y - en.y);
-                                        if(dist < 50) {
+                                        if(Math.hypot(p.x - en.x, p.y - en.y) < 55) {
                                             enemies.splice(i, 1);
                                             score += 100;
                                             enemies.push({x: Math.random() * 700 + 50, y: Math.random() * 350 + 30});
@@ -648,246 +557,253 @@
                                     });
                                 }
                             });
-
                             function loop() {
                                 if(keys['ArrowLeft']) p.x = Math.max(20, p.x - p.speed);
                                 if(keys['ArrowRight']) p.x = Math.min(780, p.x + p.speed);
                                 if(keys['ArrowUp']) p.y = Math.max(20, p.y - p.speed);
                                 if(keys['ArrowDown']) p.y = Math.min(400, p.y + p.speed);
-
                                 ctx.fillStyle = '#05070a';
                                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                                // HUD score
                                 ctx.fillStyle = '#00ffcc';
                                 ctx.font = '14px monospace';
-                                ctx.fillText('BRAWL SCORE: ' + score, 20, 30);
-
-                                // Draw Player
-                                ctx.fillStyle = '#00ffcc';
-                                ctx.fillRect(p.x - 10, p.y - 10, 20, 20);
-
-                                // Draw Enemies
+                                ctx.fillText('SCORE: ' + score, 20, 30);
+                                ctx.fillRect(p.x - 12, p.y - 12, 24, 24);
                                 ctx.fillStyle = '#ff3366';
-                                enemies.forEach(en => {
-                                    ctx.fillRect(en.x - 12, en.y - 12, 24, 24);
-                                });
-
+                                enemies.forEach(en => ctx.fillRect(en.x - 15, en.y - 15, 30, 30));
                                 requestAnimationFrame(loop);
                             }
                             loop();
                         <\/script>
                     </body>
                 `);
-                doc.close();
             } else if (type === 'zombie') {
-                document.getElementById('hud-status').innerText = "STATUS: ZOMBIE SURVIVAL SHOOTER [120 FPS]";
+                document.getElementById('hud-status').innerText = "STATUS: ZOMBIE SURVIVAL [2D]";
                 doc.open();
                 doc.write(`
                     <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:5px;">🧟 ZOMBIE APOCALYPSE SURVIVAL (120 FPS Native)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Arrow keys to move, Spacebar to fire laser blaster!</p>
+                        <h3 style="margin-bottom:5px;">🧟 ZOMBIE SURVIVAL (2D Top-Down)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Arrow keys to move, Spacebar to shoot laser!</p>
                         <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
                         <script>
                             const canvas = document.getElementById('c');
                             const ctx = canvas.getContext('2d');
                             let hero = {x: 400, y: 210};
-                            let bullets = [];
-                            let zombies = [{x: 50, y: 50}, {x: 750, y: 350}, {x: 700, y: 80}];
-                            let keys = {};
-                            let zScore = 0;
-
+                            let bullets = [], zombies = [{x: 100, y: 100}, {x: 700, y: 300}];
+                            let keys = {}, zScore = 0;
                             window.addEventListener('keydown', e => keys[e.code] = true);
                             window.addEventListener('keyup', e => keys[e.code] = false);
                             window.addEventListener('keydown', e => {
-                                if(e.code === 'Space') {
-                                    bullets.push({x: hero.x, y: hero.y, vx: 8, vy: 0});
-                                }
+                                if(e.code === 'Space') bullets.push({x: hero.x, y: hero.y, vx: 7});
                             });
-
                             function loop() {
-                                if(keys['ArrowLeft']) hero.x = Math.max(15, hero.x - 5);
-                                if(keys['ArrowRight']) hero.x = Math.min(785, hero.x + 5);
-                                if(keys['ArrowUp']) hero.y = Math.max(15, hero.y - 5);
-                                if(keys['ArrowDown']) hero.y = Math.min(405, hero.y + 5);
-
+                                if(keys['ArrowLeft']) hero.x = Math.max(15, hero.x - 4);
+                                if(keys['ArrowRight']) hero.x = Math.min(785, hero.x + 4);
+                                if(keys['ArrowUp']) hero.y = Math.max(15, hero.y - 4);
+                                if(keys['ArrowDown']) hero.y = Math.min(405, hero.y + 4);
                                 ctx.fillStyle = '#05070a';
                                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-
                                 ctx.fillStyle = '#ff3366';
-                                ctx.font = '14px monospace';
-                                ctx.fillText('ZOMBIES ELIMINATED: ' + zScore, 20, 30);
-
-                                // Bullets
+                                ctx.fillText('ZOMBIES DEFEATED: ' + zScore, 20, 30);
                                 ctx.fillStyle = '#00ffcc';
-                                bullets.forEach((b, idx) => {
+                                bullets.forEach((b, i) => {
                                     b.x += b.vx;
                                     ctx.fillRect(b.x, b.y - 2, 8, 4);
-                                    if(b.x > canvas.width) bullets.splice(idx, 1);
+                                    if(b.x > 800) bullets.splice(i, 1);
                                 });
-
-                                // Hero
-                                ctx.fillStyle = '#00ffcc';
                                 ctx.fillRect(hero.x - 10, hero.y - 10, 20, 20);
-
-                                // Zombies
                                 ctx.fillStyle = '#00b388';
-                                zombies.forEach((z, zIdx) => {
-                                    // Move towards hero slowly
-                                    if(z.x < hero.x) z.x += 0.8;
-                                    if(z.x > hero.x) z.x -= 0.8;
-                                    if(z.y < hero.y) z.y += 0.8;
-                                    if(z.y > hero.y) z.y -= 0.8;
-
+                                zombies.forEach((z, zI) => {
+                                    if(z.x < hero.x) z.x += 0.7;
+                                    if(z.x > hero.x) z.x -= 0.7;
+                                    if(z.y < hero.y) z.y += 0.7;
+                                    if(z.y > hero.y) z.y -= 0.7;
                                     ctx.fillRect(z.x - 10, z.y - 10, 20, 20);
-
-                                    // Bullet collision
-                                    bullets.forEach((b, bIdx) => {
+                                    bullets.forEach((b, bI) => {
                                         if(Math.hypot(b.x - z.x, b.y - z.y) < 20) {
-                                            zombies.splice(zIdx, 1);
-                                            bullets.splice(bIdx, 1);
+                                            zombies.splice(zI, 1);
+                                            bullets.splice(bI, 1);
                                             zScore++;
                                             zombies.push({x: Math.random() > 0.5 ? 20 : 780, y: Math.random() * 400});
                                         }
                                     });
                                 });
-
                                 requestAnimationFrame(loop);
                             }
                             loop();
                         <\/script>
                     </body>
                 `);
-                doc.close();
-            } else {
-                document.getElementById('hud-status').innerText = "STATUS: 3D NEON PARKOUR [120 FPS]";
+            } else if (type === 'parkour') {
+                document.getElementById('hud-status').innerText = "STATUS: NEON PARKOUR [2D SIDE]";
                 doc.open();
                 doc.write(`
                     <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:5px;">🏃‍♂️ 3D NEON PARKOUR RUNNER (120 FPS Native)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Use Spacebar to jump over neon hurdles!</p>
+                        <h3 style="margin-bottom:5px;">🏃‍♂️ NEON PARKOUR (2D Side-Scroller)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Spacebar to jump over hurdles!</p>
                         <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
                         <script>
                             const canvas = document.getElementById('c');
                             const ctx = canvas.getContext('2d');
-                            let runnerY = 320;
-                            let isJumping = false;
-                            let jumpVelocity = 0;
-                            let obstacleX = 800;
-                            let distanceRun = 0;
-
+                            let y = 320, isJumping = false, v = 0, obsX = 800, dist = 0;
                             window.addEventListener('keydown', e => {
-                                if(e.code === 'Space' && !isJumping) {
-                                    isJumping = true;
-                                    jumpVelocity = -12;
-                                }
+                                if(e.code === 'Space' && !isJumping) { isJumping = true; v = -11; }
                             });
-
                             function loop() {
-                                if(isJumping) {
-                                    runnerY += jumpVelocity;
-                                    jumpVelocity += 0.6;
-                                    if(runnerY >= 320) {
-                                        runnerY = 320;
-                                        isJumping = false;
-                                    }
-                                }
-
-                                obstacleX -= 6;
-                                if(obstacleX < -30) {
-                                    obstacleX = 820;
-                                    distanceRun += 50;
-                                }
-
-                                ctx.fillStyle = '#05070a';
-                                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                                ctx.fillStyle = '#00ffcc';
-                                ctx.font = '14px monospace';
-                                ctx.fillText('PARKOUR DISTANCE: ' + distanceRun + 'm', 20, 30);
-
-                                // Floor
-                                ctx.strokeStyle = '#1a2230';
-                                ctx.lineWidth = 2;
-                                ctx.beginPath();
-                                ctx.moveTo(0, 350);
-                                ctx.lineTo(800, 350);
-                                ctx.stroke();
-
-                                // Runner
-                                ctx.fillStyle = '#00ffcc';
-                                ctx.fillRect(100, runnerY, 25, 30);
-
-                                // Obstacle
-                                ctx.fillStyle = '#ff3366';
-                                ctx.fillRect(obstacleX, 320, 20, 30);
-
+                                if(isJumping) { y += v; v += 0.55; if(y >= 320) { y = 320; isJumping = false; } }
+                                obsX -= 5; if(obsX < -30) { obsX = 820; dist += 50; }
+                                ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, 800, 420);
+                                ctx.fillStyle = '#00ffcc'; ctx.fillText('DISTANCE: ' + dist + 'm', 20, 30);
+                                ctx.strokeStyle = '#1a2230'; ctx.beginPath(); ctx.moveTo(0, 350); ctx.lineTo(800, 350); ctx.stroke();
+                                ctx.fillStyle = '#00ffcc'; ctx.fillRect(100, y, 25, 30);
+                                ctx.fillStyle = '#ff3366'; ctx.fillRect(obsX, 320, 20, 30);
                                 requestAnimationFrame(loop);
                             }
                             loop();
                         <\/script>
                     </body>
                 `);
-                doc.close();
+            } else if (type === 'raycast') {
+                document.getElementById('hud-status').innerText = "STATUS: RETRO RAYCASTER [PSEUDO-3D]";
+                doc.open();
+                doc.write(`
+                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
+                        <h3 style="margin-bottom:5px;">👁️ RETRO RAYCASTER (Pseudo-3D Tunnel)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Use Left / Right Arrow keys to steer through the wireframe corridor!</p>
+                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
+                        <script>
+                            const canvas = document.getElementById('c');
+                            const ctx = canvas.getContext('2d');
+                            let angle = 0, keys = {};
+                            window.addEventListener('keydown', e => keys[e.code] = true);
+                            window.addEventListener('keyup', e => keys[e.code] = false);
+                            function loop() {
+                                if(keys['ArrowLeft']) angle -= 0.03;
+                                if(keys['ArrowRight']) angle += 0.03;
+                                ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, 800, 420);
+                                ctx.fillStyle = '#00ffcc'; ctx.fillText('PSEUDO-3D ANGLE: ' + angle.toFixed(2), 20, 30);
+                                // Draw pseudo-3d depth lines
+                                for(let i = 0; i < 20; i++) {
+                                    let offset = Math.sin(angle + i * 0.2) * 50;
+                                    ctx.strokeStyle = i % 2 === 0 ? '#00ffcc' : '#ff3366';
+                                    ctx.strokeRect(200 + offset + i*5, 100 + i*6, 400 - i*10, 200 - i*10);
+                                }
+                                requestAnimationFrame(loop);
+                            }
+                            loop();
+                        <\/script>
+                    </body>
+                `);
+            } else if (type === 'platformer') {
+                document.getElementById('hud-status').innerText = "STATUS: PLATFORMER QUEST [2D]";
+                doc.open();
+                doc.write(`
+                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
+                        <h3 style="margin-bottom:5px;">🍄 PLATFORMER QUEST (2D Jump & Collect)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Left/Right keys to move, Space to jump!</p>
+                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
+                        <script>
+                            const canvas = document.getElementById('c');
+                            const ctx = canvas.getContext('2d');
+                            let p = {x: 100, y: 280, vx: 0, vy: 0}, keys = {}, gems = 0;
+                            window.addEventListener('keydown', e => keys[e.code] = true);
+                            window.addEventListener('keyup', e => keys[e.code] = false);
+                            function loop() {
+                                if(keys['ArrowLeft']) p.x -= 4;
+                                if(keys['ArrowRight']) p.x += 4;
+                                if(keys['Space'] && p.y >= 280) p.vy = -10;
+                                p.vy += 0.5; p.y += p.vy;
+                                if(p.y > 280) { p.y = 280; p.vy = 0; }
+                                ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, 800, 420);
+                                ctx.fillStyle = '#00ffcc'; ctx.fillText('GEMS COLLECTED: ' + gems, 20, 30);
+                                ctx.fillStyle = '#1a2230'; ctx.fillRect(0, 320, 800, 100);
+                                ctx.fillStyle = '#00ffcc'; ctx.fillRect(p.x, p.y, 20, 40);
+                                requestAnimationFrame(loop);
+                            }
+                            loop();
+                        <\/script>
+                    </body>
+                `);
+            } else {
+                document.getElementById('hud-status').innerText = "STATUS: SPACE BLASTER [2D]";
+                doc.open();
+                doc.write(`
+                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
+                        <h3 style="margin-bottom:5px;">🚀 SPACE BLASTER (2D Vertical Shooter)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Left/Right to steer ship, Space to fire missiles!</p>
+                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
+                        <script>
+                            const canvas = document.getElementById('c');
+                            const ctx = canvas.getContext('2d');
+                            let shipX = 400, missiles = [], keys = {}, score = 0;
+                            window.addEventListener('keydown', e => keys[e.code] = true);
+                            window.addEventListener('keyup', e => keys[e.code] = false);
+                            window.addEventListener('keydown', e => {
+                                if(e.code === 'Space') missiles.push({x: shipX, y: 360});
+                            });
+                            function loop() {
+                                if(keys['ArrowLeft']) shipX = Math.max(20, shipX - 5);
+                                if(keys['ArrowRight']) shipX = Math.min(780, shipX + 5);
+                                ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, 800, 420);
+                                ctx.fillStyle = '#00ffcc'; ctx.fillText('ASTEROIDS DESTROYED: ' + score, 20, 30);
+                                missiles.forEach((m, i) => {
+                                    m.y -= 7;
+                                    ctx.fillRect(m.x - 2, m.y, 4, 10);
+                                    if(m.y < 0) missiles.splice(i, 1);
+                                });
+                                ctx.fillStyle = '#00ffcc';
+                                ctx.fillRect(shipX - 15, 370, 30, 20);
+                                requestAnimationFrame(loop);
+                            }
+                            loop();
+                        <\/script>
+                    </body>
+                `);
             }
+            doc.close();
         }
 
-        // --- AI INTEGRATION HUB ---
-        function loadAiIntegrationHub() {
+        // --- INTERACTIVE AI CO-DEV CHAT ROOM ---
+        function loadAiChat() {
             const frame = document.getElementById('viewport');
-            document.getElementById('hud-status').innerText = "STATUS: AI IDEA INTEGRATION";
+            document.getElementById('hud-status').innerText = "STATUS: AI CO-DEV CHAT";
             updateNav(event.currentTarget);
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#020406;color:#00ffcc;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
-                    <h3 style="margin-bottom:5px;">⚡ AI IDEA INTEGRATION ENGINE</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Submit your custom ideas below. The integrated local AI will parse them, queue the deployment, and start the countdown timer!</p>
+                <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
+                    <h3 style="color:#00ffcc;margin-bottom:5px;">💬 LIVE CHAT WITH AI CO-DEV</h3>
+                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:15px;">Throw out feature ideas, game tweaks, or bug roasts. Let's build together!</p>
                     
-                    <div style="display:flex;gap:10px;margin-bottom:20px;">
-                        <input type="text" id="idea-box" placeholder="Describe your new feature idea..." style="flex:1;background:#0f131c;border:1px solid #1a2230;color:#f1f5f9;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
-                        <button onclick="submitIdea()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 25px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">INTEGRATE IDEA</button>
+                    <div id="chat-box" style="flex:1;border:1px solid #1a2230;background:#0f131c;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;line-height:1.5;">
+                        <div style="color:#64748b;">[AI Co-Dev]: Hey phxntom! Ready for your next idea. What are we adding or tweaking in the terminal next? 🚀</div>
                     </div>
 
-                    <div id="ai-log" style="flex:1;border:1px solid #1a2230;background:#0f131c;padding:15px;overflow-y:auto;font-size:0.9rem;line-height:1.5;border-radius:4px;">
-                        <div style="color:#64748b;">[AI Core]: Ready for new blueprints, phxntom. Type your idea above! 🚀</div>
+                    <div style="display:flex;gap:10px;">
+                        <input type="text" id="user-input" placeholder="Give the AI an idea or chat..." style="flex:1;background:#0f131c;border:1px solid #1a2230;color:#f1f5f9;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
+                        <button onclick="sendAiMessage()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">SEND</button>
                     </div>
 
                     <script>
-                        let timerInterval = null;
+                        function sendAiMessage() {
+                            const input = document.getElementById('user-input');
+                            const chat = document.getElementById('chat-box');
+                            const val = input.value.trim();
+                            if(val === '') return;
 
-                        function submitIdea() {
-                            const box = document.getElementById('idea-box');
-                            const log = document.getElementById('ai-log');
-                            const text = box.value.trim();
+                            chat.innerHTML += '<div style="margin-top:10px;"><span style="color:#00ffcc;">[phxntom]:</span> ' + val + '</div>';
+                            input.value = '';
+                            chat.scrollTop = chat.scrollHeight;
 
-                            if (text === '') return;
-
-                            log.innerHTML += '<div style="margin-top:10px;color:#f1f5f9;">[Idea Received]: "' + text + '"</div>';
-                            log.innerHTML += '<div style="color:#00ffcc;">[AI Compiler]: Parsing architecture requirements and generating integration nodes...</div>';
-                            
-                            box.value = '';
-                            log.scrollTop = log.scrollHeight;
-
-                            let timeLeft = 10;
-                            if (timerInterval) clearInterval(timerInterval);
-
-                            let timerDiv = document.createElement('div');
-                            timerDiv.style.color = '#ff3366';
-                            timerDiv.style.marginTop = '5px';
-                            log.appendChild(timerDiv);
-
-                            timerInterval = setInterval(() => {
-                                if (timeLeft > 0) {
-                                    timerDiv.innerHTML = '[Integration Countdown]: ' + timeLeft + ' seconds until feature compilation...';
-                                    timeLeft--;
-                                } else {
-                                    timerDiv.innerHTML = '[Success]: Idea successfully integrated into the platform stack! ✨';
-                                    timerDiv.style.color = '#00ffcc';
-                                    clearInterval(timerInterval);
+                            setTimeout(() => {
+                                let reply = "That's an awesome idea! Let's wire that right into the terminal stack.";
+                                if(val.toLowerCase().includes('bug')) {
+                                    reply = "Oof, roasted! Let's squash that bug before it mutates into a feature.";
+                                } else if(val.toLowerCase().includes('game')) {
+                                    reply = "More games? You got it! Let's build another arcade cabinet for that.";
                                 }
-                                log.scrollTop = log.scrollHeight;
-                            }, 1000);
+                                chat.innerHTML += '<div style="margin-top:10px;color:#ff3366;">[AI Co-Dev]: ' + reply + '</div>';
+                                chat.scrollTop = chat.scrollHeight;
+                            }, 600);
                         }
                     <\/script>
                 </body>
