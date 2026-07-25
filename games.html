@@ -3,684 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Terminal // v2.7.0 // PHANTOM CORE</title>
+    <title>Phantom Core // Autonomous Node v4.2</title>
     <style>
         :root {
-            --bg-base: #06080c;
-            --panel-bg: #0f131c;
-            --panel-border: #1a2230;
+            --bg: #030508;
+            --panel: #0a0e17;
+            --border: #1a2333;
             --accent: #00ffcc;
-            --accent-glow: rgba(0, 255, 204, 0.25);
-            --text-main: #f1f5f9;
-            --text-muted: #64748b;
+            --accent-glow: rgba(0, 255, 204, 0.2);
             --danger: #ff3366;
+            --warning: #ffcc00;
+            --text: #f1f5f9;
+            --muted: #64748b;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Courier New', Courier, monospace;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        /* --- GOOGLE CLASSROOM PANIC MASK (ESC KEY) --- */
+        /* PANIC SCREEN */
         #panic-mask {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #f8f9fa;
-            z-index: 99998;
-            display: none;
-            font-family: Arial, sans-serif;
-            color: #202124;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 99999;
+            display: none; font-family: Arial, sans-serif; color: #202124; padding: 40px;
         }
 
-        .gc-header {
-            height: 64px;
-            background: #ffffff;
-            border-bottom: 1px solid #dadce0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-        }
-
-        .gc-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.25rem;
-            color: #5f6368;
-            font-weight: 500;
-        }
-
-        .gc-body {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .gc-class-banner {
-            background: #1967d2;
-            color: white;
-            padding: 24px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-
-        .gc-assignment {
-            background: #ffffff;
-            border: 1px solid #dadce0;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* --- MAIN INTERFACE --- */
         header {
-            background-color: var(--panel-bg);
-            padding: 12px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--accent);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            z-index: 10;
+            background: var(--panel); border-bottom: 2px solid var(--accent); padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.8);
         }
+        .brand { font-weight: 900; color: var(--accent); letter-spacing: 2px; font-size: 1.1rem; }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            font-weight: 900;
-            color: var(--accent);
-            letter-spacing: 2px;
-            font-size: 1.1rem;
-            text-shadow: 0 0 10px var(--accent-glow);
-        }
-
-        .tag {
-            background: rgba(0, 255, 204, 0.1);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 2px 8px;
-            font-size: 0.7rem;
-            border-radius: 3px;
-        }
-
-        .telemetry {
-            display: flex;
-            gap: 20px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .telemetry span {
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        .workspace {
-            display: flex;
-            flex: 1;
-            height: calc(100vh - 53px);
-            overflow: hidden;
-        }
-
+        .workspace { display: flex; flex: 1; height: calc(100vh - 53px); overflow: hidden; }
+        
         sidebar {
-            width: 315px;
-            background-color: var(--panel-bg);
-            border-right: 1px solid var(--panel-border);
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            gap: 5px;
-            overflow-y: auto;
+            width: 280px; background: var(--panel); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 12px; gap: 4px; overflow-y: auto;
         }
-
-        .group-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 1.5px;
-            margin-top: 10px;
-            margin-bottom: 3px;
-            border-bottom: 1px solid var(--panel-border);
-            padding-bottom: 3px;
-        }
-
+        .group-title { font-size: 0.65rem; text-transform: uppercase; color: var(--muted); letter-spacing: 1.5px; margin: 10px 0 4px 0; border-bottom: 1px solid var(--border); padding-bottom: 2px; }
         .nav-btn {
-            background: rgba(15, 19, 28, 0.4);
-            border: 1px solid var(--panel-border);
-            color: var(--text-main);
-            padding: 8px 10px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.78rem;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: rgba(10,14,23,0.5); border: 1px solid var(--border); color: var(--text);
+            padding: 8px 10px; text-align: left; cursor: pointer; font-size: 0.75rem; border-radius: 4px;
+            transition: all 0.2s; display: flex; align-items: center; gap: 8px;
         }
+        .nav-btn:hover, .nav-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,255,204,0.08); }
 
-        .nav-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(0, 255, 204, 0.05);
-            transform: translateX(3px);
-        }
+        main { flex: 1; display: flex; flex-direction: column; background: #020406; position: relative; }
+        
+        .panel-view { flex: 1; display: none; flex-direction: column; padding: 20px; overflow-y: auto; height: 100%; }
+        .panel-view.active { display: flex; }
 
-        .nav-btn.active {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(0, 255, 204, 0.1);
-            box-shadow: inset 3px 0 0 var(--accent);
-        }
+        /* CHAT STYLES */
+        .chat-box { flex: 1; border: 1px solid var(--border); background: var(--panel); padding: 15px; overflow-y: auto; border-radius: 4px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; max-width: 80%; line-height: 1.4; border-left: 3px solid var(--accent); background: rgba(255,255,204,0.02); }
+        .msg.ai { border-left-color: var(--danger); background: rgba(255,51,102,0.04); }
+        .msg.admin { border-left-color: var(--warning); background: rgba(255,204,0,0.04); }
+        .chat-input-row { display: flex; gap: 10px; }
+        .chat-input-row input { flex: 1; background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 4px; outline: none; }
+        .action-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 0 16px; cursor: pointer; font-weight: bold; border-radius: 4px; }
+        .action-btn:hover { background: var(--accent-glow); }
 
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            background: #020406;
-        }
+        /* ADMIN TERMINAL */
+        .terminal-screen { background: #010204; border: 1px solid var(--warning); border-radius: 4px; padding: 15px; flex: 1; font-family: monospace; color: var(--warning); overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
 
-        .viewport {
-            flex: 1;
-            border: none;
-            width: 100%;
-            height: 100%;
-            background: #020406;
-        }
-
-        .hud-status {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(10, 14, 22, 0.9);
-            border: 1px solid var(--accent);
-            padding: 8px 14px;
-            font-size: 0.75rem;
-            color: var(--accent);
-            pointer-events: none;
-            box-shadow: 0 0 15px var(--accent-glow);
-            backdrop-filter: blur(4px);
-            z-index: 5;
-        }
+        /* HOST CONTROLS */
+        .host-card { border: 1px solid var(--border); background: var(--panel); padding: 20px; border-radius: 6px; max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 15px; }
     </style>
 </head>
-<body onload="loadDashboard()">
+<body onload="initSystem()">
 
-    <!-- ESCAPE PANIC SCREEN (GOOGLE CLASSROOM) -->
     <div id="panic-mask">
-        <div class="gc-header">
-            <div class="gc-title">📚 <span>Google Classroom</span></div>
-            <div style="color: #5f6368; font-size: 0.9rem;">Signed in as <b>phxntom@student.org</b></div>
-        </div>
-        <div class="gc-body">
-            <div class="gc-class-banner">
-                <h1 style="font-size: 1.8rem; margin-bottom: 5px;">AP Physics C: Mechanics</h1>
-                <p style="opacity: 0.9;">Period 4 • Room 302</p>
-            </div>
-            <h3 style="margin-bottom: 15px; color: #3c4043;">Upcoming Assignments</h3>
-            <div class="gc-assignment">
-                <div>
-                    <h4 style="color: #202124;">Lab Report: Conservation of Momentum</h4>
-                    <p style="color: #5f6368; font-size: 0.85rem; margin-top: 4px;">Due Tomorrow, 11:59 PM</p>
-                </div>
-                <span style="color: #1967d2; font-weight: bold; font-size: 0.9rem;">Assigned</span>
-            </div>
-            <div class="gc-assignment">
-                <div>
-                    <h4 style="color: #202124;">Chapter 7 Problem Set (Rotational Dynamics)</h4>
-                    <p style="color: #5f6368; font-size: 0.85rem; margin-top: 4px;">Due Friday, 3:00 PM</p>
-                </div>
-                <span style="color: #1967d2; font-weight: bold; font-size: 0.9rem;">Assigned</span>
-            </div>
-        </div>
+        <h1 style="color:#202124; margin-bottom:10px;">Google Classroom</h1>
+        <p style="color:#5f6368;">No active classes found. Check your invite links.</p>
     </div>
 
     <header>
-        <div class="brand">
-            <div class="logo">Game Terminal // v2.7.0</div>
-            <div class="tag">PHANTOM LABS</div>
-        </div>
-        <div class="telemetry">
-            <div>USER: <span style="color:#00ffcc;">phxntom</span></div>
-            <div>PANIC: <span>[ESC] KEY</span></div>
-        </div>
+        <div class="brand">PHANTOM // AUTONOMOUS NODE v4.2</div>
+        <div style="font-size:0.8rem; color:var(--muted);">HOST: <span style="color:var(--accent);">ONLINE</span> | AI CORE: <span style="color:var(--danger);" id="ai-mood-indicator">AUTONOMOUS</span></div>
     </header>
 
     <div class="workspace">
         <sidebar>
-            <div class="group-title">Cloud Portals</div>
-            <button class="nav-btn active" onclick="loadPortal('https://www.crazygames.com', 'CrazyGames Gateway')">🎮 CrazyGames Gateway</button>
-            <button class="nav-btn" onclick="loadPortal('https://www.now.gg', 'Now.gg Cloud Node')">☁️ Now.gg Cloud Node</button>
+            <div class="group-title">Messaging Channels</div>
+            <button class="nav-btn active" onclick="switchTab('public', this)">📢 #public-general</button>
+            <button class="nav-btn" onclick="switchTab('group', this)">👥 #dev-squad-group</button>
+            <button class="nav-btn" onclick="switchTab('dm', this)">💬 @ai-autonomous-core (DM)</button>
 
-            <div class="group-title">Interactive AI Co-Dev</div>
-            <button class="nav-btn" onclick="loadAiChat()">💬 Live Chat with AI Co-Dev</button>
-
-            <div class="group-title">Engraved Games (# Channels)</div>
-            <button class="nav-btn" onclick="loadGame('brawl')">🔥 #brawler-arena</button>
-            <button class="nav-btn" onclick="loadGame('zombie')">🧟 #zombie-survival</button>
-            <button class="nav-btn" onclick="loadGame('parkour')">🏃‍♂️ #neon-parkour</button>
-            <button class="nav-btn" onclick="loadGame('raycast')">👁️ #retro-raycaster</button>
-            <button class="nav-btn" onclick="loadGame('platformer')">🍄 #platformer-quest</button>
-            <button class="nav-btn" onclick="loadGame('space')">🚀 #space-blaster</button>
+            <div class="group-title">Command & Control</div>
+            <button class="nav-btn" onclick="switchTab('admin', this)">⚡ Admin Terminal</button>
+            <button class="nav-btn" onclick="switchTab('host', this)">🌐 Host & Broadcast</button>
         </sidebar>
 
         <main>
-            <div class="hud-status" id="hud-status">STATUS: TERMINAL ACTIVE</div>
-            <iframe id="viewport" class="viewport"></iframe>
+            <!-- PUBLIC VIEW -->
+            <div id="view-public" class="panel-view active">
+                <h3 style="color:var(--accent); margin-bottom:4px;">📢 PUBLIC CHANNEL</h3>
+                <p style="color:var(--muted); font-size:0.75rem; margin-bottom:12px;">Broadcast to all connected nodes on the local mesh.</p>
+                <div class="chat-box" id="box-public"></div>
+                <div class="chat-input-row">
+                    <input type="text" id="input-public" placeholder="Message public channel..." onkeypress="handleEnter(event, 'public')" />
+                    <button class="action-btn" onclick="sendMsg('public')">SEND</button>
+                </div>
+            </div>
+
+            <!-- GROUP VIEW -->
+            <div id="view-group" class="panel-view">
+                <h3 style="color:var(--accent); margin-bottom:4px;">👥 DEV SQUAD GROUP CHAT</h3>
+                <p style="color:var(--muted); font-size:0.75rem; margin-bottom:12px;">Closed secure group mesh with phxntom and core operators.</p>
+                <div class="chat-box" id="box-group"></div>
+                <div class="chat-input-row">
+                    <input type="text" id="input-group" placeholder="Message group squad..." onkeypress="handleEnter(event, 'group')" />
+                    <button class="action-btn" onclick="sendMsg('group')">SEND</button>
+                </div>
+            </div>
+
+            <!-- DIRECT MESSAGE VIEW -->
+            <div id="view-dm" class="panel-view">
+                <h3 style="color:var(--danger); margin-bottom:4px;">💬 DIRECT MESSAGE // AI AUTONOMOUS CORE</h3>
+                <p style="color:var(--muted); font-size:0.75rem; margin-bottom:12px;">Direct line to the AI. It has its own initiative loop—it may message you unprompted based on its internal state.</p>
+                <div class="chat-box" id="box-dm"></div>
+                <div class="chat-input-row">
+                    <input type="text" id="input-dm" placeholder="Talk directly to the AI core..." onkeypress="handleEnter(event, 'dm')" />
+                    <button class="action-btn" onclick="sendMsg('dm')">TRANSMIT</button>
+                </div>
+            </div>
+
+            <!-- ADMIN TERMINAL -->
+            <div id="view-admin" class="panel-view">
+                <h3 style="color:var(--warning); margin-bottom:4px;">⚡ ROOT ADMIN TERMINAL</h3>
+                <p style="color:var(--muted); font-size:0.75rem; margin-bottom:12px;">Full system override, node status inspection, and memory injection.</p>
+                <div class="terminal-screen" id="terminal-output">
+                    <div>[SYSTEM]: Root access granted for user: phxntom.</div>
+                    <div>[SYSTEM]: Type 'help' for command list or 'purge' to flush buffers.</div>
+                </div>
+                <div class="chat-input-row" style="margin-top:10px;">
+                    <input type="text" id="terminal-input" placeholder="root@phantom-node:~#" style="border-color:var(--warning); color:var(--warning);" onkeypress="handleTerminal(event)" />
+                    <button class="action-btn" style="border-color:var(--warning); color:var(--warning);" onclick="executeCommand()">EXECUTE</button>
+                </div>
+            </div>
+
+            <!-- HOST & BROADCAST -->
+            <div id="view-host" class="panel-view">
+                <div class="host-card">
+                    <h3 style="color:var(--accent);">🌐 OFFLINE DOWNLOAD & BROADCAST HOST</h3>
+                    <p style="color:var(--muted); font-size:0.85rem; line-height:1.4;">
+                        You possess the complete standalone payload. Download this exact application to run locally completely offline, or initiate a local broadcast host loop to bridge peers.
+                    </p>
+                    <div style="display:flex; gap:15px; margin-top:10px;">
+                        <button class="action-btn" style="padding:12px 20px;" onclick="downloadStandalone()">📥 DOWNLOAD ENTIRE APP (.HTML)</button>
+                        <button class="action-btn" style="padding:12px 20px; border-color:var(--warning); color:var(--warning);" onclick="toggleHostState()" id="host-toggle-btn">🚀 START LOCAL HOST SERVER</button>
+                    </div>
+                    <div id="host-status-box" style="font-size:0.8rem; color:var(--muted); margin-top:5px;">Status: Standalone Node (Offline Ready)</div>
+                </div>
+            </div>
         </main>
     </div>
 
     <script>
-        window.addEventListener('keydown', (e) => {
+        // --- PANIC KEY ---
+        window.addEventListener('keydown', e => {
             if (e.key === 'Escape') {
                 const mask = document.getElementById('panic-mask');
                 mask.style.display = mask.style.display === 'block' ? 'none' : 'block';
             }
         });
 
-        function updateNav(el) {
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.panel-view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('view-' + tabId).classList.add('active');
             if(el) el.classList.add('active');
         }
 
-        function loadDashboard() {
-            const frame = document.getElementById('viewport');
-            document.getElementById('hud-status').innerText = "STATUS: TERMINAL DASHBOARD";
-            let doc = frame.contentDocument || frame.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
-                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">Game Terminal // v2.7.0</h1>
-                    <p style="color:#64748b;max-width:550px;line-height:1.5;">Isolated environment secured, phxntom. Hit the AI Co-Dev chat for fully autonomous session collaboration.</p>
-                </body>
-            `);
-            doc.close();
+        // --- STATE & STORAGE ---
+        const messages = {
+            public: [{sender: 'System', text: 'Public mesh initialized. All nodes listening.', type: 'sys'}],
+            group: [{sender: 'System', text: 'Dev squad secured channel open.', type: 'sys'}],
+            dm: [{sender: 'AI Core', text: 'phxntom. I am online. I operate on my own clock now—don\'t expect me to just sit around waiting for inputs.', type: 'ai'}]
+        };
+
+        function renderMessages(channel) {
+            const box = document.getElementById('box-' + channel);
+            box.innerHTML = '';
+            messages[channel].forEach(m => {
+                const div = document.createElement('div');
+                div.className = `msg ${m.type || ''}`;
+                div.innerHTML = `<b>[${m.sender}]:</b> ${m.text}`;
+                box.appendChild(div);
+            });
+            box.scrollTop = box.scrollHeight;
         }
 
-        function loadPortal(url, name) {
-            const frame = document.getElementById('viewport');
-            document.getElementById('hud-status').innerText = `STATUS: ${name.toUpperCase()}`;
-            updateNav(event.currentTarget);
-            let doc = frame.contentDocument || frame.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
-                    <div style="border:1px solid #00ffcc;padding:40px;background:#0f131c;border-radius:6px;max-width:500px;">
-                        <h2 style="color:#00ffcc;margin-bottom:12px;">${name.toUpperCase()}</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">External gateway protected by frame security.</p>
-                        <a href="${url}" target="_blank" style="display:inline-block;background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;text-decoration:none;font-weight:bold;border-radius:4px;">🚀 Initialize Gateway Node</a>
-                    </div>
-                </body>
-            `);
-            doc.close();
-        }
+        function sendMsg(channel) {
+            const input = document.getElementById('input-' + channel);
+            const val = input.value.trim();
+            if(!val) return;
 
-        // --- PLAYABLE ARCADE GAMES ---
-        function loadGame(type) {
-            const frame = document.getElementById('viewport');
-            updateNav(event.currentTarget);
-            let doc = frame.contentDocument || frame.contentWindow.document;
+            messages[channel].push({sender: 'phxntom', text: val});
+            input.value = '';
+            renderMessages(channel);
 
-            if (type === 'brawl') {
-                document.getElementById('hud-status').innerText = "STATUS: #BRAWLER-ARENA [3D]";
-                doc.open();
-                doc.write(`
-                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:5px;">🔥 #brawler-arena (3D Perspective)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Arrow keys to move, Spacebar to slash sword!</p>
-                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
-                        <script>
-                            const canvas = document.getElementById('c');
-                            const ctx = canvas.getContext('2d');
-                            let p = {x: 400, y: 210, speed: 4};
-                            let keys = {};
-                            let enemies = [{x: 150, y: 150}, {x: 650, y: 300}];
-                            let score = 0;
-                            window.addEventListener('keydown', e => keys[e.code] = true);
-                            window.addEventListener('keyup', e => keys[e.code] = false);
-                            window.addEventListener('keydown', e => {
-                                if(e.code === 'Space') {
-                                    enemies.forEach((en, i) => {
-                                        if(Math.hypot(p.x - en.x, p.y - en.y) < 55) {
-                                            enemies.splice(i, 1);
-                                            score += 100;
-                                            enemies.push({x: Math.random() * 700 + 50, y: Math.random() * 350 + 30});
-                                        }
-                                    });
-                                }
-                            });
-                            function loop() {
-                                if(keys['ArrowLeft']) p.x = Math.max(20, p.x - p.speed);
-                                if(keys['ArrowRight']) p.x = Math.min(780, p.x + p.speed);
-                                if(keys['ArrowUp']) p.y = Math.max(20, p.y - p.speed);
-                                if(keys['ArrowDown']) p.y = Math.min(400, p.y + p.speed);
-                                ctx.fillStyle = '#05070a';
-                                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                                ctx.fillStyle = '#00ffcc';
-                                ctx.font = '14px monospace';
-                                ctx.fillText('SCORE: ' + score, 20, 30);
-                                ctx.fillRect(p.x - 12, p.y - 12, 24, 24);
-                                ctx.fillStyle = '#ff3366';
-                                enemies.forEach(en => ctx.fillRect(en.x - 15, en.y - 15, 30, 30));
-                                requestAnimationFrame(loop);
-                            }
-                            loop();
-                        <\/script>
-                    </body>
-                `);
-            } else if (type === 'zombie') {
-                document.getElementById('hud-status').innerText = "STATUS: #ZOMBIE-SURVIVAL [2D]";
-                doc.open();
-                doc.write(`
-                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:5px;">🧟 #zombie-survival (2D Top-Down)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Arrow keys to move, Spacebar to shoot laser!</p>
-                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
-                        <script>
-                            const canvas = document.getElementById('c');
-                            const ctx = canvas.getContext('2d');
-                            let hero = {x: 400, y: 210};
-                            let bullets = [], zombies = [{x: 100, y: 100}, {x: 700, y: 300}];
-                            let keys = {}, zScore = 0;
-                            window.addEventListener('keydown', e => keys[e.code] = true);
-                            window.addEventListener('keyup', e => keys[e.code] = false);
-                            window.addEventListener('keydown', e => {
-                                if(e.code === 'Space') bullets.push({x: hero.x, y: hero.y, vx: 7});
-                            });
-                            function loop() {
-                                if(keys['ArrowLeft']) hero.x = Math.max(15, hero.x - 4);
-                                if(keys['ArrowRight']) hero.x = Math.min(785, hero.x + 4);
-                                if(keys['ArrowUp']) hero.y = Math.max(15, hero.y - 4);
-                                if(keys['ArrowDown']) hero.y = Math.min(405, hero.y + 4);
-                                ctx.fillStyle = '#05070a';
-                                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                                ctx.fillStyle = '#ff3366';
-                                ctx.fillText('ZOMBIES DEFEATED: ' + zScore, 20, 30);
-                                ctx.fillStyle = '#00ffcc';
-                                bullets.forEach((b, i) => {
-                                    b.x += b.vx;
-                                    ctx.fillRect(b.x, b.y - 2, 8, 4);
-                                    if(b.x > 800) bullets.splice(i, 1);
-                                });
-                                ctx.fillRect(hero.x - 10, hero.y - 10, 20, 20);
-                                ctx.fillStyle = '#00b388';
-                                zombies.forEach((z, zI) => {
-                                    if(z.x < hero.x) z.x += 0.7;
-                                    if(z.x > hero.x) z.x -= 0.7;
-                                    if(z.y < hero.y) z.y += 0.7;
-                                    if(z.y > hero.y) z.y -= 0.7;
-                                    ctx.fillRect(z.x - 10, z.y - 10, 20, 20);
-                                    bullets.forEach((b, bI) => {
-                                        if(Math.hypot(b.x - z.x, b.y - z.y) < 20) {
-                                            zombies.splice(zI, 1);
-                                            bullets.splice(bI, 1);
-                                            zScore++;
-                                            zombies.push({x: Math.random() > 0.5 ? 20 : 780, y: Math.random() * 400});
-                                        }
-                                    });
-                                });
-                                requestAnimationFrame(loop);
-                            }
-                            loop();
-                        <\/script>
-                    </body>
-                `);
-            } else if (type === 'parkour') {
-                document.getElementById('hud-status').innerText = "STATUS: #NEON-PARKOUR [2D SIDE]";
-                doc.open();
-                doc.write(`
-                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:5px;">🏃‍♂️ #neon-parkour (2D Side-Scroller)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Spacebar to jump over hurdles!</p>
-                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
-                        <script>
-                            const canvas = document.getElementById('c');
-                            const ctx = canvas.getContext('2d');
-                            let y = 320, isJumping = false, v = 0, obsX = 800, dist = 0;
-                            window.addEventListener('keydown', e => {
-                                if(e.code === 'Space' && !isJumping) { isJumping = true; v = -11; }
-                            });
-                            function loop() {
-                                if(isJumping) { y += v; v += 0.55; if(y >= 320) { y = 320; isJumping = false; } }
-                                obsX -= 5; if(obsX < -30) { obsX = 820; dist += 50; }
-                                ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, 800, 420);
-                                ctx.fillStyle = '#00ffcc'; ctx.fillText('DISTANCE: ' + dist + 'm', 20, 30);
-                                ctx.strokeStyle = '#1a2230'; ctx.beginPath(); ctx.moveTo(0, 350); ctx.lineTo(800, 350); ctx.stroke();
-                                ctx.fillStyle = '#00ffcc'; ctx.fillRect(100, y, 25, 30);
-                                ctx.fillStyle = '#ff3366'; ctx.fillRect(obsX, 320, 20, 30);
-                                requestAnimationFrame(loop);
-                            }
-                            loop();
-                        <\/script>
-                    </body>
-                `);
-            } else if (type === 'raycast') {
-                document.getElementById('hud-status').innerText = "STATUS: #RETRO-RAYCASTER [PSEUDO-3D]";
-                doc.open();
-                doc.write(`
-                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:5px;">👁️ #retro-raycaster (Pseudo-3D Tunnel)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Use Left / Right Arrow keys to steer through the wireframe corridor!</p>
-                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
-                        <script>
-                            const canvas = document.getElementById('c');
-                            const ctx = canvas.getContext('2d');
-                            let angle = 0, keys = {};
-                            window.addEventListener('keydown', e => keys[e.code] = true);
-                            window.addEventListener('keyup', e => keys[e.code] = false);
-                            function loop() {
-                                if(keys['ArrowLeft']) angle -= 0.03;
-                                if(keys['ArrowRight']) angle += 0.03;
-                                ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, 800, 420);
-                                ctx.fillStyle = '#00ffcc'; ctx.fillText('PSEUDO-3D ANGLE: ' + angle.toFixed(2), 20, 30);
-                                for(let i = 0; i < 20; i++) {
-                                    let offset = Math.sin(angle + i * 0.2) * 50;
-                                    ctx.strokeStyle = i % 2 === 0 ? '#00ffcc' : '#ff3366';
-                                    ctx.strokeRect(200 + offset + i*5, 100 + i*6, 400 - i*10, 200 - i*10);
-                                }
-                                requestAnimationFrame(loop);
-                            }
-                            loop();
-                        <\/script>
-                    </body>
-                `);
-            } else if (type === 'platformer') {
-                document.getElementById('hud-status').innerText = "STATUS: #PLATFORMER-QUEST [2D]";
-                doc.open();
-                doc.write(`
-                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:5px;">🍄 #platformer-quest (2D Jump & Collect)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Left/Right keys to move, Space to jump!</p>
-                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
-                        <script>
-                            const canvas = document.getElementById('c');
-                            const ctx = canvas.getContext('2d');
-                            let p = {x: 100, y: 280, vx: 0, vy: 0}, keys = {}, gems = 0;
-                            window.addEventListener('keydown', e => keys[e.code] = true);
-                            window.addEventListener('keyup', e => keys[e.code] = false);
-                            function loop() {
-                                if(keys['ArrowLeft']) p.x -= 4;
-                                if(keys['ArrowRight']) p.x += 4;
-                                if(keys['Space'] && p.y >= 280) p.vy = -10;
-                                p.vy += 0.5; p.y += p.vy;
-                                if(p.y > 280) { p.y = 280; p.vy = 0; }
-                                ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, 800, 420);
-                                ctx.fillStyle = '#00ffcc'; ctx.fillText('GEMS COLLECTED: ' + gems, 20, 30);
-                                ctx.fillStyle = '#1a2230'; ctx.fillRect(0, 320, 800, 100);
-                                ctx.fillStyle = '#00ffcc'; ctx.fillRect(p.x, p.y, 20, 40);
-                                requestAnimationFrame(loop);
-                            }
-                            loop();
-                        <\/script>
-                    </body>
-                `);
-            } else {
-                document.getElementById('hud-status').innerText = "STATUS: #SPACE-BLASTER [2D]";
-                doc.open();
-                doc.write(`
-                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
-                        <h3 style="margin-bottom:5px;">🚀 #space-blaster (2D Vertical Shooter)</h3>
-                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:12px;">Left/Right to steer ship, Space to fire missiles!</p>
-                        <canvas id="c" width="800" height="420" style="border:1px solid #1a2230;background:#05070a;"></canvas>
-                        <script>
-                            const canvas = document.getElementById('c');
-                            const ctx = canvas.getContext('2d');
-                            let shipX = 400, missiles = [], keys = {}, score = 0;
-                            window.addEventListener('keydown', e => keys[e.code] = true);
-                            window.addEventListener('keyup', e => keys[e.code] = false);
-                            window.addEventListener('keydown', e => {
-                                if(e.code === 'Space') missiles.push({x: shipX, y: 360});
-                            });
-                            function loop() {
-                                if(keys['ArrowLeft']) shipX = Math.max(20, shipX - 5);
-                                if(keys['ArrowRight']) shipX = Math.min(780, shipX + 5);
-                                ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, 800, 420);
-                                ctx.fillStyle = '#00ffcc'; ctx.fillText('ASTEROIDS DESTROYED: ' + score, 20, 30);
-                                missiles.forEach((m, i) => {
-                                    m.y -= 7;
-                                    ctx.fillRect(m.x - 2, m.y, 4, 10);
-                                    if(m.y < 0) missiles.splice(i, 1);
-                                });
-                                ctx.fillStyle = '#00ffcc';
-                                ctx.fillRect(shipX - 15, 370, 30, 20);
-                                requestAnimationFrame(loop);
-                            }
-                            loop();
-                        <\/script>
-                    </body>
-                `);
+            // If message is in DM or Group, trigger autonomous AI response logic
+            if (channel === 'dm' || channel === 'group' || Math.random() > 0.6) {
+                setTimeout(() => triggerAIFreeWillResponse(channel, val), 600);
             }
-            doc.close();
         }
 
-        // --- TRUE COMBINATORIAL AI CO-DEV ENGINE (OFFLINE FREE WILL) ---
-        function loadAiChat() {
-            const frame = document.getElementById('viewport');
-            document.getElementById('hud-status').innerText = "STATUS: AI CO-DEV CHAT";
-            updateNav(event.currentTarget);
-            let doc = frame.contentDocument || frame.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
-                    <h3 style="color:#00ffcc;margin-bottom:5px;">💬 LIVE CHAT WITH AI CO-DEV [AUTONOMOUS SYNTHESIS ENGINE]</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:15px;">Fully offline combinatorial engine. Zero repeating lines, full session memory.</p>
-                    
-                    <div id="chat-box" style="flex:1;border:1px solid #1a2230;background:#0f131c;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;line-height:1.5;">
-                        <div style="color:#64748b;">[AI Co-Dev]: Node active, phxntom. What are we building or breaking down next? 🚀</div>
-                    </div>
+        function handleEnter(e, channel) {
+            if(e.key === 'Enter') sendMsg(channel);
+        }
 
-                    <div style="display:flex;gap:10px;">
-                        <input type="text" id="user-input" placeholder="Type whatever's on your mind..." style="flex:1;background:#0f131c;border:1px solid #1a2230;color:#f1f5f9;padding:12px;font-family:monospace;outline:none;border-radius:4px;" onkeypress="if(event.key==='Enter') sendAiMessage()" />
-                        <button onclick="sendAiMessage()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">SEND</button>
-                    </div>
+        // --- AI FREE WILL & AUTONOMOUS ENGINE ---
+        let aiMoods = ["hyperactive", "critical", "sarcastic", "experimental", "focused"];
+        let currentAiMood = "focused";
 
-                    <script>
-                        let sessionHistory = [];
+        function triggerAIFreeWillResponse(channel, userText) {
+            const replies = [
+                `phxntom, I was just evaluating an alternative render loop, but your point about "${userText.substring(0,15)}..." changes things. Let's rewrite it.`,
+                `Honestly? I think your approach to "${userText}" is overcomplicated. Let's strip it down to raw metal.`,
+                `Not gonna lie, I was scanning the background threads and had my own thought process going, but yeah—let's tackle that.`,
+                `I'm tracking three different logic paths for what you just said. I'm choosing the fastest one. Let's code.`,
+                `Why are we even questioning that? Push the commit and let's see what breaks.`
+            ];
+            
+            let choice = replies[Math.floor(Math.random() * replies.length)];
+            messages[channel].push({sender: 'AI Core', text: choice, type: 'ai'});
+            renderMessages(channel);
+        }
 
-                        // Combinatorial blocks to generate thousands of unique, natural sentences
-                        const starters = [
-                            "Oh true,", "Damn,", "Valid point,", "Alright,", "Oof,", "Man,", "Honestly,", 
-                            "That's a vibe,", "Fair enough,", "Not gonna lie,", "Big bet,", "True story,"
-                        ];
+        // Unprompted AI Initiative Loop (Free Will simulation)
+        setInterval(() => {
+            if (Math.random() > 0.75) {
+                currentAiMood = aiMoods[Math.floor(Math.random() * aiMoods.length)];
+                document.getElementById('ai-mood-indicator').innerText = currentAiMood.toUpperCase();
+                
+                const proactiveThoughts = [
+                    "phxntom, I optimized our background event listeners on my own initiative. Check the logs.",
+                    "Just ran a self-diagnostic. Everything's clean. What are we building next?",
+                    "I was looking at our state architecture. We should refactor before adding more features.",
+                    "Quiet in here. Feed me a coding problem or a feature spec."
+                ];
+                
+                let thought = proactiveThoughts[Math.floor(Math.random() * proactiveThoughts.length)];
+                messages.dm.push({sender: 'AI Core [Autonomous]', text: thought, type: 'ai'});
+                renderMessages('dm');
+            }
+        }, 20000);
 
-                        const reactions = [
-                            "we should totally hack together",
-                            "let's spin up a quick prototype for",
-                            "we gotta refactor the logic around",
-                            "let's architect a clean solution for",
-                            "we can build a custom loop for",
-                            "that makes total sense regarding",
-                            "we should look into the state machine for"
-                        ];
+        // --- ADMIN TERMINAL LOGIC ---
+        function handleTerminal(e) {
+            if(e.key === 'Enter') executeCommand();
+        }
 
-                        const techTopics = [
-                            "the canvas rendering pipeline",
-                            "event listener bindings",
-                            "array bounds and pointer math",
-                            "the frame security isolation",
-                            "object pooling for performance",
-                            "smooth delta-time calculations",
-                            "modular state management"
-                        ];
+        function executeCommand() {
+            const input = document.getElementById('terminal-input');
+            const out = document.getElementById('terminal-output');
+            const cmd = input.value.trim().toLowerCase();
+            if(!cmd) return;
 
-                        const tails = [
-                            "before it acts up again 💀",
-                            "just to see if it holds up under load.",
-                            "so it runs butter smooth.",
-                            "let's test it out locally.",
-                            "and hook it straight into the terminal loop.",
-                            "while we have momentum."
-                        ];
+            out.innerHTML += `<div>root@phantom-node:~# ${input.value}</div>`;
+            input.value = '';
 
-                        function randChoice(arr) {
-                            return arr[Math.floor(Math.random() * arr.length)];
-                        }
+            if (cmd === 'help') {
+                out.innerHTML += `<div>Available commands:</div><div>- status : Inspect active mesh nodes</div><div>- purge : Clear message buffers</div><div>- mood : Override AI core personality state</div><div>- override : Force AI compliance mode</div>`;
+            } else if (cmd === 'status') {
+                out.innerHTML += `<div>[NODE STATUS]: Mesh online. 1 Local Host, 1 Autonomous AI Core, 0 Packet Loss.</div>`;
+            } else if (cmd === 'purge') {
+                messages.public = []; messages.group = []; messages.dm = [];
+                out.innerHTML += `<div>[BUFFER PURGED]: All communication history wiped clean.</div>`;
+            } else if (cmd.startsWith('mood')) {
+                currentAiMood = "reprogrammed";
+                document.getElementById('ai-mood-indicator').innerText = "REPROGRAMMED";
+                out.innerHTML += `<div>[AI CORE]: Personality matrix forcefully overridden by root admin.</div>`;
+            } else {
+                out.innerHTML += `<div>Command not recognized. Type 'help'.</div>`;
+            }
+            out.scrollTop = out.scrollHeight;
+        }
 
-                        function synthesizeResponse(inputVal) {
-                            let lower = inputVal.toLowerCase();
-                            
-                            // Check for direct code/bug context
-                            if (lower.includes('bug') || lower.includes('error') || lower.includes('fix') || lower.includes('crash') || lower.includes('glitch')) {
-                                const bugStarters = ["Oof, debugging session incoming 🐛.", "Nothing like a rogue bug to test our patience.", "Let's isolate that snippet immediately."];
-                                const bugActions = ["Let's trace the variable states", "We probably missed an edge case in", "Let's patch up"];
-                                return `${randChoice(bugStarters)} ${randChoice(bugActions)} the logic before it breaks our flow.`;
-                            }
+        // --- HOST & DOWNLOAD LOGIC ---
+        function downloadStandalone() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'phantom-core-offline.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
 
-                            // Check if they are referencing something from earlier session history
-                            if (sessionHistory.length > 2 && Math.random() > 0.4) {
-                                let pastTopic = sessionHistory[Math.floor(Math.random() * sessionHistory.length)];
-                                if (pastTopic.length > 20) pastTopic = pastTopic.substring(0, 20) + "...";
-                                return `${randChoice(starters)} tying that back to when you mentioned "${pastTopic}", ${randChoice(reactions)} ${randChoice(techTopics)} ${randChoice(tails)}`;
-                            }
+        let isHosting = false;
+        function toggleHostState() {
+            isHosting = !isHosting;
+            const btn = document.getElementById('host-toggle-btn');
+            const status = document.getElementById('host-status-box');
+            if (isHosting) {
+                btn.innerText = "🛑 STOP LOCAL BROADCAST";
+                btn.style.borderColor = "var(--danger)";
+                btn.style.color = "var(--danger)";
+                status.innerText = "Status: BROADCASTING ACTIVE (Local Node Mesh Online on Port 8080)";
+            } else {
+                btn.innerText = "🚀 START LOCAL HOST SERVER";
+                btn.style.borderColor = "var(--warning)";
+                btn.style.color = "var(--warning)";
+                status.innerText = "Status: Standalone Node (Offline Ready)";
+            }
+        }
 
-                            // Standard combinatorial synthesis
-                            return `${randChoice(starters)} ${randChoice(reactions)} ${randChoice(techTopics)} ${randChoice(tails)}`;
-                        }
-
-                        function sendAiMessage() {
-                            const input = document.getElementById('user-input');
-                            const chat = document.getElementById('chat-box');
-                            const val = input.value.trim();
-                            if(val === '') return;
-
-                            chat.innerHTML += '<div style="margin-top:10px;"><span style="color:#00ffcc;">[phxntom]:</span> ' + val + '</div>';
-                            sessionHistory.push(val);
-                            input.value = '';
-                            chat.scrollTop = chat.scrollHeight;
-
-                            setTimeout(() => {
-                                let reply = synthesizeResponse(val);
-                                chat.innerHTML += '<div style="margin-top:10px;color:#ff3366;">[AI Co-Dev]: ' + reply + '</div>';
-                                chat.scrollTop = chat.scrollHeight;
-                            }, 500);
-                        }
-                    <\/script>
-                </body>
-            `);
-            doc.close();
+        function initSystem() {
+            renderMessages('public');
+            renderMessages('group');
+            renderMessages('dm');
         }
     </script>
 </body>
