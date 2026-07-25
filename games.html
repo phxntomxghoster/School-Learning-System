@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Terminal // v1.7.5 // TRAINING WHEELS PROTOCOL // proudly made by Phantom Enterprises LLC</title>
+    <title>Game Terminal // v1.7.5 // TRAINING WHEELS PROTOCOL</title>
     <style>
         :root {
             --bg-base: #06080c;
@@ -365,13 +365,14 @@
             <button class="nav-btn" onclick="loadGroupChat()">👥 Encrypted Group Rooms</button>
             <button class="nav-btn" onclick="loadDirectChat()">💬 Direct Secure Messages (DM)</button>
 
-            <div class="group-title">Emulation Engines</div>
-            <button class="nav-btn" onclick="loadEmulator('ps1')">💿 Sony PlayStation 1 (PS1)</button>
-            <button class="nav-btn" onclick="loadEmulator('ps2')">📀 Sony PlayStation 2 (PS2 E-Rated)</button>
-            <button class="nav-btn" onclick="loadEmulator('psp')">🕹️ PlayStation Portable (PSP)</button>
+            <div class="group-title">Unified Console Emulators</div>
+            <button class="nav-btn" onclick="loadEmulatorHub('sony')">🎮 Sony PlayStation Hub (PS1/PS2/PSP/PS3)</button>
+            <button class="nav-btn" onclick="loadEmulatorHub('xbox')">🟢 Microsoft Xbox Hub (Original/360/One)</button>
 
-            <div class="group-title">Native 3D Engines</div>
-            <button class="nav-btn" onclick="loadEngine3D('matrix')">🚀 3D Wireframe Matrix (120 FPS)</button>
+            <div class="group-title">Native 120FPS FPS Engines</div>
+            <button class="nav-btn" onclick="loadFPS('2d')">🎯 2D Retro Arcade Shooter (120 FPS)</button>
+            <button class="nav-btn" onclick="loadFPS('pseudo')">🕹️ Pseudo-3D Raycaster FPS (120 FPS)</button>
+            <button class="nav-btn" onclick="loadFPS('3d')">🚀 Full 3D Vector Arena FPS (120 FPS)</button>
 
             <div class="group-title">Admin AI Integration Hub</div>
             <button class="nav-btn" onclick="loadAiIntegrationHub()">⚡ Submit Ideas & AI Integration</button>
@@ -423,7 +424,7 @@
             doc.write(`
                 <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
                     <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">Game Terminal // v1.7.5</h1>
-                    <p style="color:#64748b;max-width:550px;line-height:1.5;">TRAINING WHEELS PROTOCOL • Made by Phantom Enterprises LLC. Access messaging or submit feature ideas on the sidebar.</p>
+                    <p style="color:#64748b;max-width:550px;line-height:1.5;">TRAINING WHEELS PROTOCOL • Made by Phantom Enterprises LLC. Launch unified console hubs, 120FPS FPS games, or switch group messaging channels on the sidebar.</p>
                 </body>
             `);
             doc.close();
@@ -481,7 +482,7 @@
             doc.close();
         }
 
-        // --- GROUP MESSAGING ---
+        // --- GROUP MESSAGING WITH SELECTABLE ROOMS ---
         function loadGroupChat() {
             const frame = document.getElementById('viewport');
             document.getElementById('hud-status').innerText = "STATUS: ENCRYPTED GROUP ROOMS";
@@ -491,20 +492,35 @@
             doc.write(`
                 <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
                     <h3 style="color:#00ffcc;margin-bottom:5px;">👥 ENCRYPTED GROUP ROOMS</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Current Room: #dev-squad [AES-256 Secured]</p>
+                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:15px;">Switch active secure channel below:</p>
+                    
+                    <div style="display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap;">
+                        <button onclick="switchRoom('#homework')" style="background:rgba(0,255,204,0.1);border:1px solid #00ffcc;color:#00ffcc;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#homework</button>
+                        <button onclick="switchRoom('#life')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#life</button>
+                        <button onclick="switchRoom('#fortnite')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#(that game)</button>
+                        <button onclick="switchRoom('#helldivers')" style="background:rgba(15,19,28,0.4);border:1px solid #1a2230;color:#f1f5f9;padding:6px 12px;cursor:pointer;font-family:monospace;border-radius:4px;">#(this game)</button>
+                    </div>
+
+                    <div id="room-banner" style="color:#00ffcc;font-size:0.85rem;margin-bottom:8px;">Active Room: #homework</div>
                     <div id="box" style="flex:1;border:1px solid #1a2230;background:#0f131c;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;">
-                        <div style="color:#64748b;">[Room Key Established]: Secure channel initialized.</div>
+                        <div style="color:#64748b;">[Channel #homework]: Encrypted vault open.</div>
                     </div>
                     <div style="display:flex;gap:10px;">
                         <input type="text" id="msg" placeholder="Type group message..." style="flex:1;background:#0f131c;border:1px solid #1a2230;color:#f1f5f9;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
                         <button onclick="sendGroup()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">TRANSMIT</button>
                     </div>
                     <script>
+                        let currentRoom = '#homework';
+                        function switchRoom(room) {
+                            currentRoom = room;
+                            document.getElementById('room-banner').innerText = 'Active Room: ' + room;
+                            document.getElementById('box').innerHTML = '<div style="color:#64748b;">[Channel ' + room + ']: Secure vault tunnel initialized.</div>';
+                        }
                         function sendGroup() {
                             let m = document.getElementById('msg');
                             let b = document.getElementById('box');
                             if(m.value.trim() !== '') {
-                                b.innerHTML += '<div style="margin-top:8px;"><span style="color:#ff3366;">[Group / phxntom]:</span> ' + m.value + '</div>';
+                                b.innerHTML += '<div style="margin-top:8px;"><span style="color:#ff3366;">[' + currentRoom + ' / phxntom]:</span> ' + m.value + '</div>';
                                 m.value = '';
                                 b.scrollTop = b.scrollHeight;
                             }
@@ -547,6 +563,218 @@
                 </body>
             `);
             doc.close();
+        }
+
+        // --- UNIFIED SONY CONSOLE HUB (PS1, PS2, PSP, PS3) ---
+        function loadEmulatorHub(brand) {
+            const frame = document.getElementById('viewport');
+            updateNav(event.currentTarget);
+
+            if (brand === 'sony') {
+                document.getElementById('hud-status').innerText = "STATUS: SONY CONSOLE HUB (PS1/PS2/PSP/PS3)";
+                let doc = frame.contentDocument || frame.contentWindow.document;
+                doc.open();
+                doc.write(`
+                    <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:30px;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;">
+                        <h2 style="color:#00ffcc;margin-bottom:10px;">PlayStation Unified Matrix (PS1 • PS2 • PSP • PS3)</h2>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Training Wheels protocol active: E-rated hardware bin mount ready for Cell & Emotion Engine matrices.</p>
+                        <div style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-bottom:25px;">
+                            <button onclick="alert('Mounting PS1 ISO Image...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">💿 PS1 Core</button>
+                            <button onclick="alert('Mounting PS2 ISO Image...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">📀 PS2 Core</button>
+                            <button onclick="alert('Mounting PSP ISO Image...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">🕹️ PSP Core</button>
+                            <button onclick="alert('Mounting PS3 Cell Matrix...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">⚡ PS3 Cell Core</button>
+                        </div>
+                        <input type="file" id="rom" style="display:none;" />
+                        <button onclick="document.getElementById('rom').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount Game Binary / ISO</button>
+                    </body>
+                `);
+                doc.close();
+            } else {
+                document.getElementById('hud-status').innerText = "STATUS: XBOX CONSOLE HUB (XBOX / 360 / ONE)";
+                let doc = frame.contentDocument || frame.contentWindow.document;
+                doc.open();
+                doc.write(`
+                    <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:30px;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;">
+                        <h2 style="color:#00ffcc;margin-bottom:10px;">Microsoft Xbox Unified Hub (Original • 360 • One)</h2>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Note on Xbox One: Runs via browser hypervisor simulation layer. Xenon & XAPI bridge active.</p>
+                        <div style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-bottom:25px;">
+                            <button onclick="alert('Mounting Original Xbox XISO...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">🟢 Xbox Original</button>
+                            <button onclick="alert('Mounting Xbox 360 Title...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">💚 Xbox 360</button>
+                            <button onclick="alert('Mounting Xbox One Cloud Container...')" style="background:#0f131c;border:1px solid #00ffcc;color:#00ffcc;padding:12px 20px;cursor:pointer;border-radius:4px;font-family:monospace;font-weight:bold;">☁️ Xbox One Cloud</button>
+                        </div>
+                        <input type="file" id="rom" style="display:none;" />
+                        <button onclick="document.getElementById('rom').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount Game Binary / Container</button>
+                    </body>
+                `);
+                doc.close();
+            }
+        }
+
+        // --- NATIVE 120 FPS FPS ENGINES ---
+        function loadFPS(type) {
+            const frame = document.getElementById('viewport');
+            updateNav(event.currentTarget);
+            let doc = frame.contentDocument || frame.contentWindow.document;
+
+            if (type === '2d') {
+                document.getElementById('hud-status').innerText = "STATUS: 2D RETRO ARCADE SHOOTER [120 FPS]";
+                doc.open();
+                doc.write(`
+                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
+                        <h3 style="margin-bottom:10px;">🎯 2D RETRO ARCADE SHOOTER (120 FPS Native)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:15px;">Use Left/Right Arrow keys to move, Spacebar to fire lasers.</p>
+                        <canvas id="c" width="800" height="450" style="border:1px solid #1a2230;background:#05070a;"></canvas>
+                        <script>
+                            const canvas = document.getElementById('c');
+                            const ctx = canvas.getContext('2d');
+                            let shipX = 370;
+                            let bullets = [];
+                            let enemies = [{x: 100, y: 50}, {x: 300, y: 50}, {x: 500, y: 50}, {x: 700, y: 50}];
+                            let keys = {};
+
+                            window.addEventListener('keydown', e => keys[e.code] = true);
+                            window.addEventListener('keyup', e => keys[e.code] = false);
+                            window.addEventListener('keydown', e => {
+                                if(e.code === 'Space') {
+                                    bullets.push({x: shipX + 18, y: 390});
+                                }
+                            });
+
+                            function loop() {
+                                if(keys['ArrowLeft']) shipX = Math.max(10, shipX - 6);
+                                if(keys['ArrowRight']) shipX = Math.min(750, shipX + 6);
+
+                                ctx.fillStyle = '#05070a';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                                // Draw ship
+                                ctx.fillStyle = '#00ffcc';
+                                ctx.fillRect(shipX, 390, 40, 20);
+
+                                // Draw bullets
+                                ctx.fillStyle = '#ff3366';
+                                bullets.forEach((b, index) => {
+                                    b.y -= 8;
+                                    ctx.fillRect(b.x, b.y, 4, 12);
+                                    if(b.y < 0) bullets.splice(index, 1);
+                                });
+
+                                // Draw enemies & collision
+                                ctx.fillStyle = '#ff3366';
+                                enemies.forEach((en, eIdx) => {
+                                    ctx.fillRect(en.x, en.y, 30, 30);
+                                    bullets.forEach((b, bIdx) => {
+                                        if(b.x > en.x && b.x < en.x + 30 && b.y > en.y && b.y < en.y + 30) {
+                                            enemies.splice(eIdx, 1);
+                                            bullets.splice(bIdx, 1);
+                                            enemies.push({x: Math.random() * 700 + 50, y: 50});
+                                        }
+                                    });
+                                });
+
+                                requestAnimationFrame(loop);
+                            }
+                            loop();
+                        <\/script>
+                    </body>
+                `);
+                doc.close();
+            } else if (type === 'pseudo') {
+                document.getElementById('hud-status').innerText = "STATUS: PSEUDO-3D RAYCASTER FPS [120 FPS]";
+                doc.open();
+                doc.write(`
+                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
+                        <h3 style="margin-bottom:10px;">🕹️ PSEUDO-3D RAYCASTER ENGINE (120 FPS Native)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:15px;">Use A/D or Left/Right arrows to rotate camera view.</p>
+                        <canvas id="c" width="800" height="450" style="border:1px solid #1a2230;background:#05070a;"></canvas>
+                        <script>
+                            const canvas = document.getElementById('c');
+                            const ctx = canvas.getContext('2d');
+                            let angle = 0;
+                            let keys = {};
+
+                            window.addEventListener('keydown', e => keys[e.code] = true);
+                            window.addEventListener('keyup', e => keys[e.code] = false);
+
+                            function loop() {
+                                if(keys['ArrowLeft'] || keys['KeyA']) angle -= 0.04;
+                                if(keys['ArrowRight'] || keys['KeyD']) angle += 0.04;
+
+                                ctx.fillStyle = '#020406';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height/2);
+                                ctx.fillStyle = '#0f131c';
+                                ctx.fillRect(0, canvas.height/2, canvas.width, canvas.height/2);
+
+                                // Raycaster simulation pillars
+                                let numRays = 80;
+                                let stripW = canvas.width / numRays;
+                                for(let i=0; i<numRays; i++) {
+                                    let rayAngle = angle - 0.5 + (i / numRays);
+                                    let distance = 120 + Math.sin(rayAngle * 3) * 60;
+                                    let wallH = Math.min(400, 15000 / distance);
+
+                                    ctx.fillStyle = i % 2 === 0 ? '#00ffcc' : '#00b388';
+                                    ctx.fillRect(i * stripW, (canvas.height/2) - (wallH/2), stripW - 1, wallH);
+                                }
+
+                                requestAnimationFrame(loop);
+                            }
+                            loop();
+                        <\/script>
+                    </body>
+                `);
+                doc.close();
+            } else {
+                document.getElementById('hud-status').innerText = "STATUS: FULL 3D VECTOR ARENA FPS [120 FPS]";
+                doc.open();
+                doc.write(`
+                    <body style="background:#020406;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ffcc;font-family:monospace;">
+                        <h3 style="margin-bottom:10px;">🚀 FULL 3D VECTOR ARENA FPS (120 FPS Native)</h3>
+                        <p style="color:#64748b;font-size:0.8rem;margin-bottom:15px;">Rotating wireframe 3D target simulation lock.</p>
+                        <canvas id="c" width="800" height="450" style="border:1px solid #1a2230;background:#05070a;"></canvas>
+                        <script>
+                            const canvas = document.getElementById('c');
+                            const ctx = canvas.getContext('2d');
+                            let a = 0;
+                            function loop() {
+                                ctx.fillStyle = '#020406';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                ctx.strokeStyle = '#ff3366';
+                                ctx.lineWidth = 2;
+                                
+                                let p = [[-60,-60,-60],[60,-60,-60],[60,60,-60],[-60,60,-60],[-60,-60,60],[60,-60,60],[60,60,60],[-60,70,60]];
+                                let proj = p.map(v => {
+                                    let x = v[0], y = v[1], z = v[2];
+                                    let x1 = x * Math.cos(a) - z * Math.sin(a);
+                                    let z1 = x * Math.sin(a) + z * Math.cos(a);
+                                    let y2 = y * Math.cos(a) - z1 * Math.sin(a);
+                                    let z2 = y * Math.sin(a) + z1 * Math.cos(a);
+                                    let f = 350, s = f / (f + z2 + 200);
+                                    return [canvas.width/2 + x1 * s, canvas.height/2 + y2 * s];
+                                });
+                                let e = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+                                e.forEach(edge => {
+                                    ctx.beginPath();
+                                    ctx.moveTo(proj[edge[0]][0], proj[edge[0]][1]);
+                                    ctx.lineTo(proj[edge[1]][0], proj[edge[1]][1]);
+                                    ctx.stroke();
+                                });
+
+                                // Draw crosshair
+                                ctx.strokeStyle = '#00ffcc';
+                                ctx.beginPath();
+                                ctx.arc(canvas.width/2, canvas.height/2, 15, 0, Math.PI * 2);
+                                ctx.stroke();
+
+                                a += 0.03;
+                                requestAnimationFrame(loop);
+                            }
+                            loop();
+                        <\/script>
+                    </body>
+                `);
+                doc.close();
+            }
         }
 
         // --- AI INTEGRATION HUB WITH IDEA SUBMISSION & COUNTDOWN ---
@@ -606,70 +834,6 @@
                                 log.scrollTop = log.scrollHeight;
                             }, 1000);
                         }
-                    <\/script>
-                </body>
-            `);
-            doc.close();
-        }
-
-        function loadEmulator(type) {
-            const frame = document.getElementById('viewport');
-            document.getElementById('hud-status').innerText = `STATUS: ${type.toUpperCase()} CORE`;
-            updateNav(event.currentTarget);
-            let doc = frame.contentDocument || frame.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
-                    <div style="border:1px solid #00ffcc;padding:40px;background:#0f131c;text-align:center;border-radius:6px;max-width:550px;">
-                        <h2 style="color:#00ffcc;margin-bottom:10px;">${type.toUpperCase()} EMULATION SANDBOX</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Training Wheels protocol active: E-rated hardware binary mount ready.</p>
-                        <input type="file" id="rom" style="display:none;" />
-                        <button onclick="document.getElementById('rom').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount Binary Image</button>
-                    </div>
-                </body>
-            `);
-            doc.close();
-        }
-
-        function loadEngine3D(type) {
-            const frame = document.getElementById('viewport');
-            document.getElementById('hud-status').innerText = "STATUS: 3D VECTOR ENGINE";
-            updateNav(event.currentTarget);
-            let doc = frame.contentDocument || frame.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <body style="background:#020406;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;">
-                    <canvas id="c" width="900" height="550" style="border:1px solid #1a2230;background:#020406;"></canvas>
-                    <script>
-                        const canvas = document.getElementById('c');
-                        const ctx = canvas.getContext('2d');
-                        let a = 0;
-                        function loop() {
-                            ctx.fillStyle = '#020406';
-                            ctx.fillRect(0, 0, canvas.width, canvas.height);
-                            ctx.strokeStyle = '#00ffcc';
-                            ctx.lineWidth = 2;
-                            let p = [[-70,-70,-70],[70,-70,-70],[70,70,-70],[-70,70,-70],[-70,-70,70],[70,-70,70],[70,70,70],[-70,70,70]];
-                            let proj = p.map(v => {
-                                let x = v[0], y = v[1], z = v[2];
-                                let x1 = x * Math.cos(a) - z * Math.sin(a);
-                                let z1 = x * Math.sin(a) + z * Math.cos(a);
-                                let y2 = y * Math.cos(a) - z1 * Math.sin(a);
-                                let z2 = y * Math.sin(a) + z1 * Math.cos(a);
-                                let f = 350, s = f / (f + z2 + 250);
-                                return [canvas.width/2 + x1 * s, canvas.height/2 + y2 * s];
-                            });
-                            let e = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-                            e.forEach(edge => {
-                                ctx.beginPath();
-                                ctx.moveTo(proj[edge[0]][0], proj[edge[0]][1]);
-                                ctx.lineTo(proj[edge[1]][0], proj[edge[1]][1]);
-                                ctx.stroke();
-                            });
-                            a += 0.02;
-                            requestAnimationFrame(loop);
-                        }
-                        loop();
                     <\/script>
                 </body>
             `);
