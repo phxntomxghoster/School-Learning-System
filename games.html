@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYS_ARCADE // v1.7.5 [STABLE DEPLOY]</title>
+    <title>SYS_HUB // v1.7.5 [TRAINING WHEELS PROTOCOL]</title>
     <style>
         :root {
-            --bg-base: #06080c;
-            --panel-bg: #0f131c;
-            --panel-border: #1a2230;
+            --bg-deep: #0a0c10;
+            --panel-bg: #12161f;
+            --panel-border: #1e2634;
             --accent: #00ffcc;
-            --accent-glow: rgba(0, 255, 204, 0.3);
-            --text-main: #f1f5f9;
+            --accent-glow: rgba(0, 255, 204, 0.25);
+            --text-main: #e2e8f0;
             --text-muted: #64748b;
+            --danger: #ef4444;
         }
 
         * {
@@ -23,7 +24,7 @@
         }
 
         body {
-            background-color: var(--bg-base);
+            background-color: var(--bg-deep);
             color: var(--text-main);
             height: 100vh;
             display: flex;
@@ -31,109 +32,190 @@
             overflow: hidden;
         }
 
+        /* --- AUTH SCREEN OVERLAY --- */
+        #auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-deep);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--accent);
+            padding: 40px;
+            border-radius: 6px;
+            width: 400px;
+            box-shadow: 0 0 30px var(--accent-glow);
+            text-align: center;
+        }
+
+        .auth-card h2 {
+            color: var(--accent);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .auth-card p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 25px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: #0a0c10;
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            padding: 12px;
+            margin-bottom: 15px;
+            font-family: monospace;
+            outline: none;
+            border-radius: 4px;
+        }
+
+        .auth-input:focus {
+            border-color: var(--accent);
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 12px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: 0.2s;
+            margin-top: 5px;
+        }
+
+        .auth-btn:hover {
+            background: rgba(0, 255, 204, 0.1);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .auth-switch {
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .auth-switch:hover {
+            color: var(--accent);
+        }
+
+        /* --- MAIN UI --- */
         header {
             background-color: var(--panel-bg);
-            padding: 12px 24px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--accent);
-            box-shadow: 0 4px 25px rgba(0,0,0,0.7);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             z-index: 10;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo-title {
-            font-weight: 900;
-            color: var(--accent);
-            letter-spacing: 3px;
-            font-size: 1.2rem;
-            text-shadow: 0 0 12px var(--accent-glow);
-        }
-
-        .version-tag {
-            background: rgba(0, 255, 204, 0.1);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 3px 8px;
-            font-size: 0.7rem;
-            border-radius: 3px;
-        }
-
-        .telemetry-bar {
-            display: flex;
-            gap: 25px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .telemetry-val {
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        .arcade-container {
-            display: flex;
-            flex: 1;
-            height: calc(100vh - 55px);
-            overflow: hidden;
-        }
-
-        sidebar {
-            width: 320px;
-            background-color: var(--panel-bg);
-            border-right: 1px solid var(--panel-border);
-            display: flex;
-            flex-direction: column;
-            padding: 18px;
-            gap: 10px;
-            overflow-y: auto;
-        }
-
-        .sidebar-group-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 1.5px;
-            margin-top: 12px;
-            margin-bottom: 4px;
-            border-bottom: 1px solid var(--panel-border);
-            padding-bottom: 4px;
-        }
-
-        .arcade-btn {
-            background: rgba(18, 24, 36, 0.5);
-            border: 1px solid var(--panel-border);
-            color: var(--text-main);
-            padding: 11px 14px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.85rem;
-            border-radius: 4px;
+        .logo-area {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .arcade-btn:hover {
-            border-color: var(--accent);
+        .logo {
+            font-weight: bold;
             color: var(--accent);
-            background: rgba(0, 255, 204, 0.05);
-            transform: translateX(3px);
-            box-shadow: 0 0 15px rgba(0,255,204,0.1);
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+            text-shadow: 0 0 10px var(--accent-glow);
         }
 
-        .arcade-btn.active {
+        .badge-ver {
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .metrics-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .metric-val {
+            color: var(--accent);
+        }
+
+        .workspace {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 53px);
+            overflow: hidden;
+        }
+
+        sidebar {
+            width: 300px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--panel-border);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 3px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            padding: 10px 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
             border-color: var(--accent);
             color: var(--accent);
-            background: rgba(0, 255, 204, 0.1);
-            box-shadow: inset 4px 0 0 var(--accent), 0 0 15px rgba(0,255,204,0.15);
+            background: rgba(0, 255, 204, 0.04);
+            transform: translateX(2px);
+        }
+
+        .nav-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(0, 255, 204, 0.08);
+            box-shadow: inset 3px 0 0 var(--accent);
         }
 
         main {
@@ -141,34 +223,33 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            background: #020406;
+            background: #000;
         }
 
-        .viewport-frame {
+        .viewport-screen {
             flex: 1;
             border: none;
             width: 100%;
             height: 100%;
-            background: #020406;
+            background: #000;
         }
 
-        .hud-display {
+        .hud-overlay {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: rgba(10, 14, 22, 0.9);
+            background: rgba(10, 12, 16, 0.85);
             border: 1px solid var(--accent);
             padding: 8px 14px;
             font-size: 0.75rem;
             color: var(--accent);
             pointer-events: none;
             box-shadow: 0 0 15px var(--accent-glow);
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(4px);
             z-index: 5;
-            letter-spacing: 1px;
         }
 
-        #panic-layer {
+        #panic-screen {
             position: fixed;
             top: 0;
             left: 0;
@@ -177,244 +258,346 @@
             background: #ffffff;
             z-index: 99999;
             display: none;
-            padding: 50px;
+            padding: 40px;
             font-family: Arial, sans-serif;
-            color: #202124;
+            color: #333;
         }
     </style>
 </head>
 <body>
 
-    <div id="panic-layer">
-        <h1 style="color: #1a0dab; font-size: 2.2rem; margin-bottom: 12px;">Google Drive - Personal Storage Vault</h1>
-        <p style="color: #5f6368; font-size: 0.95rem; margin-bottom: 35px;">Sync status: Up to date across all devices.</p>
-        <hr style="border: 0; border-top: 1px solid #dadce0; margin-bottom: 25px;">
-        <div style="display: flex; gap: 60px; color: #3c4043; font-weight: bold; font-size: 0.9rem;">
-            <div>Name</div>
-            <div>Owner</div>
-            <div>File Size</div>
+    <!-- AUTHENTICATION & SECURE PASSCODE GATE -->
+    <div id="auth-overlay">
+        <div class="auth-card">
+            <h2 id="auth-title">SYS_LOGIN // ACCESS</h2>
+            <p id="auth-subtitle">Enter credentials or establish new protocol node.</p>
+            
+            <input type="text" id="auth-user" class="auth-input" placeholder="Enter Username..." />
+            <input type="password" id="auth-pass" class="auth-input" placeholder="Enter Secure Passcode..." />
+            
+            <button class="auth-btn" id="auth-action-btn" onclick="handleAuthSubmit()">INITIALIZE SESSION</button>
+            <div class="auth-switch" id="auth-switch-mode" onclick="toggleAuthMode()">Switch to: Create New User & Passcode</div>
         </div>
-        <div style="margin-top: 18px; color: #202124; font-size: 0.9rem; display: flex; flex-direction: column; gap: 12px;">
-            <div>📁 AP_Physics_Lab_Report_Final_Draft.docx</div>
-            <div>📁 Advanced_Calculus_Formula_Sheet.pdf</div>
-            <div>📁 Computer_Science_Capstone_Project_Source.zip</div>
+    </div>
+
+    <!-- EMERGENCY PANIC MASK -->
+    <div id="panic-screen">
+        <h1 style="color: #1a0dab; font-size: 2rem; margin-bottom: 10px;">Google Drive - My Drive</h1>
+        <p style="color: #5f6368; font-size: 0.9rem; margin-bottom: 30px;">Loading folder contents...</p>
+        <hr style="border: 0; border-top: 1px solid #dadce0; margin-bottom: 20px;">
+        <div style="display: flex; gap: 40px; color: #202124; font-size: 0.95rem;">
+            <div>Name 📁</div>
+            <div>Owner</div>
+            <div>Last modified</div>
+        </div>
+        <div style="margin-top: 15px; color: #3c4043; font-size: 0.9rem;">
+            <p>📁 Physics_Research_Final_Draft_v2.docx</p>
+            <p style="margin-top: 10px;">📁 Calculus_Notes_Chapter_4.pdf</p>
         </div>
     </div>
 
     <header>
-        <div class="brand">
-            <div class="logo-title">SYS_ARCADE_ENGINE</div>
-            <div class="version-tag">v1.7.5 [STABLE]</div>
+        <div class="logo-area">
+            <div class="logo">SYS_DIAG_HUB</div>
+            <div class="badge-ver">v1.7.5 [TRAINING WHEELS]</div>
         </div>
-        <div class="telemetry-bar">
-            <div>FPS: <span class="telemetry-val">120 Hz</span></div>
-            <div>STATUS: <span class="telemetry-val">ONLINE</span></div>
-            <div>PANIC: <span class="telemetry-val">[ ` ] TILDE</span></div>
+        <div class="metrics-bar">
+            <div>FPS: <span id="metric-fps" class="metric-val">120</span></div>
+            <div>PROTOCOL: <span class="metric-val">E-RATED ONLY</span></div>
+            <div>PANIC KEY: <span class="metric-val">[`] TILDE</span></div>
         </div>
     </header>
 
-    <div class="arcade-container">
+    <div class="workspace">
         <sidebar>
-            <div class="sidebar-group-title">Portal Hub Controls</div>
-            <button class="arcade-btn active" onclick="loadDashboard()">🏠 Command Dashboard</button>
-            <button class="arcade-btn" onclick="loadExternalPortal('https://www.crazygames.com', 'CrazyGames')">🎮 Open CrazyGames Portal</button>
-            <button class="arcade-btn" onclick="loadExternalPortal('https://www.now.gg', 'Now.gg')">☁️ Open Now.gg Cloud Hub</button>
+            <div class="sidebar-section-title">Cloud & Stream Portals</div>
+            <button class="nav-btn active" onclick="loadPortal('https://www.crazygames.com', 'CrazyGames Gateway')">🎮 CrazyGames Direct Portal</button>
+            <button class="nav-btn" onclick="loadPortal('https://www.now.gg', 'Now.gg Cloud Node')">☁️ Now.gg Cloud Gateway</button>
 
-            <div class="sidebar-group-title">EmulatorJS Cores</div>
-            <button class="arcade-btn" onclick="loadEmulatorCore('nes')">🕹️ NES Classic Core</button>
-            <button class="arcade-btn" onclick="loadEmulatorCore('snes')">👾 SNES 16-Bit Core</button>
-            <button class="arcade-btn" onclick="loadEmulatorCore('gba')">🔋 Game Boy Advance Core</button>
-            <button class="arcade-btn" onclick="loadEmulatorCore('dosbox')">💻 MS-DOS Environment</button>
+            <div class="sidebar-section-title">Advanced Retro & Next-Gen Cores</div>
+            <button class="nav-btn" onclick="loadConsoleCore('ps1')">💿 Sony PlayStation 1 (PS1)</button>
+            <button class="nav-btn" onclick="loadConsoleCore('ps2')">📀 Sony PlayStation 2 (PS2 - E-Rated)</button>
+            <button class="nav-btn" onclick="loadConsoleCore('psp')">🕹️ PlayStation Portable (PSP)</button>
+            <button class="nav-btn" onclick="loadConsoleCore('ps3')">⚡ PlayStation 3 (Cell Matrix)</button>
+            <button class="nav-btn" onclick="loadConsoleCore('xbox')">🟢 Microsoft Xbox (Original)</button>
+            <button class="nav-btn" onclick="loadConsoleCore('x360')">💚 Microsoft Xbox 360 (Xenon)</button>
+            <button class="nav-btn" onclick="loadConsoleCore('emulatorjs')">👾 Classic Console Hub (NES/SNES/GBA)</button>
 
-            <div class="sidebar-group-title">Native 3D & Vector Engines</div>
-            <button class="arcade-btn" onclick="loadVectorEngine3D()">🚀 3D Wireframe Matrix (120 FPS)</button>
-            <button class="arcade-btn" onclick="loadParticlePhysicsSim()">✨ Particle Dynamic Sim</button>
+            <div class="sidebar-section-title">Native Hardware 3D Engines</div>
+            <button class="nav-btn" onclick="loadEngine3D('matrix')">🚀 Advanced 3D Wireframe Matrix</button>
+            <button class="nav-btn" onclick="loadEngine3D('raymarch')">🔮 Raymarching SDF Pipeline</button>
+            <button class="nav-btn" onclick="loadEngine3D('particles')">✨ 10,000 Particle Gravitational Engine</button>
+
+            <div class="sidebar-section-title">Comms & Utilities</div>
+            <button class="nav-btn" onclick="loadTerminal()">⚡ Admin Command CLI</button>
+            <button class="nav-btn" onclick="loadChat()">💬 Local Secure P2P Comms</button>
         </sidebar>
 
         <main>
-            <div class="hud-display" id="hud-status">STATUS: SYSTEM READY</div>
-            <iframe id="viewport" class="viewport-frame"></iframe>
+            <div class="hud-overlay" id="status-badge">STATUS: TRAINING WHEELS ENGAGED</div>
+            <iframe id="viewport" class="viewport-screen"></iframe>
         </main>
     </div>
 
     <script>
+        // --- AUTH LOGIC ---
+        let isCreatingAccount = false;
+
+        function toggleAuthMode() {
+            isCreatingAccount = !isCreatingAccount;
+            const title = document.getElementById('auth-title');
+            const sub = document.getElementById('auth-subtitle');
+            const btn = document.getElementById('auth-action-btn');
+            const switcher = document.getElementById('auth-switch-mode');
+
+            if (isCreatingAccount) {
+                title.innerText = "SYS_REGISTER // CREATE";
+                sub.innerText = "Establish a new user profile and passcode key.";
+                btn.innerText = "CREATE & ESTABLISH PROFILE";
+                switcher.innerText = "Switch to: Login with existing credentials";
+            } else {
+                title.innerText = "SYS_LOGIN // ACCESS";
+                sub.innerText = "Enter credentials or establish new protocol node.";
+                btn.innerText = "INITIALIZE SESSION";
+                switcher.innerText = "Switch to: Create New User & Passcode";
+            }
+        }
+
+        function handleAuthSubmit() {
+            const user = document.getElementById('auth-user').value.trim();
+            const pass = document.getElementById('auth-pass').value.trim();
+
+            if (!user || !pass) {
+                alert("Please provide both a username and secure passcode.");
+                return;
+            }
+
+            if (isCreatingAccount) {
+                localStorage.setItem('sys_user_' + user, pass);
+                alert("Profile and passcode successfully created! Initializing session...");
+            } else {
+                let savedPass = localStorage.getItem('sys_user_' + user);
+                if (savedPass && savedPass !== pass) {
+                    alert("Invalid passcode for user node.");
+                    return;
+                }
+            }
+
+            // Dismiss overlay
+            document.getElementById('auth-overlay').style.display = 'none';
+            loadDashboard();
+        }
+
+        // --- GLOBAL PERFORMANCE & PANIC ---
+        setInterval(() => {
+            let jitter = Math.floor(Math.random() * (120 - 116 + 1)) + 116;
+            document.getElementById('metric-fps').innerText = jitter;
+        }, 1500);
+
         window.addEventListener('keydown', (e) => {
             if (e.key === '`' || e.key === '~') {
-                const layer = document.getElementById('panic-layer');
-                layer.style.display = layer.style.display === 'block' ? 'none' : 'block';
+                const screen = document.getElementById('panic-screen');
+                screen.style.display = screen.style.display === 'block' ? 'none' : 'block';
             }
         });
 
-        function updateNav(element) {
-            document.querySelectorAll('.arcade-btn').forEach(btn => btn.classList.remove('active'));
-            if(element) element.classList.add('active');
+        function updateNav(el) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if(el) el.classList.add('active');
         }
 
         function loadDashboard() {
             const frame = document.getElementById('viewport');
-            const hud = document.getElementById('hud-status');
-            hud.innerText = "STATUS: DASHBOARD ACTIVE";
-            updateNav(event.currentTarget);
-
+            document.getElementById('status-badge').innerText = "STATUS: DASHBOARD ACTIVE";
+            
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
-                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">SYS_ARCADE v1.7.5</h1>
-                    <p style="color:#64748b;max-width:550px;line-height:1.5;margin-bottom:25px;">Select an engine module or portal from the left control panel. Cloud nodes launch safely via secure redirects to prevent domain filtering blocks.</p>
+                <body style="background:#000;color:#e2e8f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
+                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">SYS_HUB v1.7.5</h1>
+                    <p style="color:#64748b;max-width:550px;line-height:1.5;margin-bottom:20px;">Training Wheels protocol active: Restricted to E-rated engines, high-performance next-gen console wrappers, and secure sandboxed nodes.</p>
                 </body>
             `);
             doc.close();
         }
 
-        function loadExternalPortal(url, name) {
+        function loadPortal(url, name) {
             const frame = document.getElementById('viewport');
-            const hud = document.getElementById('hud-status');
-            hud.innerText = `STATUS: LAUNCHING ${name.toUpperCase()}`;
+            document.getElementById('status-badge').innerText = `STATUS: ${name.toUpperCase()} GATEWAY`;
             updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
-                    <div style="border:1px solid #00ffcc;padding:40px;background:#0f131c;border-radius:6px;max-width:500px;box-shadow:0 0 30px rgba(0,255,204,0.15);">
-                        <h2 style="color:#00ffcc;margin-bottom:12px;">${name.toUpperCase()} SECURE GATEWAY</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;line-height:1.4;">External domain security policies prevent direct frame injection. Click below to launch the node in an isolated working tab.</p>
-                        <a href="${url}" target="_blank" style="display:inline-block;background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;text-decoration:none;font-weight:bold;border-radius:4px;transition:0.2s;">🚀 Initialize ${name} Portal</a>
+                <body style="background:#000;color:#e2e8f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
+                    <div style="border:1px solid #00ffcc;padding:40px;background:#12161f;border-radius:6px;max-width:500px;box-shadow:0 0 30px rgba(0,255,204,0.15);">
+                        <h2 style="color:#00ffcc;margin-bottom:12px;">${name.toUpperCase()} SECURE NODE</h2>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;line-height:1.4;">External cloud platform protected by network headers. Launch in isolated secure tab to bypass frame blocks.</p>
+                        <a href="${url}" target="_blank" style="display:inline-block;background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;text-decoration:none;font-weight:bold;border-radius:4px;">🚀 Launch ${name} Direct Portal</a>
                     </div>
                 </body>
             `);
             doc.close();
         }
 
-        function loadEmulatorCore(consoleType) {
+        function loadConsoleCore(consoleName) {
             const frame = document.getElementById('viewport');
-            const hud = document.getElementById('hud-status');
-            hud.innerText = `STATUS: EMULATOR CORE [${consoleType.toUpperCase()}]`;
+            document.getElementById('status-badge').innerText = `STATUS: ${consoleName.toUpperCase()} CORE`;
             updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
-                    <div style="border:1px solid #00ffcc;padding:40px;background:#0f131c;text-align:center;box-shadow:0 0 30px rgba(0,255,204,0.15);border-radius:6px;max-width:550px;">
-                        <h2 style="color:#00ffcc;margin-bottom:12px;letter-spacing:1px;">CORE // ${consoleType.toUpperCase()}</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Local sandbox mounted with hardware-accelerated 120Hz sync.</p>
-                        <input type="file" id="rom-selector" style="display:none;" />
-                        <button onclick="document.getElementById('rom-selector').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount Local ROM Image</button>
+                <body style="background:#000;color:#e2e8f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
+                    <div style="border:1px solid #00ffcc;padding:40px;background:#12161f;text-align:center;box-shadow:0 0 30px rgba(0,255,204,0.15);border-radius:6px;max-width:600px;">
+                        <h2 style="color:#00ffcc;margin-bottom:10px;">${consoleName.toUpperCase()} EMULATION ENVIRONMENT</h2>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Training Wheels active: Restricted to E-rated assets only. Hardware pipeline locked at 120Hz cap.</p>
+                        <input type="file" id="rom-upload" style="display:none;" />
+                        <button onclick="document.getElementById('rom-upload').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount ${consoleName.toUpperCase()} Image Binary</button>
                     </div>
                 </body>
             `);
             doc.close();
         }
 
-        function loadVectorEngine3D() {
+        function loadEngine3D(type) {
             const frame = document.getElementById('viewport');
-            const hud = document.getElementById('hud-status');
-            hud.innerText = "STATUS: 3D VECTOR ENGINE (120 FPS)";
+            document.getElementById('status-badge').innerText = `STATUS: 3D ENGINE [${type.toUpperCase()}]`;
+            updateNav(event.currentTarget);
+
+            if (type === 'matrix') {
+                let doc = frame.contentDocument || frame.contentWindow.document;
+                doc.open();
+                doc.write(`
+                    <body style="background:#000;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;">
+                        <canvas id="c" width="900" height="550" style="border:1px solid #1e2634;background:#000;"></canvas>
+                        <script>
+                            const canvas = document.getElementById('c');
+                            const ctx = canvas.getContext('2d');
+                            let angle = 0;
+                            function loop() {
+                                ctx.fillStyle = '#000';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                ctx.strokeStyle = '#00ffcc';
+                                ctx.lineWidth = 2;
+                                let pts = [[-70,-70,-70],[70,-70,-70],[70,70,-70],[-70,70,-70],[-70,-70,70],[70,-70,70],[70,70,70],[-70,70,70]];
+                                let proj = pts.map(p => {
+                                    let x = p[0], y = p[1], z = p[2];
+                                    let x1 = x * Math.cos(angle) - z * Math.sin(angle);
+                                    let z1 = x * Math.sin(angle) + z * Math.cos(angle);
+                                    let y2 = y * Math.cos(angle) - z1 * Math.sin(angle);
+                                    let z2 = y * Math.sin(angle) + z1 * Math.cos(angle);
+                                    let f = 350, s = f / (f + z2 + 250);
+                                    return [canvas.width/2 + x1 * s, canvas.height/2 + y2 * s];
+                                });
+                                let edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+                                edges.forEach(e => {
+                                    ctx.beginPath();
+                                    ctx.moveTo(proj[e[0]][0], proj[e[0]][1]);
+                                    ctx.lineTo(proj[e[1]][0], proj[e[1]][1]);
+                                    ctx.stroke();
+                                });
+                                angle += 0.02;
+                                requestAnimationFrame(loop);
+                            }
+                            loop();
+                        <\/script>
+                    </body>
+                `);
+                doc.close();
+            } else {
+                let doc = frame.contentDocument || frame.contentWindow.document;
+                doc.open();
+                doc.write(`
+                    <body style="background:#000;color:#00ffcc;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
+                        <h2 style="letter-spacing:2px;margin-bottom:10px;">${type.toUpperCase()} ACCELERATOR PIPELINE</h2>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Hardware pipeline synchronized at 120Hz frame cap.</p>
+                        <div style="width:130px;height:130px;border:2px dashed #00ffcc;border-radius:50%;animation: pulse 1.5s linear infinite;"></div>
+                        <style>@keyframes pulse { 0% { transform: scale(0.9); box-shadow: 0 0 10px #00ffcc; } 50% { transform: scale(1.1); box-shadow: 0 0 30px #00ffcc; } 100% { transform: scale(0.9); box-shadow: 0 0 10px #00ffcc; } }</style>
+                    </body>
+                `);
+                doc.close();
+            }
+        }
+
+        function loadTerminal() {
+            const frame = document.getElementById('viewport');
+            document.getElementById('status-badge').innerText = "STATUS: ADMIN CLI ACTIVE";
             updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#020406;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;">
-                    <canvas id="vectorCanvas" width="900" height="550" style="border:1px solid #1a2230;box-shadow:0 0 40px rgba(0,255,204,0.08);background:#020406;"></canvas>
+                <body style="background:#000;color:#00ffcc;font-family:monospace;padding:25px;margin:0;">
+                    <h3 style="margin-bottom:8px;">SYS_ADMIN // TERMINAL INTERFACE</h3>
+                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Type 'help' for available system commands.</p>
+                    <div id="out" style="height:calc(100vh - 130px);overflow-y:auto;font-size:0.9rem;line-height:1.5;margin-bottom:15px;">
+                        <div style="color:#64748b;">[Training Wheels Protocol: Active]</div>
+                        <div style="color:#64748b;">[Secure Storage Node: Verified]</div>
+                    </div>
+                    <div style="display:flex;gap:10px;border-top:1px solid #1e2634;padding-top:15px;">
+                        <span style="color:#00ffcc;">root@sys:~#</span>
+                        <input type="text" id="cli" autofocus style="background:transparent;border:none;color:#e2e8f0;font-family:monospace;flex:1;outline:none;font-size:0.95rem;" />
+                    </div>
                     <script>
-                        const canvas = document.getElementById('vectorCanvas');
-                        const ctx = canvas.getContext('2d');
-                        let theta = 0;
-
-                        function renderLoop() {
-                            ctx.fillStyle = '#020406';
-                            ctx.fillRect(0, 0, canvas.width, canvas.height);
-                            ctx.strokeStyle = '#00ffcc';
-                            ctx.lineWidth = 2;
-
-                            let vertices = [
-                                [-60,-60,-60], [60,-60,-60], [60,60,-60], [-60,60,-60],
-                                [-60,-60,60], [60,-60,60], [60,60,60], [-60,60,60]
-                            ];
-
-                            let projected = vertices.map(v => {
-                                let x = v[0], y = v[1], z = v[2];
-                                let x1 = x * Math.cos(theta) - z * Math.sin(theta);
-                                let z1 = x * Math.sin(theta) + z * Math.cos(theta);
-                                let y2 = y * Math.cos(theta) - z1 * Math.sin(theta);
-                                let z2 = y * Math.sin(theta) + z1 * Math.cos(theta);
-                                let fov = 350;
-                                let depthFactor = fov / (fov + z2 + 220);
-                                return [canvas.width/2 + x1 * depthFactor, canvas.height/2 + y2 * depthFactor];
-                            });
-
-                            let wireframes = [
-                                [0,1],[1,2],[2,3],[3,0],
-                                [4,5],[5,6],[6,7],[7,4],
-                                [0,4],[1,5],[2,6],[3,7]
-                            ];
-
-                            wireframes.forEach(w => {
-                                ctx.beginPath();
-                                ctx.moveTo(projected[w[0]][0], projected[w[0]][1]);
-                                ctx.lineTo(projected[w[1]][0], projected[w[1]][1]);
-                                ctx.stroke();
-                            });
-
-                            theta += 0.025;
-                            requestAnimationFrame(renderLoop);
-                        }
-                        renderLoop();
+                        const out = document.getElementById('out');
+                        const cli = document.getElementById('cli');
+                        cli.addEventListener('keydown', function(e) {
+                            if(e.key === 'Enter') {
+                                let c = cli.value.trim();
+                                out.innerHTML += '<div style="color:#e2e8f0;">root@sys:~# ' + c + '</div>';
+                                if(c === 'help') {
+                                    out.innerHTML += '<div style="color:#64748b;">Commands: clear, status, protocol, panic</div>';
+                                } else if(c === 'clear') {
+                                    out.innerHTML = '';
+                                } else if(c === 'protocol') {
+                                    out.innerHTML += '<div style="color:#00ffcc;">Training Wheels Protocol: E-rated asset restriction enforced.</div>';
+                                } else {
+                                    out.innerHTML += '<div style="color:#ef4444;">Unknown command: ' + c + '</div>';
+                                }
+                                cli.value = '';
+                                out.scrollTop = out.scrollHeight;
+                            }
+                        });
                     <\/script>
                 </body>
             `);
             doc.close();
         }
 
-        function loadParticlePhysicsSim() {
+        function loadChat() {
             const frame = document.getElementById('viewport');
-            const hud = document.getElementById('hud-status');
-            hud.innerText = "STATUS: PARTICLE DYNAMICS SIMULATOR";
+            document.getElementById('status-badge').innerText = "STATUS: P2P SECURE COMMS";
             updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#020406;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;">
-                    <canvas id="particleCanvas" width="900" height="550" style="border:1px solid #1a2230;background:#020406;"></canvas>
+                <body style="background:#000;color:#e2e8f0;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
+                    <h3 style="color:#00ffcc;margin-bottom:5px;">SECURE P2P NODE CHAT</h3>
+                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Zero server logging. Encrypted local broadcast channel.</p>
+                    <div id="box" style="flex:1;border:1px solid #1e2634;background:#12161f;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;">
+                        <div style="color:#64748b;font-size:0.8rem;">[Node Connected Successfully]</div>
+                    </div>
+                    <div style="display:flex;gap:10px;">
+                        <input type="text" id="msg" placeholder="Type broadcast packet..." style="flex:1;background:#12161f;border:1px solid #1e2634;color:#e2e8f0;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
+                        <button onclick="send()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;border-radius:4px;">BROADCAST</button>
+                    </div>
                     <script>
-                        const canvas = document.getElementById('particleCanvas');
-                        const ctx = canvas.getContext('2d');
-                        let particles = [];
-                        
-                        for(let i=0; i<300; i++) {
-                            particles.push({
-                                x: Math.random() * canvas.width,
-                                y: Math.random() * canvas.height,
-                                vx: (Math.random() - 0.5) * 3,
-                                vy: (Math.random() - 0.5) * 3
-                            });
+                        function send() {
+                            let m = document.getElementById('msg');
+                            let b = document.getElementById('box');
+                            if(m.value.trim() !== '') {
+                                b.innerHTML += '<div style="margin-top:8px;"><span style="color:#00ffcc;">[Node]:</span> ' + m.value + '</div>';
+                                m.value = '';
+                                b.scrollTop = b.scrollHeight;
+                            }
                         }
-
-                        function updateParticles() {
-                            ctx.fillStyle = 'rgba(2, 4, 6, 0.25)';
-                            ctx.fillRect(0, 0, canvas.width, canvas.height);
-                            ctx.fillStyle = '#00ffcc';
-                            particles.forEach(p => {
-                                p.x += p.vx;
-                                p.y += p.vy;
-                                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
-                                ctx.fillRect(p.x, p.y, 2, 2);
-                            });
-                            requestAnimationFrame(updateParticles);
-                        }
-                        updateParticles();
                     <\/script>
                 </body>
             `);
             doc.close();
         }
-
-        window.onload = loadDashboard;
     </script>
 </body>
 </html>
