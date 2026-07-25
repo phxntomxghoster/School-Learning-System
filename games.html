@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYS_ARCADE // v1.7.5 [BYPASS ENGAGED]</title>
+    <title>SYS_ARCADE // v1.7.5 [STABLE DEPLOY]</title>
     <style>
         :root {
             --bg-base: #06080c;
@@ -13,7 +13,6 @@
             --accent-glow: rgba(0, 255, 204, 0.3);
             --text-main: #f1f5f9;
             --text-muted: #64748b;
-            --danger: #ff3366;
         }
 
         * {
@@ -205,36 +204,35 @@
     <header>
         <div class="brand">
             <div class="logo-title">SYS_ARCADE_ENGINE</div>
-            <div class="version-tag">v1.7.5 [SAFE-LOAD]</div>
+            <div class="version-tag">v1.7.5 [STABLE]</div>
         </div>
         <div class="telemetry-bar">
-            <div>FPS TARGET: <span class="telemetry-val">120 Hz</span></div>
-            <div>STATUS: <span class="telemetry-val">OPTIMIZED</span></div>
-            <div>PANIC KEY: <span class="telemetry-val">[ ` ] TILDE</span></div>
+            <div>FPS: <span class="telemetry-val">120 Hz</span></div>
+            <div>STATUS: <span class="telemetry-val">ONLINE</span></div>
+            <div>PANIC: <span class="telemetry-val">[ ` ] TILDE</span></div>
         </div>
     </header>
 
     <div class="arcade-container">
         <sidebar>
-            <div class="sidebar-group-title">Cloud Direct Portals</div>
-            <button class="arcade-btn active" onclick="loadDashboardHome()">🏠 Arcade Hub Dashboard</button>
-            <button class="arcade-btn" onclick="openExternalBypass('https://www.crazygames.com')">🎮 Launch CrazyGames (Direct Tab)</button>
-            <button class="arcade-btn" onclick="openExternalBypass('https://www.now.gg')">☁️ Launch Now.gg Cloud (Direct Tab)</button>
+            <div class="sidebar-group-title">Portal Hub Controls</div>
+            <button class="arcade-btn active" onclick="loadDashboard()">🏠 Command Dashboard</button>
+            <button class="arcade-btn" onclick="loadExternalPortal('https://www.crazygames.com', 'CrazyGames')">🎮 Open CrazyGames Portal</button>
+            <button class="arcade-btn" onclick="loadExternalPortal('https://www.now.gg', 'Now.gg')">☁️ Open Now.gg Cloud Hub</button>
 
             <div class="sidebar-group-title">EmulatorJS Cores</div>
             <button class="arcade-btn" onclick="loadEmulatorCore('nes')">🕹️ NES Classic Core</button>
             <button class="arcade-btn" onclick="loadEmulatorCore('snes')">👾 SNES 16-Bit Core</button>
             <button class="arcade-btn" onclick="loadEmulatorCore('gba')">🔋 Game Boy Advance Core</button>
-            <button class="arcade-btn" onclick="loadEmulatorCore('dosbox')">💻 MS-DOSBox Environment</button>
+            <button class="arcade-btn" onclick="loadEmulatorCore('dosbox')">💻 MS-DOS Environment</button>
 
             <div class="sidebar-group-title">Native 3D & Vector Engines</div>
             <button class="arcade-btn" onclick="loadVectorEngine3D()">🚀 3D Wireframe Matrix (120 FPS)</button>
-            <button class="arcade-btn" onclick="loadRaymarchShaderCore()">🔮 Raymarching Shader Pipeline</button>
-            <button class="arcade-btn" onclick="loadParticlePhysicsSim()">✨ 5,000 Particle Gravitational Sim</button>
+            <button class="arcade-btn" onclick="loadParticlePhysicsSim()">✨ Particle Dynamic Sim</button>
         </sidebar>
 
         <main>
-            <div class="hud-display" id="hud-status">STATUS: HUB ACTIVE</div>
+            <div class="hud-display" id="hud-status">STATUS: SYSTEM READY</div>
             <iframe id="viewport" class="viewport-frame"></iframe>
         </main>
     </div>
@@ -247,50 +245,53 @@
             }
         });
 
-        function updateNavigationState(element) {
+        function updateNav(element) {
             document.querySelectorAll('.arcade-btn').forEach(btn => btn.classList.remove('active'));
             if(element) element.classList.add('active');
         }
 
-        function loadDashboardHome() {
+        function loadDashboard() {
             const frame = document.getElementById('viewport');
             const hud = document.getElementById('hud-status');
-            hud.innerText = "STATUS: HUB DASHBOARD ACTIVE";
-            updateNavigationState(event.currentTarget);
+            hud.innerText = "STATUS: DASHBOARD ACTIVE";
+            updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
                 <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
-                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">SYS_ARCADE_ENGINE v1.7.5</h1>
-                    <p style="color:#64748b;max-width:600px;line-height:1.5;margin-bottom:30px;">Select a core module from the sidebar. External embeds block direct iframes via security headers, so cloud portals utilize isolated direct tabs while emulators and native 3D engines run locally in-frame.</p>
-                    <div style="display:flex;gap:15px;">
-                        <div style="border:1px solid #1a2230;padding:20px;background:#0f131c;border-radius:6px;width:200px;">
-                            <h3 style="color:#00ffcc;font-size:1rem;margin-bottom:8px;">EMULATORJS</h3>
-                            <p style="color:#64748b;font-size:0.75rem;">Retro ROM console hooks ready.</p>
-                        </div>
-                        <div style="border:1px solid #1a2230;padding:20px;background:#0f131c;border-radius:6px;width:200px;">
-                            <h3 style="color:#00ffcc;font-size:1rem;margin-bottom:8px;">3D RENDERERS</h3>
-                            <p style="color:#64748b;font-size:0.75rem;">Hardware-accelerated 120Hz canvas.</p>
-                        </div>
+                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">SYS_ARCADE v1.7.5</h1>
+                    <p style="color:#64748b;max-width:550px;line-height:1.5;margin-bottom:25px;">Select an engine module or portal from the left control panel. Cloud nodes launch safely via secure redirects to prevent domain filtering blocks.</p>
+                </body>
+            `);
+            doc.close();
+        }
+
+        function loadExternalPortal(url, name) {
+            const frame = document.getElementById('viewport');
+            const hud = document.getElementById('hud-status');
+            hud.innerText = `STATUS: LAUNCHING ${name.toUpperCase()}`;
+            updateNav(event.currentTarget);
+
+            let doc = frame.contentDocument || frame.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
+                    <div style="border:1px solid #00ffcc;padding:40px;background:#0f131c;border-radius:6px;max-width:500px;box-shadow:0 0 30px rgba(0,255,204,0.15);">
+                        <h2 style="color:#00ffcc;margin-bottom:12px;">${name.toUpperCase()} SECURE GATEWAY</h2>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;line-height:1.4;">External domain security policies prevent direct frame injection. Click below to launch the node in an isolated working tab.</p>
+                        <a href="${url}" target="_blank" style="display:inline-block;background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;text-decoration:none;font-weight:bold;border-radius:4px;transition:0.2s;">🚀 Initialize ${name} Portal</a>
                     </div>
                 </body>
             `);
             doc.close();
         }
 
-        function openExternalBypass(url) {
-            window.open(url, '_blank');
-            const hud = document.getElementById('hud-status');
-            hud.innerText = "STATUS: EXTERNAL PORTAL OPENED IN TAB";
-            updateNavigationState(event.currentTarget);
-        }
-
         function loadEmulatorCore(consoleType) {
             const frame = document.getElementById('viewport');
             const hud = document.getElementById('hud-status');
             hud.innerText = `STATUS: EMULATOR CORE [${consoleType.toUpperCase()}]`;
-            updateNavigationState(event.currentTarget);
+            updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
@@ -298,7 +299,7 @@
                 <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
                     <div style="border:1px solid #00ffcc;padding:40px;background:#0f131c;text-align:center;box-shadow:0 0 30px rgba(0,255,204,0.15);border-radius:6px;max-width:550px;">
                         <h2 style="color:#00ffcc;margin-bottom:12px;letter-spacing:1px;">CORE // ${consoleType.toUpperCase()}</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;line-height:1.4;">Emulator sandbox mounted with dedicated local memory allocation at 120Hz cap.</p>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Local sandbox mounted with hardware-accelerated 120Hz sync.</p>
                         <input type="file" id="rom-selector" style="display:none;" />
                         <button onclick="document.getElementById('rom-selector').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount Local ROM Image</button>
                     </div>
@@ -311,7 +312,7 @@
             const frame = document.getElementById('viewport');
             const hud = document.getElementById('hud-status');
             hud.innerText = "STATUS: 3D VECTOR ENGINE (120 FPS)";
-            updateNavigationState(event.currentTarget);
+            updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
@@ -368,30 +369,11 @@
             doc.close();
         }
 
-        function loadRaymarchShaderCore() {
-            const frame = document.getElementById('viewport');
-            const hud = document.getElementById('hud-status');
-            hud.innerText = "STATUS: RAYMARCHING PIPELINE ACTIVE";
-            updateNavigationState(event.currentTarget);
-
-            let doc = frame.contentDocument || frame.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <body style="background:#020406;color:#00ffcc;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
-                    <h2 style="letter-spacing:2px;margin-bottom:8px;">RAYMARCH ACCELERATOR PIPELINE</h2>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">Signed Distance Field (SDF) evaluation loop executing at 120Hz sync.</p>
-                    <div style="width:140px;height:140px;border:2px dashed #00ffcc;border-radius:50%;animation: rotateRing 2s linear infinite;"></div>
-                    <style>@keyframes rotateRing { 0% { transform: rotate(0deg) scale(0.95); box-shadow: 0 0 10px rgba(0,255,204,0.2); } 50% { transform: rotate(180deg) scale(1.05); box-shadow: 0 0 35px rgba(0,255,204,0.4); } 100% { transform: rotate(360deg) scale(0.95); box-shadow: 0 0 10px rgba(0,255,204,0.2); } }</style>
-                </body>
-            `);
-            doc.close();
-        }
-
         function loadParticlePhysicsSim() {
             const frame = document.getElementById('viewport');
             const hud = document.getElementById('hud-status');
             hud.innerText = "STATUS: PARTICLE DYNAMICS SIMULATOR";
-            updateNavigationState(event.currentTarget);
+            updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
@@ -432,8 +414,7 @@
             doc.close();
         }
 
-        // Initialize default screen on load
-        window.onload = loadDashboardHome;
+        window.onload = loadDashboard;
     </script>
 </body>
 </html>
