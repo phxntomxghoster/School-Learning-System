@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYS_HUB // v1.7.5 [TRAINING WHEELS PROTOCOL]</title>
+    <title>SYS_HUB // v2.0.0 [MASTER NODE EDITION]</title>
     <style>
         :root {
-            --bg-deep: #0a0c10;
-            --panel-bg: #12161f;
-            --panel-border: #1e2634;
+            --bg-base: #06080c;
+            --panel-bg: #0f131c;
+            --panel-border: #1a2230;
             --accent: #00ffcc;
             --accent-glow: rgba(0, 255, 204, 0.25);
-            --text-main: #e2e8f0;
+            --text-main: #f1f5f9;
             --text-muted: #64748b;
-            --danger: #ef4444;
+            --danger: #ff3366;
         }
 
         * {
@@ -24,7 +24,7 @@
         }
 
         body {
-            background-color: var(--bg-deep);
+            background-color: var(--bg-base);
             color: var(--text-main);
             height: 100vh;
             display: flex;
@@ -32,14 +32,14 @@
             overflow: hidden;
         }
 
-        /* --- AUTH SCREEN OVERLAY --- */
+        /* --- AUTH SCREEN --- */
         #auth-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: var(--bg-deep);
+            background: var(--bg-base);
             z-index: 99999;
             display: flex;
             justify-content: center;
@@ -50,14 +50,15 @@
             background: var(--panel-bg);
             border: 1px solid var(--accent);
             padding: 40px;
+            width: 420px;
             border-radius: 6px;
-            width: 400px;
-            box-shadow: 0 0 30px var(--accent-glow);
+            box-shadow: 0 0 40px var(--accent-glow);
             text-align: center;
         }
 
-        .auth-card h2 {
+        .auth-card h1 {
             color: var(--accent);
+            font-size: 1.3rem;
             margin-bottom: 8px;
             letter-spacing: 2px;
         }
@@ -70,18 +71,19 @@
 
         .auth-input {
             width: 100%;
-            background: #0a0c10;
+            background: #040609;
             border: 1px solid var(--panel-border);
             color: var(--text-main);
             padding: 12px;
             margin-bottom: 15px;
+            border-radius: 4px;
             font-family: monospace;
             outline: none;
-            border-radius: 4px;
         }
 
         .auth-input:focus {
             border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
         }
 
         .auth-btn {
@@ -91,7 +93,6 @@
             color: var(--accent);
             padding: 12px;
             cursor: pointer;
-            font-family: monospace;
             font-weight: bold;
             border-radius: 4px;
             transition: 0.2s;
@@ -100,64 +101,112 @@
 
         .auth-btn:hover {
             background: rgba(0, 255, 204, 0.1);
-            box-shadow: 0 0 10px var(--accent-glow);
+            box-shadow: 0 0 12px var(--accent-glow);
         }
 
-        .auth-switch {
-            margin-top: 15px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            cursor: pointer;
+        /* --- REALISTIC GOOGLE CLASSROOM PANIC MASK (ESC KEY) --- */
+        #panic-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #f8f9fa;
+            z-index: 99998;
+            display: none;
+            font-family: Arial, sans-serif;
+            color: #202124;
         }
 
-        .auth-switch:hover {
-            color: var(--accent);
+        .gc-header {
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid #dadce0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
         }
 
-        /* --- MAIN UI --- */
+        .gc-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            color: #5f6368;
+            font-weight: 500;
+        }
+
+        .gc-body {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .gc-class-banner {
+            background: #1967d2;
+            color: white;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .gc-assignment {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- MAIN INTERFACE --- */
         header {
             background-color: var(--panel-bg);
-            padding: 12px 20px;
+            padding: 12px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--accent);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
             z-index: 10;
         }
 
-        .logo-area {
+        .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
 
         .logo {
-            font-weight: bold;
+            font-weight: 900;
             color: var(--accent);
             letter-spacing: 2px;
             font-size: 1.1rem;
             text-shadow: 0 0 10px var(--accent-glow);
         }
 
-        .badge-ver {
+        .tag {
             background: rgba(0, 255, 204, 0.1);
             border: 1px solid var(--accent);
             color: var(--accent);
             padding: 2px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
+            font-size: 0.7rem;
+            border-radius: 3px;
         }
 
-        .metrics-bar {
+        .telemetry {
             display: flex;
             gap: 20px;
             font-size: 0.85rem;
             color: var(--text-muted);
         }
 
-        .metric-val {
+        .telemetry span {
             color: var(--accent);
+            font-weight: bold;
         }
 
         .workspace {
@@ -168,21 +217,21 @@
         }
 
         sidebar {
-            width: 300px;
+            width: 310px;
             background-color: var(--panel-bg);
             border-right: 1px solid var(--panel-border);
             display: flex;
             flex-direction: column;
             padding: 15px;
-            gap: 8px;
+            gap: 6px;
             overflow-y: auto;
         }
 
-        .sidebar-section-title {
-            font-size: 0.75rem;
+        .group-title {
+            font-size: 0.7rem;
             text-transform: uppercase;
             color: var(--text-muted);
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             margin-top: 10px;
             margin-bottom: 4px;
             border-bottom: 1px solid var(--panel-border);
@@ -190,14 +239,14 @@
         }
 
         .nav-btn {
-            background: transparent;
+            background: rgba(15, 19, 28, 0.4);
             border: 1px solid var(--panel-border);
             color: var(--text-main);
             padding: 10px 12px;
             text-align: left;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             border-radius: 4px;
             display: flex;
             align-items: center;
@@ -207,14 +256,14 @@
         .nav-btn:hover {
             border-color: var(--accent);
             color: var(--accent);
-            background: rgba(0, 255, 204, 0.04);
-            transform: translateX(2px);
+            background: rgba(0, 255, 204, 0.05);
+            transform: translateX(3px);
         }
 
         .nav-btn.active {
             border-color: var(--accent);
             color: var(--accent);
-            background: rgba(0, 255, 204, 0.08);
+            background: rgba(0, 255, 204, 0.1);
             box-shadow: inset 3px 0 0 var(--accent);
         }
 
@@ -223,22 +272,22 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            background: #000;
+            background: #020406;
         }
 
-        .viewport-screen {
+        .viewport {
             flex: 1;
             border: none;
             width: 100%;
             height: 100%;
-            background: #000;
+            background: #020406;
         }
 
-        .hud-overlay {
+        .hud-status {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: rgba(10, 12, 16, 0.85);
+            background: rgba(10, 14, 22, 0.9);
             border: 1px solid var(--accent);
             padding: 8px 14px;
             font-size: 0.75rem;
@@ -248,156 +297,112 @@
             backdrop-filter: blur(4px);
             z-index: 5;
         }
-
-        #panic-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #ffffff;
-            z-index: 99999;
-            display: none;
-            padding: 40px;
-            font-family: Arial, sans-serif;
-            color: #333;
-        }
     </style>
 </head>
 <body>
 
-    <!-- AUTHENTICATION & SECURE PASSCODE GATE -->
+    <!-- AUTHENTICATION GATE -->
     <div id="auth-overlay">
         <div class="auth-card">
-            <h2 id="auth-title">SYS_LOGIN // ACCESS</h2>
-            <p id="auth-subtitle">Enter credentials or establish new protocol node.</p>
+            <h1>SYS_MASTER_GATE</h1>
+            <p>Admin Login: projectt / 090515</p>
             
-            <input type="text" id="auth-user" class="auth-input" placeholder="Enter Username..." />
-            <input type="password" id="auth-pass" class="auth-input" placeholder="Enter Secure Passcode..." />
+            <input type="text" id="username-box" class="auth-input" placeholder="Enter Username..." />
+            <input type="password" id="passcode-box" class="auth-input" placeholder="Enter Passcode Key..." />
             
-            <button class="auth-btn" id="auth-action-btn" onclick="handleAuthSubmit()">INITIALIZE SESSION</button>
-            <div class="auth-switch" id="auth-switch-mode" onclick="toggleAuthMode()">Switch to: Create New User & Passcode</div>
+            <button class="auth-btn" onclick="authenticateUser()">INITIALIZE MASTER SESSION</button>
         </div>
     </div>
 
-    <!-- EMERGENCY PANIC MASK -->
-    <div id="panic-screen">
-        <h1 style="color: #1a0dab; font-size: 2rem; margin-bottom: 10px;">Google Drive - My Drive</h1>
-        <p style="color: #5f6368; font-size: 0.9rem; margin-bottom: 30px;">Loading folder contents...</p>
-        <hr style="border: 0; border-top: 1px solid #dadce0; margin-bottom: 20px;">
-        <div style="display: flex; gap: 40px; color: #202124; font-size: 0.95rem;">
-            <div>Name 📁</div>
-            <div>Owner</div>
-            <div>Last modified</div>
+    <!-- ESCAPE PANIC SCREEN (GOOGLE CLASSROOM) -->
+    <div id="panic-mask">
+        <div class="gc-header">
+            <div class="gc-title">📚 <span>Google Classroom</span></div>
+            <div style="color: #5f6368; font-size: 0.9rem;">Signed in as <b>phxntom@student.org</b></div>
         </div>
-        <div style="margin-top: 15px; color: #3c4043; font-size: 0.9rem;">
-            <p>📁 Physics_Research_Final_Draft_v2.docx</p>
-            <p style="margin-top: 10px;">📁 Calculus_Notes_Chapter_4.pdf</p>
+        <div class="gc-body">
+            <div class="gc-class-banner">
+                <h1 style="font-size: 1.8rem; margin-bottom: 5px;">AP Physics C: Mechanics</h1>
+                <p style="opacity: 0.9;">Period 4 • Room 302</p>
+            </div>
+            <h3 style="margin-bottom: 15px; color: #3c4043;">Upcoming Assignments</h3>
+            <div class="gc-assignment">
+                <div>
+                    <h4 style="color: #202124;">Lab Report: Conservation of Momentum</h4>
+                    <p style="color: #5f6368; font-size: 0.85rem; margin-top: 4px;">Due Tomorrow, 11:59 PM</p>
+                </div>
+                <span style="color: #1967d2; font-weight: bold; font-size: 0.9rem;">Assigned</span>
+            </div>
+            <div class="gc-assignment">
+                <div>
+                    <h4 style="color: #202124;">Chapter 7 Problem Set (Rotational Dynamics)</h4>
+                    <p style="color: #5f6368; font-size: 0.85rem; margin-top: 4px;">Due Friday, 3:00 PM</p>
+                </div>
+                <span style="color: #1967d2; font-weight: bold; font-size: 0.9rem;">Assigned</span>
+            </div>
         </div>
     </div>
 
     <header>
-        <div class="logo-area">
-            <div class="logo">SYS_DIAG_HUB</div>
-            <div class="badge-ver">v1.7.5 [TRAINING WHEELS]</div>
+        <div class="brand">
+            <div class="logo">SYS_MASTER_HUB</div>
+            <div class="tag">v2.0.0 [AI INTEGRATED]</div>
         </div>
-        <div class="metrics-bar">
-            <div>FPS: <span id="metric-fps" class="metric-val">120</span></div>
-            <div>PROTOCOL: <span class="metric-val">E-RATED ONLY</span></div>
-            <div>PANIC KEY: <span class="metric-val">[`] TILDE</span></div>
+        <div class="telemetry">
+            <div>NODE: <span style="color:#00ffcc;">LOCAL HOST</span></div>
+            <div>STATUS: <span style="color:#00ffcc;">SECURE</span></div>
+            <div>PANIC: <span>[ESC] KEY</span></div>
         </div>
     </header>
 
     <div class="workspace">
         <sidebar>
-            <div class="sidebar-section-title">Cloud & Stream Portals</div>
-            <button class="nav-btn active" onclick="loadPortal('https://www.crazygames.com', 'CrazyGames Gateway')">🎮 CrazyGames Direct Portal</button>
-            <button class="nav-btn" onclick="loadPortal('https://www.now.gg', 'Now.gg Cloud Node')">☁️ Now.gg Cloud Gateway</button>
+            <div class="group-title">Cloud & Stream Hubs</div>
+            <button class="nav-btn active" onclick="loadPortal('https://www.crazygames.com', 'CrazyGames Gateway')">🎮 CrazyGames Secure Portal</button>
+            <button class="nav-btn" onclick="loadPortal('https://www.now.gg', 'Now.gg Cloud Node')">☁️ Now.gg Cloud Hub</button>
 
-            <div class="sidebar-section-title">Advanced Retro & Next-Gen Cores</div>
-            <button class="nav-btn" onclick="loadConsoleCore('ps1')">💿 Sony PlayStation 1 (PS1)</button>
-            <button class="nav-btn" onclick="loadConsoleCore('ps2')">📀 Sony PlayStation 2 (PS2 - E-Rated)</button>
-            <button class="nav-btn" onclick="loadConsoleCore('psp')">🕹️ PlayStation Portable (PSP)</button>
-            <button class="nav-btn" onclick="loadConsoleCore('ps3')">⚡ PlayStation 3 (Cell Matrix)</button>
-            <button class="nav-btn" onclick="loadConsoleCore('xbox')">🟢 Microsoft Xbox (Original)</button>
-            <button class="nav-btn" onclick="loadConsoleCore('x360')">💚 Microsoft Xbox 360 (Xenon)</button>
-            <button class="nav-btn" onclick="loadConsoleCore('emulatorjs')">👾 Classic Console Hub (NES/SNES/GBA)</button>
+            <div class="group-title">Emulation Engines</div>
+            <button class="nav-btn" onclick="loadEmulator('ps1')">💿 Sony PlayStation 1 (PS1)</button>
+            <button class="nav-btn" onclick="loadEmulator('ps2')">📀 Sony PlayStation 2 (PS2 E-Rated)</button>
+            <button class="nav-btn" onclick="loadEmulator('psp')">🕹️ PlayStation Portable (PSP)</button>
+            <button class="nav-btn" onclick="loadEmulator('ps3')">⚡ PlayStation 3 (Cell Matrix)</button>
+            <button class="nav-btn" onclick="loadEmulator('xbox')">🟢 Microsoft Xbox (Original)</button>
+            <button class="nav-btn" onclick="loadEmulator('x360')">💚 Microsoft Xbox 360 (Xenon)</button>
 
-            <div class="sidebar-section-title">Native Hardware 3D Engines</div>
-            <button class="nav-btn" onclick="loadEngine3D('matrix')">🚀 Advanced 3D Wireframe Matrix</button>
-            <button class="nav-btn" onclick="loadEngine3D('raymarch')">🔮 Raymarching SDF Pipeline</button>
-            <button class="nav-btn" onclick="loadEngine3D('particles')">✨ 10,000 Particle Gravitational Engine</button>
+            <div class="group-title">Native 3D Engines</div>
+            <button class="nav-btn" onclick="loadEngine3D('matrix')">🚀 3D Wireframe Matrix (120 FPS)</button>
+            <button class="nav-btn" onclick="loadEngine3D('particles')">✨ 10,000 Particle Physics Sim</button>
 
-            <div class="sidebar-section-title">Comms & Utilities</div>
-            <button class="nav-btn" onclick="loadTerminal()">⚡ Admin Command CLI</button>
-            <button class="nav-btn" onclick="loadChat()">💬 Local Secure P2P Comms</button>
+            <div class="group-title">Admin Terminal & AI</div>
+            <button class="nav-btn" onclick="loadAdminTerminal()">⚡ AI-Integrated Admin CLI</button>
+            <button class="nav-btn" onclick="loadComms()">💬 Secure P2P Comms</button>
         </sidebar>
 
         <main>
-            <div class="hud-overlay" id="status-badge">STATUS: TRAINING WHEELS ENGAGED</div>
-            <iframe id="viewport" class="viewport-screen"></iframe>
+            <div class="hud-status" id="hud-status">STATUS: MASTER SESSION ACTIVE</div>
+            <iframe id="viewport" class="viewport"></iframe>
         </main>
     </div>
 
     <script>
-        // --- AUTH LOGIC ---
-        let isCreatingAccount = false;
+        // --- MASTER AUTHENTICATION ---
+        function authenticateUser() {
+            const user = document.getElementById('username-box').value.trim();
+            const pass = document.getElementById('passcode-box').value.trim();
 
-        function toggleAuthMode() {
-            isCreatingAccount = !isCreatingAccount;
-            const title = document.getElementById('auth-title');
-            const sub = document.getElementById('auth-subtitle');
-            const btn = document.getElementById('auth-action-btn');
-            const switcher = document.getElementById('auth-switch-mode');
-
-            if (isCreatingAccount) {
-                title.innerText = "SYS_REGISTER // CREATE";
-                sub.innerText = "Establish a new user profile and passcode key.";
-                btn.innerText = "CREATE & ESTABLISH PROFILE";
-                switcher.innerText = "Switch to: Login with existing credentials";
+            if (user === 'projectt' && pass === '090515') {
+                document.getElementById('auth-overlay').style.display = 'none';
+                loadDashboard();
             } else {
-                title.innerText = "SYS_LOGIN // ACCESS";
-                sub.innerText = "Enter credentials or establish new protocol node.";
-                btn.innerText = "INITIALIZE SESSION";
-                switcher.innerText = "Switch to: Create New User & Passcode";
+                alert("Access Denied. Master credentials required: projectt / 090515");
             }
         }
 
-        function handleAuthSubmit() {
-            const user = document.getElementById('auth-user').value.trim();
-            const pass = document.getElementById('auth-pass').value.trim();
-
-            if (!user || !pass) {
-                alert("Please provide both a username and secure passcode.");
-                return;
-            }
-
-            if (isCreatingAccount) {
-                localStorage.setItem('sys_user_' + user, pass);
-                alert("Profile and passcode successfully created! Initializing session...");
-            } else {
-                let savedPass = localStorage.getItem('sys_user_' + user);
-                if (savedPass && savedPass !== pass) {
-                    alert("Invalid passcode for user node.");
-                    return;
-                }
-            }
-
-            // Dismiss overlay
-            document.getElementById('auth-overlay').style.display = 'none';
-            loadDashboard();
-        }
-
-        // --- GLOBAL PERFORMANCE & PANIC ---
-        setInterval(() => {
-            let jitter = Math.floor(Math.random() * (120 - 116 + 1)) + 116;
-            document.getElementById('metric-fps').innerText = jitter;
-        }, 1500);
-
+        // --- ESCAPE PANIC KEY ---
         window.addEventListener('keydown', (e) => {
-            if (e.key === '`' || e.key === '~') {
-                const screen = document.getElementById('panic-screen');
-                screen.style.display = screen.style.display === 'block' ? 'none' : 'block';
+            if (e.key === 'Escape') {
+                const mask = document.getElementById('panic-mask');
+                mask.style.display = mask.style.display === 'block' ? 'none' : 'block';
             }
         });
 
@@ -408,14 +413,14 @@
 
         function loadDashboard() {
             const frame = document.getElementById('viewport');
-            document.getElementById('status-badge').innerText = "STATUS: DASHBOARD ACTIVE";
+            document.getElementById('hud-status').innerText = "STATUS: MASTER DASHBOARD";
             
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#000;color:#e2e8f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
-                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">SYS_HUB v1.7.5</h1>
-                    <p style="color:#64748b;max-width:550px;line-height:1.5;margin-bottom:20px;">Training Wheels protocol active: Restricted to E-rated engines, high-performance next-gen console wrappers, and secure sandboxed nodes.</p>
+                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
+                    <h1 style="color:#00ffcc;font-size:2rem;margin-bottom:10px;letter-spacing:2px;">SYS_HUB MASTER NODE</h1>
+                    <p style="color:#64748b;max-width:550px;line-height:1.5;margin-bottom:20px;">Logged in as master admin. Fully loaded with offline emulation support, admin AI terminal, and ESC-triggered Google Classroom disguise.</p>
                 </body>
             `);
             doc.close();
@@ -423,37 +428,37 @@
 
         function loadPortal(url, name) {
             const frame = document.getElementById('viewport');
-            document.getElementById('status-badge').innerText = `STATUS: ${name.toUpperCase()} GATEWAY`;
+            document.getElementById('hud-status').innerText = `STATUS: ${name.toUpperCase()}`;
             updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#000;color:#e2e8f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
-                    <div style="border:1px solid #00ffcc;padding:40px;background:#12161f;border-radius:6px;max-width:500px;box-shadow:0 0 30px rgba(0,255,204,0.15);">
-                        <h2 style="color:#00ffcc;margin-bottom:12px;">${name.toUpperCase()} SECURE NODE</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;line-height:1.4;">External cloud platform protected by network headers. Launch in isolated secure tab to bypass frame blocks.</p>
-                        <a href="${url}" target="_blank" style="display:inline-block;background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;text-decoration:none;font-weight:bold;border-radius:4px;">🚀 Launch ${name} Direct Portal</a>
+                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;">
+                    <div style="border:1px solid #00ffcc;padding:40px;background:#0f131c;border-radius:6px;max-width:500px;box-shadow:0 0 30px rgba(0,255,204,0.15);">
+                        <h2 style="color:#00ffcc;margin-bottom:12px;">${name.toUpperCase()}</h2>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:25px;">External gateway protected by frame security. Launch in isolated tab to bypass restriction.</p>
+                        <a href="${url}" target="_blank" style="display:inline-block;background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;text-decoration:none;font-weight:bold;border-radius:4px;">🚀 Initialize Gateway Node</a>
                     </div>
                 </body>
             `);
             doc.close();
         }
 
-        function loadConsoleCore(consoleName) {
+        function loadEmulator(type) {
             const frame = document.getElementById('viewport');
-            document.getElementById('status-badge').innerText = `STATUS: ${consoleName.toUpperCase()} CORE`;
+            document.getElementById('hud-status').innerText = `STATUS: ${type.toUpperCase()} CORE [TRAINING WHEELS]`;
             updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#000;color:#e2e8f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
-                    <div style="border:1px solid #00ffcc;padding:40px;background:#12161f;text-align:center;box-shadow:0 0 30px rgba(0,255,204,0.15);border-radius:6px;max-width:600px;">
-                        <h2 style="color:#00ffcc;margin-bottom:10px;">${consoleName.toUpperCase()} EMULATION ENVIRONMENT</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Training Wheels active: Restricted to E-rated assets only. Hardware pipeline locked at 120Hz cap.</p>
-                        <input type="file" id="rom-upload" style="display:none;" />
-                        <button onclick="document.getElementById('rom-upload').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount ${consoleName.toUpperCase()} Image Binary</button>
+                <body style="background:#020406;color:#f1f5f9;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
+                    <div style="border:1px solid #00ffcc;padding:40px;background:#0f131c;text-align:center;box-shadow:0 0 30px rgba(0,255,204,0.15);border-radius:6px;max-width:550px;">
+                        <h2 style="color:#00ffcc;margin-bottom:10px;">${type.toUpperCase()} EMULATION SANDBOX</h2>
+                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Training Wheels protocol active: E-rated hardware binary mount ready at 120Hz cap.</p>
+                        <input type="file" id="rom" style="display:none;" />
+                        <button onclick="document.getElementById('rom').click()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:12px 24px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">📂 Mount Binary Image</button>
                     </div>
                 </body>
             `);
@@ -462,99 +467,91 @@
 
         function loadEngine3D(type) {
             const frame = document.getElementById('viewport');
-            document.getElementById('status-badge').innerText = `STATUS: 3D ENGINE [${type.toUpperCase()}]`;
-            updateNav(event.currentTarget);
-
-            if (type === 'matrix') {
-                let doc = frame.contentDocument || frame.contentWindow.document;
-                doc.open();
-                doc.write(`
-                    <body style="background:#000;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;">
-                        <canvas id="c" width="900" height="550" style="border:1px solid #1e2634;background:#000;"></canvas>
-                        <script>
-                            const canvas = document.getElementById('c');
-                            const ctx = canvas.getContext('2d');
-                            let angle = 0;
-                            function loop() {
-                                ctx.fillStyle = '#000';
-                                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                                ctx.strokeStyle = '#00ffcc';
-                                ctx.lineWidth = 2;
-                                let pts = [[-70,-70,-70],[70,-70,-70],[70,70,-70],[-70,70,-70],[-70,-70,70],[70,-70,70],[70,70,70],[-70,70,70]];
-                                let proj = pts.map(p => {
-                                    let x = p[0], y = p[1], z = p[2];
-                                    let x1 = x * Math.cos(angle) - z * Math.sin(angle);
-                                    let z1 = x * Math.sin(angle) + z * Math.cos(angle);
-                                    let y2 = y * Math.cos(angle) - z1 * Math.sin(angle);
-                                    let z2 = y * Math.sin(angle) + z1 * Math.cos(angle);
-                                    let f = 350, s = f / (f + z2 + 250);
-                                    return [canvas.width/2 + x1 * s, canvas.height/2 + y2 * s];
-                                });
-                                let edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-                                edges.forEach(e => {
-                                    ctx.beginPath();
-                                    ctx.moveTo(proj[e[0]][0], proj[e[0]][1]);
-                                    ctx.lineTo(proj[e[1]][0], proj[e[1]][1]);
-                                    ctx.stroke();
-                                });
-                                angle += 0.02;
-                                requestAnimationFrame(loop);
-                            }
-                            loop();
-                        <\/script>
-                    </body>
-                `);
-                doc.close();
-            } else {
-                let doc = frame.contentDocument || frame.contentWindow.document;
-                doc.open();
-                doc.write(`
-                    <body style="background:#000;color:#00ffcc;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;">
-                        <h2 style="letter-spacing:2px;margin-bottom:10px;">${type.toUpperCase()} ACCELERATOR PIPELINE</h2>
-                        <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Hardware pipeline synchronized at 120Hz frame cap.</p>
-                        <div style="width:130px;height:130px;border:2px dashed #00ffcc;border-radius:50%;animation: pulse 1.5s linear infinite;"></div>
-                        <style>@keyframes pulse { 0% { transform: scale(0.9); box-shadow: 0 0 10px #00ffcc; } 50% { transform: scale(1.1); box-shadow: 0 0 30px #00ffcc; } 100% { transform: scale(0.9); box-shadow: 0 0 10px #00ffcc; } }</style>
-                    </body>
-                `);
-                doc.close();
-            }
-        }
-
-        function loadTerminal() {
-            const frame = document.getElementById('viewport');
-            document.getElementById('status-badge').innerText = "STATUS: ADMIN CLI ACTIVE";
+            document.getElementById('hud-status').innerText = "STATUS: 3D VECTOR ENGINE";
             updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#000;color:#00ffcc;font-family:monospace;padding:25px;margin:0;">
-                    <h3 style="margin-bottom:8px;">SYS_ADMIN // TERMINAL INTERFACE</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Type 'help' for available system commands.</p>
-                    <div id="out" style="height:calc(100vh - 130px);overflow-y:auto;font-size:0.9rem;line-height:1.5;margin-bottom:15px;">
-                        <div style="color:#64748b;">[Training Wheels Protocol: Active]</div>
-                        <div style="color:#64748b;">[Secure Storage Node: Verified]</div>
+                <body style="background:#020406;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh;">
+                    <canvas id="c" width="900" height="550" style="border:1px solid #1a2230;background:#020406;"></canvas>
+                    <script>
+                        const canvas = document.getElementById('c');
+                        const ctx = canvas.getContext('2d');
+                        let a = 0;
+                        function loop() {
+                            ctx.fillStyle = '#020406';
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                            ctx.strokeStyle = '#00ffcc';
+                            ctx.lineWidth = 2;
+                            let p = [[-70,-70,-70],[70,-70,-70],[70,70,-70],[-70,70,-70],[-70,-70,70],[70,-70,70],[70,70,70],[-70,70,70]];
+                            let proj = p.map(v => {
+                                let x = v[0], y = v[1], z = v[2];
+                                let x1 = x * Math.cos(a) - z * Math.sin(a);
+                                let z1 = x * Math.sin(a) + z * Math.cos(a);
+                                let y2 = y * Math.cos(a) - z1 * Math.sin(a);
+                                let z2 = y * Math.sin(a) + z1 * Math.cos(a);
+                                let f = 350, s = f / (f + z2 + 250);
+                                return [canvas.width/2 + x1 * s, canvas.height/2 + y2 * s];
+                            });
+                            let e = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+                            e.forEach(edge => {
+                                ctx.beginPath();
+                                ctx.moveTo(proj[edge[0]][0], proj[edge[0]][1]);
+                                ctx.lineTo(proj[edge[1]][0], proj[edge[1]][1]);
+                                ctx.stroke();
+                            });
+                            a += 0.02;
+                            requestAnimationFrame(loop);
+                        }
+                        loop();
+                    <\/script>
+                </body>
+            `);
+            doc.close();
+        }
+
+        // --- AI-INTEGRATED ADMIN CLI TERMINAL ---
+        function loadAdminTerminal() {
+            const frame = document.getElementById('viewport');
+            document.getElementById('hud-status').innerText = "STATUS: ADMIN CLI + AI ACTIVE";
+            updateNav(event.currentTarget);
+
+            let doc = frame.contentDocument || frame.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <body style="background:#020406;color:#00ffcc;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
+                    <h3 style="margin-bottom:5px;">SYS_ADMIN // INTEGRATED AI TERMINAL</h3>
+                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Type 'help' for commands, or type 'ai [query]' to prompt your built-in local assistant.</p>
+                    <div id="out" style="flex:1;border:1px solid #1a2230;background:#0f131c;padding:15px;overflow-y:auto;font-size:0.9rem;line-height:1.5;margin-bottom:15px;border-radius:4px;">
+                        <div style="color:#64748b;">[Master Node User: projectt]</div>
+                        <div style="color:#64748b;">[AI Subsystem Online & Ready]</div>
                     </div>
-                    <div style="display:flex;gap:10px;border-top:1px solid #1e2634;padding-top:15px;">
-                        <span style="color:#00ffcc;">root@sys:~#</span>
-                        <input type="text" id="cli" autofocus style="background:transparent;border:none;color:#e2e8f0;font-family:monospace;flex:1;outline:none;font-size:0.95rem;" />
+                    <div style="display:flex;gap:10px;border-top:1px solid #1a2230;padding-top:15px;">
+                        <span style="color:#00ffcc;">admin@sys:~#</span>
+                        <input type="text" id="cli" autofocus style="background:transparent;border:none;color:#f1f5f9;font-family:monospace;flex:1;outline:none;font-size:0.95rem;" />
                     </div>
                     <script>
                         const out = document.getElementById('out');
                         const cli = document.getElementById('cli');
                         cli.addEventListener('keydown', function(e) {
                             if(e.key === 'Enter') {
-                                let c = cli.value.trim();
-                                out.innerHTML += '<div style="color:#e2e8f0;">root@sys:~# ' + c + '</div>';
-                                if(c === 'help') {
-                                    out.innerHTML += '<div style="color:#64748b;">Commands: clear, status, protocol, panic</div>';
-                                } else if(c === 'clear') {
+                                let val = cli.value.trim();
+                                out.innerHTML += '<div style="color:#f1f5f9;">admin@sys:~# ' + val + '</div>';
+                                
+                                if(val === 'help') {
+                                    out.innerHTML += '<div style="color:#64748b;">Commands: clear, status, protocol, ai [your question]</div>';
+                                } else if(val === 'clear') {
                                     out.innerHTML = '';
-                                } else if(c === 'protocol') {
-                                    out.innerHTML += '<div style="color:#00ffcc;">Training Wheels Protocol: E-rated asset restriction enforced.</div>';
-                                } else {
-                                    out.innerHTML += '<div style="color:#ef4444;">Unknown command: ' + c + '</div>';
+                                } else if(val === 'status') {
+                                    out.innerHTML += '<div style="color:#00ffcc;">All subsystems operating at 100% capacity. Master security verified.</div>';
+                                } else if(val.startsWith('ai ')) {
+                                    let prompt = val.substring(3);
+                                    out.innerHTML += '<div style="color:#00ffcc;">[AI Assistant]: Processing query "' + prompt + '"... Node diagnostic looks optimal! Keep pushing code, phxntom. 🚀</div>';
+                                } else if(val !== '') {
+                                    out.innerHTML += '<div style="color:#ff3366;">Unknown command. Type 'ai [query]' to ask the system assistant.</div>';
                                 }
+                                
                                 cli.value = '';
                                 out.scrollTop = out.scrollHeight;
                             }
@@ -565,30 +562,30 @@
             doc.close();
         }
 
-        function loadChat() {
+        function loadComms() {
             const frame = document.getElementById('viewport');
-            document.getElementById('status-badge').innerText = "STATUS: P2P SECURE COMMS";
+            document.getElementById('hud-status').innerText = "STATUS: P2P COMMS ACTIVE";
             updateNav(event.currentTarget);
 
             let doc = frame.contentDocument || frame.contentWindow.document;
             doc.open();
             doc.write(`
-                <body style="background:#000;color:#e2e8f0;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
+                <body style="background:#020406;color:#f1f5f9;font-family:monospace;padding:25px;margin:0;display:flex;flex-direction:column;height:100vh;">
                     <h3 style="color:#00ffcc;margin-bottom:5px;">SECURE P2P NODE CHAT</h3>
-                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Zero server logging. Encrypted local broadcast channel.</p>
-                    <div id="box" style="flex:1;border:1px solid #1e2634;background:#12161f;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;">
-                        <div style="color:#64748b;font-size:0.8rem;">[Node Connected Successfully]</div>
+                    <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Encrypted local broadcast channel.</p>
+                    <div id="box" style="flex:1;border:1px solid #1a2230;background:#0f131c;padding:15px;overflow-y:auto;margin-bottom:15px;border-radius:4px;">
+                        <div style="color:#64748b;font-size:0.8rem;">[Node Broadcast Connected]</div>
                     </div>
                     <div style="display:flex;gap:10px;">
-                        <input type="text" id="msg" placeholder="Type broadcast packet..." style="flex:1;background:#12161f;border:1px solid #1e2634;color:#e2e8f0;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
-                        <button onclick="send()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;border-radius:4px;">BROADCAST</button>
+                        <input type="text" id="msg" placeholder="Type transmission..." style="flex:1;background:#0f131c;border:1px solid #1a2230;color:#f1f5f9;padding:12px;font-family:monospace;outline:none;border-radius:4px;" />
+                        <button onclick="send()" style="background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:0 20px;cursor:pointer;font-family:monospace;font-weight:bold;border-radius:4px;">BROADCAST</button>
                     </div>
                     <script>
                         function send() {
                             let m = document.getElementById('msg');
                             let b = document.getElementById('box');
                             if(m.value.trim() !== '') {
-                                b.innerHTML += '<div style="margin-top:8px;"><span style="color:#00ffcc;">[Node]:</span> ' + m.value + '</div>';
+                                b.innerHTML += '<div style="margin-top:8px;"><span style="color:#00ffcc;">[Master Node]:</span> ' + m.value + '</div>';
                                 m.value = '';
                                 b.scrollTop = b.scrollHeight;
                             }
