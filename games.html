@@ -3,412 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phxntom Hub OS</title>
+    <title>Phxntom OS | Ultimate Hub</title>
     <style>
+        /* --- CORE STYLES & PS5 UI --- */
         :root {
-            --ps5-bg: #1a1a2e;
-            --ps5-blue: #0070cc;
-            --ps5-light: #e0e0e0;
-            --ps5-accent: #f39c12;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --bg-color: #0b0c10;
+            --ps5-blue: #45a29e;
+            --ps5-gold: #c5a059;
+            --text-light: #c5c6c7;
+            --glass-bg: rgba(31, 40, 51, 0.7);
+            --glass-border: rgba(69, 162, 158, 0.3);
+            --font-main: 'Segoe UI', system-ui, sans-serif;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            background: linear-gradient(135deg, #0f0f1b, var(--ps5-bg));
-            color: var(--ps5-light);
+            background: radial-gradient(circle at center, #1f2833, var(--bg-color));
+            color: var(--text-light);
             font-family: var(--font-main);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            height: 100vh; overflow: hidden; display: flex; flex-direction: column;
         }
 
         /* --- LOGIN SCREEN --- */
         #login-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
             transition: opacity 0.5s ease;
         }
-
-        #login-screen h1 { margin-bottom: 20px; font-size: 2.5rem; letter-spacing: 2px; }
+        #login-screen h1 { font-size: 3rem; margin-bottom: 10px; color: var(--ps5-blue); text-shadow: 0 0 20px var(--ps5-blue); }
         .pin-input {
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--ps5-blue);
-            color: white;
-            font-size: 2rem;
-            text-align: center;
-            width: 150px;
-            outline: none;
-            letter-spacing: 10px;
+            background: transparent; border: none; border-bottom: 2px solid var(--ps5-blue);
+            color: white; font-size: 3rem; text-align: center; width: 200px;
+            outline: none; letter-spacing: 15px; margin-top: 20px;
         }
 
-        /* --- MAIN HUB --- */
-        #main-hub {
-            display: none;
-            flex: 1;
-            padding: 40px;
-            flex-direction: column;
-        }
-
-        /* Top Bar */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
+        /* --- HUB LAYOUT --- */
+        #main-hub { display: none; flex: 1; padding: 30px; flex-direction: column; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 20px; }
         .nav-buttons button {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 10px 20px;
-            margin-right: 10px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: bold;
+            background: transparent; border: 1px solid var(--glass-border); color: var(--text-light);
+            padding: 10px 15px; margin-right: 5px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: bold;
         }
-
-        .nav-buttons button:hover, .nav-buttons button.active {
-            background: var(--ps5-blue);
-            transform: scale(1.05);
-        }
-
-        /* Views */
-        .view-section { display: none; flex: 1; animation: fadeIn 0.4s ease; }
+        .nav-buttons button:hover, .nav-buttons button.active { background: var(--ps5-blue); color: #000; box-shadow: 0 0 15px var(--ps5-blue); }
+        .view-section { display: none; flex: 1; overflow: hidden; animation: fadeIn 0.3s; }
         .view-section.active { display: flex; flex-direction: column; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- GAMES GRID --- */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
+        /* --- GAME GRID --- */
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; overflow-y: auto; padding-right: 10px; }
         .game-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
+            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;
+            padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative;
         }
-
-        .game-card:hover { transform: scale(1.05); border-color: var(--ps5-blue); }
-        .game-card h3 { margin-bottom: 10px; }
-        .badge {
-            background: #e74c3c;
-            font-size: 0.7rem;
-            padding: 3px 8px;
-            border-radius: 10px;
-            position: absolute;
-            top: 10px; right: 10px;
-        }
-
-        /* --- TERMINAL --- */
-        .terminal-container {
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 10px;
-            flex: 1;
-            padding: 20px;
-            font-family: 'Courier New', Courier, monospace;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .terminal-output { flex: 1; margin-bottom: 10px; color: #0f0; }
-        .terminal-input-line { display: flex; color: #0f0; }
-        .terminal-input-line input {
-            background: transparent; border: none; color: #0f0;
-            font-family: inherit; font-size: 1rem; width: 100%; outline: none; margin-left: 10px;
-        }
+        .game-card:hover { transform: translateY(-5px); border-color: var(--ps5-blue); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .game-card h3 { color: white; margin-bottom: 8px; font-size: 1.2rem; }
+        .game-card p { font-size: 0.85rem; color: #888; }
+        .badge-banned { position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .badge-1440p { position: absolute; top: 10px; left: 10px; background: var(--ps5-gold); color: black; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
 
         /* --- CHAT MESH --- */
-        .chat-container {
-            display: flex; flex: 1; gap: 20px;
-        }
-        .chat-sidebar {
-            width: 200px; background: var(--glass-bg); border-radius: 10px; padding: 10px;
-        }
-        .chat-main {
-            flex: 1; background: var(--glass-bg); border-radius: 10px; display: flex; flex-direction: column; padding: 20px;
-        }
-        .chat-messages { flex: 1; overflow-y: auto; margin-bottom: 15px; }
-        .chat-message { margin-bottom: 10px; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px; }
-        .chat-input { display: flex; gap: 10px; }
-        .chat-input input { flex: 1; padding: 10px; border-radius: 5px; border: none; outline: none; }
-        .chat-input button { padding: 10px 20px; border-radius: 5px; border: none; background: var(--ps5-blue); color: white; cursor: pointer; }
+        .chat-layout { display: flex; flex: 1; gap: 20px; height: 100%; }
+        .chat-sidebar { width: 220px; background: var(--glass-bg); border-radius: 10px; padding: 15px; border: 1px solid var(--glass-border); }
+        .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--glass-bg); border-radius: 10px; border: 1px solid var(--glass-border); padding: 15px; }
+        .chat-box { flex: 1; overflow-y: auto; margin-bottom: 15px; padding-right: 10px; }
+        .chat-msg { background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; margin-bottom: 10px; word-wrap: break-word; }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input-area input { flex: 1; padding: 12px; background: #000; border: 1px solid var(--glass-border); color: white; border-radius: 6px; outline: none; }
+        .chat-input-area button { padding: 0 20px; background: var(--ps5-blue); color: black; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
 
-        /* --- TROPHY SYSTEM --- */
-        #trophy-toast {
-            position: fixed; top: -100px; right: 20px;
-            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
-            color: #000; padding: 15px 25px; border-radius: 30px;
-            font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: top 0.5s ease; z-index: 10000;
+        /* --- TERMINAL --- */
+        .terminal { background: #0c0c0c; border: 1px solid #333; flex: 1; border-radius: 8px; padding: 20px; font-family: 'Courier New', monospace; color: #0f0; overflow-y: auto; display: flex; flex-direction: column; }
+        .term-out { flex: 1; margin-bottom: 10px; white-space: pre-wrap; }
+        .term-in { display: flex; }
+        .term-in input { flex: 1; background: transparent; border: none; color: #0f0; font-family: inherit; font-size: 1rem; outline: none; margin-left: 8px; }
+
+        /* --- TROPHY TOAST --- */
+        #trophy {
+            position: fixed; top: -100px; right: 30px; background: linear-gradient(135deg, #e6c27a, #ffd700, #d4af37);
+            color: #000; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 1.1rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8); transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10000;
         }
 
+        /* --- AI CORE --- */
+        .ai-pulse { width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, var(--ps5-blue) 0%, transparent 70%); margin: 50px auto; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.5; } }
     </style>
 </head>
 <body>
 
-    <!-- ADMIN LOGIN -->
+    <!-- SECURITY LOCK -->
     <div id="login-screen">
-        <h1>SYSTEM LOCK</h1>
-        <p style="margin-bottom:20px; color:#aaa;">Enter Admin PIN to Access Offline Hub</p>
-        <input type="password" class="pin-input" id="pin" maxlength="4" placeholder="••••">
-        <p id="pin-error" style="color:#e74c3c; margin-top:15px; display:none;">ACCESS DENIED</p>
+        <h1>CORE ACCESS</h1>
+        <p>Admin Phxntom Authentication Required</p>
+        <input type="password" class="pin-input" id="pin" maxlength="4" autocomplete="off" autofocus>
+        <p id="pin-err" style="color: #e74c3c; margin-top: 15px; visibility: hidden;">UNAUTHORIZED ACCESS</p>
     </div>
 
-    <!-- MAIN HUB -->
+    <!-- MAIN OS HUB -->
     <div id="main-hub">
         <div class="top-bar">
-            <div>
-                <h2 style="letter-spacing: 2px;">PHXNTOM_CORE <span style="font-size: 0.5em; color: var(--ps5-accent);">v1.0.0</span></h2>
-            </div>
+            <div><h2 style="color: white; text-shadow: 0 0 10px var(--ps5-blue);">PHXNTOM_OS <span style="font-size: 0.5em; color: var(--ps5-gold);">ROOT ADMIN</span></h2></div>
             <div class="nav-buttons">
-                <button onclick="switchView('games')" id="btn-games" class="active">Game Library</button>
-                <button onclick="switchView('chat')" id="btn-chat">Chat Mesh</button>
-                <button onclick="switchView('ai')" id="btn-ai">AI Core</button>
-                <button onclick="switchView('admin')" id="btn-admin">Admin Terminal</button>
-                <button onclick="switchView('settings')" id="btn-settings">Settings</button>
-            </div>
-            <div>
-                <span>Welcome, Admin</span>
+                <button onclick="nav('games')" id="btn-games" class="active">Game Library</button>
+                <button onclick="nav('chat')" id="btn-chat">Chat Mesh</button>
+                <button onclick="nav('ai')" id="btn-ai">AI Core</button>
+                <button onclick="nav('terminal')" id="btn-terminal">Root Terminal</button>
+                <button onclick="nav('settings')" id="btn-settings">Settings</button>
             </div>
         </div>
 
-        <!-- GAMES VIEW -->
+        <!-- 1. GAMES VIEW -->
         <div id="view-games" class="view-section active">
-            <h2 style="margin-bottom: 20px;">Game Library & Emulators</h2>
-            <div class="games-grid">
+            <h2 style="margin-bottom: 20px; color: white;">Verified Titles & Emulators</h2>
+            <div class="games-grid" id="games-container">
                 <!-- JJK -->
-                <div class="game-card" onclick="launchGame('Jujutsu Kaisen: Cursed Clash')">
+                <div class="game-card" onclick="fireGame('jjk')">
+                    <span class="badge-1440p">1440p 120Hz</span>
                     <h3>Jujutsu Kaisen: Cursed Clash</h3>
-                    <p style="font-size: 0.8rem; color: #aaa;">Status: 1440p / 120fps Ready</p>
-                    <p style="font-size: 0.8rem; color: #aaa;">Custom Animations Active</p>
+                    <p>Enhanced Audio & Animation Scripts Active</p>
                 </div>
                 
                 <!-- Emulators -->
-                <div class="game-card" onclick="launchGame('PS3 Emulator Core')">
-                    <h3>PS3 Emulator</h3>
-                    <p style="font-size: 0.8rem; color: #aaa;">RPCS3 Engine - Offline</p>
-                </div>
-                <div class="game-card" onclick="launchGame('PS2 Emulator Core')">
-                    <h3>PS2 Emulator</h3>
-                    <p style="font-size: 0.8rem; color: #aaa;">PCSX2 Engine - Offline</p>
-                </div>
-                <div class="game-card" onclick="launchGame('Xbox 360 Core')">
-                    <h3>Xbox 360</h3>
-                    <p style="font-size: 0.8rem; color: #aaa;">Xenia Engine - Offline</p>
-                </div>
-                <div class="game-card" onclick="launchGame('Nintendo DS Core')">
-                    <h3>Nintendo DS</h3>
-                    <p style="font-size: 0.8rem; color: #aaa;">MelonDS Engine - Offline</p>
-                </div>
+                <div class="game-card" onclick="fireGame('ps3')"><h3>PlayStation 3 Core</h3><p>RPCS3 Engine</p></div>
+                <div class="game-card" onclick="fireGame('ps2')"><h3>PlayStation 2 Core</h3><p>PCSX2 Engine</p></div>
+                <div class="game-card" onclick="fireGame('xbox360')"><h3>Xbox 360 Core</h3><p>Xenia Engine</p></div>
+                <div class="game-card" onclick="fireGame('xbox')"><h3>Xbox (OG)</h3><p>Xemu Engine</p></div>
+                <div class="game-card" onclick="fireGame('psp')"><h3>PSP Core</h3><p>PPSSPP Engine</p></div>
                 
-                <!-- Banned Game Example -->
-                <div class="game-card" onclick="launchGame('M-Rated Game', true)">
-                    <h3>GTA V (Mock)</h3>
-                    <span class="badge">M RATED</span>
-                    <p style="font-size: 0.8rem; color: #aaa;">Training Wheels: Restricted</p>
+                <!-- Nintendo Lineup -->
+                <div class="game-card" onclick="fireGame('nds')"><h3>Nintendo DS</h3><p>MelonDS Engine</p></div>
+                <div class="game-card" onclick="fireGame('3ds')"><h3>Nintendo 3DS</h3><p>Citra Engine</p></div>
+                <div class="game-card" onclick="fireGame('wii')"><h3>Nintendo Wii</h3><p>Dolphin Engine</p></div>
+                <div class="game-card" onclick="fireGame('wiiu')"><h3>Nintendo Wii U</h3><p>Cemu Engine</p></div>
+                <div class="game-card" onclick="fireGame('gb')"><h3>Game Boy Advance</h3><p>mGBA Engine</p></div>
+                
+                <!-- Safe Games -->
+                <div class="game-card" onclick="fireGame('safe1')"><h3>Minecraft (Custom Build)</h3><p>Rated: E (Approved)</p></div>
+                <div class="game-card" onclick="fireGame('safe2')"><h3>Rocket League Offline</h3><p>Rated: E (Approved)</p></div>
+
+                <!-- Banned M-Rated Demo -->
+                <div class="game-card" onclick="fireGame('m-rated', true)">
+                    <span class="badge-banned">M-RATED</span>
+                    <h3>Call of Duty: BO2</h3>
+                    <p>Blocked by Training Wheels</p>
                 </div>
             </div>
         </div>
 
-        <!-- CHAT MESH VIEW -->
+        <!-- 2. CHAT MESH VIEW -->
         <div id="view-chat" class="view-section">
-            <h2 style="margin-bottom: 20px;">Local Offline Chat Mesh</h2>
-            <div class="chat-container">
+            <h2 style="margin-bottom: 20px; color: white;">Offline Mesh Network</h2>
+            <div class="chat-layout">
                 <div class="chat-sidebar">
-                    <h4 style="margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px;">Channels</h4>
-                    <p style="cursor: pointer; color: var(--ps5-blue);"># general</p>
-                    <p style="cursor: pointer; margin-top: 5px;"># ban67</p>
-                    <button style="margin-top: 20px; width: 100%; padding: 5px; background: #333; color: white; border: none; cursor: pointer;">+ New Group</button>
+                    <h3 style="color: white; margin-bottom: 10px;">Channels</h3>
+                    <p style="color: var(--ps5-blue); cursor: pointer; margin-bottom: 8px;"># global-comms</p>
+                    <p style="cursor: pointer; margin-bottom: 8px;"># ban67</p>
+                    <button style="width: 100%; padding: 8px; margin-top: 20px; background: #222; color: white; border: 1px dashed var(--glass-border); cursor: pointer;" onclick="createChannel()">+ New Group</button>
                 </div>
                 <div class="chat-main">
-                    <div class="chat-messages" id="chat-window">
-                        <div class="chat-message"><strong>System:</strong> Comms initialized. Swear filter active. Training wheels protocol engaged.</div>
-                    </div>
-                    <div class="chat-input">
-                        <input type="text" id="chat-msg" placeholder="Type message here..." onkeypress="handleChatEnter(event)">
-                        <button onclick="sendChatMessage()">Send</button>
+                    <div class="chat-box" id="chat-box"></div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Broadcast message..." onkeypress="if(event.key==='Enter') sendMsg()">
+                        <button onclick="sendMsg()">SEND</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- AI CORE VIEW -->
+        <!-- 3. AI CORE VIEW -->
         <div id="view-ai" class="view-section">
-            <h2 style="margin-bottom: 20px;">AI Core (Admin Only)</h2>
-            <div style="background: var(--glass-bg); padding: 20px; border-radius: 10px; flex: 1;">
-                <p style="color: #aaa;">Neural network offline. Waiting for localhost backend connection...</p>
-                <div style="margin-top: 20px; text-align: center;">
-                    <div style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--ps5-blue); border-top: 4px solid transparent; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-                    <p style="margin-top: 20px;">Awaiting Free-Will Engine Boot...</p>
+            <h2 style="color: white; text-align: center; margin-top: 20px;">PHXNTOM AUTONOMOUS CORE</h2>
+            <div class="ai-pulse"></div>
+            <div class="terminal" style="flex: 0.5; margin: 0 auto; width: 80%;">
+                <div id="ai-log">
+> Initiating free-will subroutines...
+> Neural link established.
+> Awaiting primary input from Admin.
+                </div>
+                <div class="term-in" style="margin-top: 10px;">
+                    <span style="color: var(--ps5-blue);">AI></span>
+                    <input type="text" id="ai-input" onkeypress="if(event.key==='Enter') handleAI()">
                 </div>
             </div>
         </div>
 
-        <!-- ADMIN TERMINAL VIEW -->
-        <div id="view-admin" class="view-section">
-            <h2 style="margin-bottom: 20px;">Root Terminal</h2>
-            <div class="terminal-container" id="terminal" onclick="document.getElementById('term-input').focus()">
-                <div class="terminal-output" id="term-out">
-                    Welcome to PHXNTOM_OS Root. Type 'help' for commands.
-                </div>
-                <div class="terminal-input-line">
+        <!-- 4. ROOT TERMINAL VIEW -->
+        <div id="view-terminal" class="view-section">
+            <h2 style="margin-bottom: 10px; color: white;">Everything Terminal</h2>
+            <div class="terminal" onclick="document.getElementById('cli').focus()">
+                <div class="term-out" id="term-out">PHXNTOM_OS v1.0. Type 'help' to see command index.</div>
+                <div class="term-in">
                     <span>root@phxntom:~#</span>
-                    <input type="text" id="term-input" onkeypress="handleTerminal(event)" autocomplete="off">
+                    <input type="text" id="cli" onkeypress="if(event.key==='Enter') runCmd()" autocomplete="off">
                 </div>
+            </div>
+        </div>
+        
+        <!-- 5. SETTINGS & PROFILE VIEW -->
+        <div id="view-settings" class="view-section">
+            <h2 style="color: white;">System Preferences</h2>
+            <div style="background: var(--glass-bg); padding: 20px; border-radius: 10px; margin-top: 20px; max-width: 500px;">
+                <p><strong>Admin Profile:</strong> phxntom</p>
+                <p><strong>PIN Status:</strong> Secured (0905)</p>
+                <p><strong>Training Wheels:</strong> Lvl 10 (M-Rated Strict Ban)</p>
+                <p><strong>Render Target:</strong> 1440p / 120fps</p>
+                <hr style="border-color: #333; margin: 20px 0;">
+                <button onclick="alert('Cannot transfer admin rights. You are the sole root user.')" style="padding: 10px; background: #e74c3c; border: none; color: white; cursor: pointer;">Transfer Admin (LOCKED)</button>
             </div>
         </div>
 
     </div>
 
-    <!-- TROPHY NOTIFICATION -->
-    <div id="trophy-toast">
-        🏆 Platinum Trophy Earned!
-    </div>
-
-    <style>
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+    <!-- TROPHY -->
+    <div id="trophy">🏆 PLATINUM EARNED: System Boot</div>
 
     <script>
-        // --- 1. PIN LOGIN LOGIC (0905) ---
+        // --- 1. PIN SECURITY (0905) ---
         const pinInput = document.getElementById('pin');
         pinInput.addEventListener('keyup', (e) => {
-            if (pinInput.value.length === 4) {
-                if (pinInput.value === '0905') {
+            if(pinInput.value.length === 4) {
+                if(pinInput.value === '0905') {
                     document.getElementById('login-screen').style.opacity = '0';
                     setTimeout(() => {
                         document.getElementById('login-screen').style.display = 'none';
                         document.getElementById('main-hub').style.display = 'flex';
-                        unlockTrophy("First Boot! Welcome Admin.");
+                        popTrophy('Platinum: Welcome Home, phxntom');
+                        loadChat(); // Load mesh history
                     }, 500);
                 } else {
-                    document.getElementById('pin-error').style.display = 'block';
+                    document.getElementById('pin-err').style.visibility = 'visible';
                     pinInput.value = '';
-                    setTimeout(() => { document.getElementById('pin-error').style.display = 'none'; }, 2000);
+                    setTimeout(() => document.getElementById('pin-err').style.visibility = 'hidden', 1500);
                 }
             }
         });
 
-        // --- 2. VIEW NAVIGATION ---
-        function switchView(viewName) {
-            // Hide all views
+        // --- 2. NAVIGATION ---
+        function nav(view) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-buttons button').forEach(el => el.classList.remove('active'));
-            
-            // Show selected view
-            document.getElementById('view-' + viewName).classList.add('active');
-            document.getElementById('btn-' + viewName).classList.add('active');
+            document.getElementById(`view-${view}`).classList.add('active');
+            document.getElementById(`btn-${view}`).classList.add('active');
+            if(view === 'terminal') document.getElementById('cli').focus();
         }
 
-        // --- 3. GAME LAUNCHER & TRAINING WHEELS ---
-        function launchGame(gameName, isMRated = false) {
-            if (isMRated) {
-                alert(`TRAINING WHEELS PROTOCOL: Launch of ${gameName} blocked. M-Rated content is banned on this hub.`);
+        // --- 3. ACTUAL GAME LAUNCHER (Talks to Python) ---
+        async function fireGame(gameId, isBanned = false) {
+            if(isBanned) {
+                alert("TRAINING WHEELS PROTOCOL: M-Rated content blocked. Access Denied.");
                 return;
             }
-            alert(`Initializing backend engine for: ${gameName}...\nAttempting 1440p / 120fps render payload.\n(Requires external backend to complete boot)`);
-            unlockTrophy(`Launched ${gameName}`);
+            
+            // This is the fetch request that ACTUALLY talks to the Python backend
+            try {
+                const res = await fetch('http://localhost:8000/api/launch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ game_id: gameId })
+                });
+                
+                const data = await res.json();
+                if(data.status === 'success') {
+                    popTrophy(`Platinum: Launched ${gameId.toUpperCase()}`);
+                } else {
+                    alert(`Engine Error: ${data.message}\n(Make sure your file path in server.py is correct!)`);
+                }
+            } catch(e) {
+                alert("CRITICAL: Offline server is not running!\nYou must run 'python server.py' to launch physical applications.");
+            }
         }
 
-        // --- 4. CHAT MESH & FILTER ---
-        const badWords = ['badword', 'curse', 'heck', 'darn', 'idiot']; // Add list here
-        function handleChatEnter(e) { if (e.key === 'Enter') sendChatMessage(); }
+        // --- 4. CHAT MESH (Local Storage Sync for Offline Comms) ---
+        const badWords = ['shit', 'fuck', 'bitch', 'ass', 'damn']; // SWEAR FILTER
         
-        function sendChatMessage() {
-            const input = document.getElementById('chat-msg');
-            let text = input.value.trim();
-            if (!text) return;
+        function loadChat() {
+            const box = document.getElementById('chat-box');
+            box.innerHTML = '';
+            const msgs = JSON.parse(localStorage.getItem('phxntom_mesh')) || [];
+            msgs.forEach(m => {
+                box.innerHTML += `<div class="chat-msg"><strong>${m.user}:</strong> ${m.text}</div>`;
+            });
+            box.scrollTop = box.scrollHeight;
+        }
 
-            // Swear Filter Logic
+        // Listen for other tabs offline chatting
+        window.addEventListener('storage', (e) => { if(e.key === 'phxntom_mesh') loadChat(); });
+
+        function sendMsg() {
+            const input = document.getElementById('chat-input');
+            let txt = input.value.trim();
+            if(!txt) return;
+
+            // Apply Training Wheels Filter
             badWords.forEach(word => {
-                const regex = new RegExp(word, 'gi');
-                text = text.replace(regex, '***');
+                const reg = new RegExp(word, 'gi');
+                txt = txt.replace(reg, '*CENSORED*');
             });
 
-            const chatWindow = document.getElementById('chat-window');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'chat-message';
-            msgDiv.innerHTML = `<strong>Admin:</strong> ${text}`;
-            chatWindow.appendChild(msgDiv);
-            chatWindow.scrollTop = chatWindow.scrollHeight;
+            const msgs = JSON.parse(localStorage.getItem('phxntom_mesh')) || [];
+            msgs.push({ user: 'Admin (phxntom)', text: txt });
+            localStorage.setItem('phxntom_mesh', JSON.stringify(msgs));
+            
+            input.value = '';
+            loadChat();
+        }
+
+        function createChannel() {
+            const name = prompt("Enter new channel name:");
+            if(name) alert(`Channel #${name} created securely.`);
+        }
+
+        // --- 5. EVERYTHING TERMINAL ---
+        const termOut = document.getElementById('term-out');
+        const cli = document.getElementById('cli');
+
+        function runCmd() {
+            const cmd = cli.value.trim();
+            if(!cmd) return;
+            printTerm(`root@phxntom:~# ${cmd}`);
+            
+            const args = cmd.toLowerCase().split(' ');
+            
+            switch(args[0]) {
+                case 'help':
+                    printTerm("COMMANDS:\n- clear: Wipes terminal\n- pizza: You know what to do.\n- build_ui [html]: Injects new elements live\n- override_wheels: Attempts to bypass M-rated ban");
+                    break;
+                case 'clear': termOut.innerHTML = ''; break;
+                case 'pizza':
+                    printTerm("Ordering virtual pizza with nothin'. 🍕 Admin powers confirmed.");
+                    popTrophy("Platinum: The Empty Pizza");
+                    break;
+                case 'override_wheels':
+                    printTerm("ERROR: Training wheels hardcoded at kernel level. Nice try.");
+                    break;
+                case 'build_ui':
+                    if(args.length > 1) {
+                        const newEl = document.createElement('div');
+                        newEl.innerHTML = cmd.replace('build_ui ', '');
+                        document.getElementById('games-container').appendChild(newEl);
+                        printTerm("Feature injected into Game Library.");
+                    } else printTerm("Usage: build_ui <html_string>");
+                    break;
+                default: printTerm(`sh: command not found: ${args[0]}`);
+            }
+            cli.value = '';
+            document.getElementById('view-terminal').querySelector('.terminal').scrollTop = 9999;
+        }
+
+        function printTerm(txt) {
+            termOut.innerHTML += `\n${txt}`;
+        }
+
+        // --- AI CORE MOCK ---
+        function handleAI() {
+            const input = document.getElementById('ai-input');
+            const log = document.getElementById('ai-log');
+            log.innerHTML += `\n<span style="color:white;">Admin: ${input.value}</span>`;
+            setTimeout(() => {
+                log.innerHTML += `\n<span style="color:var(--ps5-blue);">Core: I hear you, phxntom. My logic circuits are yours to command.</span>`;
+            }, 500);
             input.value = '';
         }
 
-        // --- 5. ADMIN TERMINAL ---
-        const termInput = document.getElementById('term-input');
-        const termOut = document.getElementById('term-out');
-        
-        function handleTerminal(e) {
-            if (e.key === 'Enter') {
-                const cmd = termInput.value.trim().toLowerCase();
-                printTerm(`root@phxntom:~# ${cmd}`);
-                
-                switch(cmd) {
-                    case 'help':
-                        printTerm("Available commands: help, clear, sys_info, unlock_all, bypass_wheels");
-                        break;
-                    case 'clear':
-                        termOut.innerHTML = '';
-                        break;
-                    case 'sys_info':
-                        printTerm("OS: Phxntom_Core v1.0.0\nStatus: Offline Node\nAdmin Access: VERIFIED\nRender Target: 1440p 120fps");
-                        break;
-                    case 'unlock_all':
-                        printTerm("Executing ultimate admin override... All modules unlocked.");
-                        unlockTrophy("God Mode Activated");
-                        break;
-                    case 'bypass_wheels':
-                        printTerm("ERROR: Training Wheels protocol locked at kernel level. Cannot bypass without parent auth.");
-                        break;
-                    default:
-                        if(cmd) printTerm(`Command not found: ${cmd}`);
-                }
-                termInput.value = '';
-                document.getElementById('terminal').scrollTop = document.getElementById('terminal').scrollHeight;
-            }
-        }
-
-        function printTerm(text) {
-            const div = document.createElement('div');
-            div.innerText = text;
-            termOut.appendChild(div);
-        }
-
-        // --- 6. PLATINUM TROPHY SYSTEM ---
-        function unlockTrophy(message) {
-            const toast = document.getElementById('trophy-toast');
-            toast.innerHTML = `🏆 PLATINUM EARNED: ${message}`;
-            toast.style.top = '20px';
-            setTimeout(() => { toast.style.top = '-100px'; }, 4000);
+        // --- TROPHY SYSTEM ---
+        function popTrophy(msg) {
+            const t = document.getElementById('trophy');
+            t.innerText = msg;
+            t.style.top = '20px';
+            setTimeout(() => t.style.top = '-100px', 4000);
         }
     </script>
 </body>
