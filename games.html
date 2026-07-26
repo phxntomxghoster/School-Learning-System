@@ -3,374 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phxntom OS | Ultimate Hub</title>
+    <title>PHXNTOM_OS | STANDALONE CORE</title>
     <style>
-        /* --- CORE STYLES & PS5 UI --- */
+        /* --- DYNAMIC CSS VARIABLES --- */
         :root {
             --bg-color: #0b0c10;
-            --ps5-blue: #45a29e;
-            --ps5-gold: #c5a059;
-            --text-light: #c5c6c7;
-            --glass-bg: rgba(31, 40, 51, 0.7);
-            --glass-border: rgba(69, 162, 158, 0.3);
-            --font-main: 'Segoe UI', system-ui, sans-serif;
+            --surface: #1f2833;
+            --primary: #45a29e;
+            --accent: #66fcf1;
+            --text-main: #c5c6c7;
+            --danger: #e74c3c;
+            --gold: #f1c40f;
+            --glass: rgba(31, 40, 51, 0.85);
+            --border: rgba(102, 252, 241, 0.2);
+            --font-size: 16px;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
         body {
-            background: radial-gradient(circle at center, #1f2833, var(--bg-color));
-            color: var(--text-light);
-            font-family: var(--font-main);
-            height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+            background: radial-gradient(circle at top left, var(--surface), var(--bg-color));
+            color: var(--text-main); font-size: var(--font-size);
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* --- LOGIN SCREEN --- */
-        #login-screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-        #login-screen h1 { font-size: 3rem; margin-bottom: 10px; color: var(--ps5-blue); text-shadow: 0 0 20px var(--ps5-blue); }
-        .pin-input {
-            background: transparent; border: none; border-bottom: 2px solid var(--ps5-blue);
-            color: white; font-size: 3rem; text-align: center; width: 200px;
-            outline: none; letter-spacing: 15px; margin-top: 20px;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
 
-        /* --- HUB LAYOUT --- */
-        #main-hub { display: none; flex: 1; padding: 30px; flex-direction: column; }
-        .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 20px; }
-        .nav-buttons button {
-            background: transparent; border: 1px solid var(--glass-border); color: var(--text-light);
-            padding: 10px 15px; margin-right: 5px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: bold;
+        /* --- LOGIN OVERLAY --- */
+        #auth-gate {
+            position: fixed; inset: 0; background: #000; z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.6s ease;
         }
-        .nav-buttons button:hover, .nav-buttons button.active { background: var(--ps5-blue); color: #000; box-shadow: 0 0 15px var(--ps5-blue); }
-        .view-section { display: none; flex: 1; overflow: hidden; animation: fadeIn 0.3s; }
-        .view-section.active { display: flex; flex-direction: column; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        #auth-gate h1 { font-size: 3rem; color: var(--accent); letter-spacing: 5px; text-shadow: 0 0 15px var(--primary); margin-bottom: 20px; }
+        #pin-input {
+            background: transparent; border: none; border-bottom: 3px solid var(--primary);
+            color: white; font-size: 4rem; text-align: center; width: 250px;
+            letter-spacing: 20px; outline: none; transition: border-color 0.3s;
+        }
+        #pin-input:focus { border-bottom-color: var(--accent); }
+        #pin-err { color: var(--danger); margin-top: 20px; font-weight: bold; opacity: 0; transition: opacity 0.3s; }
 
-        /* --- GAME GRID --- */
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; overflow-y: auto; padding-right: 10px; }
+        /* --- BOOT SEQUENCE OVERLAY --- */
+        #boot-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9000;
+            flex-direction: column; align-items: center; justify-content: center; color: var(--accent);
+        }
+        .spinner { width: 50px; height: 50px; border: 3px solid transparent; border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- MAIN LAYOUT --- */
+        #os-core { display: none; flex: 1; flex-direction: column; padding: 20px; height: 100vh; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+        .header h2 { color: white; letter-spacing: 2px; }
+        .header h2 span { color: var(--accent); font-size: 0.6em; }
+        
+        .nav-tabs { display: flex; gap: 10px; }
+        .nav-btn {
+            background: transparent; border: 1px solid var(--border); color: var(--text-main);
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.2s;
+        }
+        .nav-btn:hover { background: rgba(69, 162, 158, 0.1); }
+        .nav-btn.active { background: var(--primary); color: #000; box-shadow: 0 0 10px var(--primary); }
+
+        .sys-status { display: flex; align-items: center; gap: 10px; font-size: 0.9em; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+
+        /* --- VIEWS --- */
+        .view-pane { display: none; flex: 1; overflow: hidden; animation: slideUp 0.3s ease forwards; }
+        .view-pane.active { display: flex; flex-direction: column; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 1. GAMES */
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; overflow-y: auto; padding-right: 10px; padding-bottom: 20px; }
         .game-card {
-            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;
-            padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative;
+            background: var(--glass); border: 1px solid var(--border); border-radius: 12px;
+            padding: 20px; text-align: center; cursor: pointer; position: relative; transition: all 0.3s;
         }
-        .game-card:hover { transform: translateY(-5px); border-color: var(--ps5-blue); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .game-card h3 { color: white; margin-bottom: 8px; font-size: 1.2rem; }
-        .game-card p { font-size: 0.85rem; color: #888; }
-        .badge-banned { position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .badge-1440p { position: absolute; top: 10px; left: 10px; background: var(--ps5-gold); color: black; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .game-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 8px 25px rgba(0,0,0,0.6); }
+        .game-card h3 { color: white; margin-bottom: 10px; font-size: 1.2rem; }
+        .game-card p { font-size: 0.85rem; color: #999; }
+        .badge { position: absolute; top: 10px; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .badge.left { left: 10px; background: var(--gold); color: black; }
+        .badge.right { right: 10px; background: var(--danger); color: white; }
 
-        /* --- CHAT MESH --- */
-        .chat-layout { display: flex; flex: 1; gap: 20px; height: 100%; }
-        .chat-sidebar { width: 220px; background: var(--glass-bg); border-radius: 10px; padding: 15px; border: 1px solid var(--glass-border); }
-        .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--glass-bg); border-radius: 10px; border: 1px solid var(--glass-border); padding: 15px; }
-        .chat-box { flex: 1; overflow-y: auto; margin-bottom: 15px; padding-right: 10px; }
-        .chat-msg { background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; margin-bottom: 10px; word-wrap: break-word; }
-        .chat-input-area { display: flex; gap: 10px; }
-        .chat-input-area input { flex: 1; padding: 12px; background: #000; border: 1px solid var(--glass-border); color: white; border-radius: 6px; outline: none; }
-        .chat-input-area button { padding: 0 20px; background: var(--ps5-blue); color: black; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
+        /* 2. CHAT MESH */
+        .chat-container { display: flex; flex: 1; gap: 20px; min-height: 0; }
+        .channel-list { width: 220px; background: var(--glass); border: 1px solid var(--border); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; }
+        .channel-item { padding: 10px; cursor: pointer; border-radius: 4px; margin-bottom: 5px; color: #aaa; transition: 0.2s; }
+        .channel-item:hover { background: rgba(255,255,255,0.05); color: white; }
+        .channel-item.active { background: rgba(69, 162, 158, 0.2); color: var(--accent); border-left: 3px solid var(--accent); }
+        
+        .chat-window { flex: 1; background: var(--glass); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; padding: 15px; }
+        .chat-history { flex: 1; overflow-y: auto; margin-bottom: 15px; padding-right: 10px; display: flex; flex-direction: column; gap: 10px; }
+        .msg-bubble { background: rgba(0,0,0,0.4); padding: 10px 15px; border-radius: 8px; max-width: 80%; align-self: flex-start; word-wrap: break-word; }
+        .msg-bubble.admin { align-self: flex-end; background: rgba(69, 162, 158, 0.15); border: 1px solid var(--border); }
+        .msg-sender { font-size: 0.75rem; color: var(--accent); margin-bottom: 4px; display: block; }
+        
+        .chat-input-row { display: flex; gap: 10px; }
+        .chat-input-row input { flex: 1; padding: 12px; background: #000; border: 1px solid var(--border); color: white; border-radius: 6px; outline: none; }
+        .chat-input-row input:focus { border-color: var(--accent); }
+        .chat-input-row button, .generic-btn { padding: 10px 20px; background: var(--primary); color: #000; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .generic-btn:hover { background: var(--accent); }
 
-        /* --- TERMINAL --- */
-        .terminal { background: #0c0c0c; border: 1px solid #333; flex: 1; border-radius: 8px; padding: 20px; font-family: 'Courier New', monospace; color: #0f0; overflow-y: auto; display: flex; flex-direction: column; }
-        .term-out { flex: 1; margin-bottom: 10px; white-space: pre-wrap; }
-        .term-in { display: flex; }
-        .term-in input { flex: 1; background: transparent; border: none; color: #0f0; font-family: inherit; font-size: 1rem; outline: none; margin-left: 8px; }
+        /* 3. AI CORE */
+        .ai-layout { display: flex; flex: 1; gap: 20px; }
+        .ai-visual { width: 300px; background: var(--glass); border-radius: 8px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .orb { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, var(--accent) 0%, transparent 70%); animation: breathe 3s infinite ease-in-out; box-shadow: 0 0 30px var(--primary); }
+        @keyframes breathe { 0%, 100% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } }
+        
+        /* 4. TERMINAL */
+        .term-box { flex: 1; background: #050505; border: 1px solid #333; border-radius: 8px; padding: 20px; font-family: 'Consolas', monospace; color: #0f0; overflow-y: auto; display: flex; flex-direction: column; }
+        .term-history { flex: 1; margin-bottom: 10px; white-space: pre-wrap; line-height: 1.4; }
+        .term-line { display: flex; align-items: center; }
+        .term-line span { margin-right: 8px; }
+        .term-line input { flex: 1; background: transparent; border: none; color: #0f0; font-family: inherit; font-size: inherit; outline: none; }
 
-        /* --- TROPHY TOAST --- */
-        #trophy {
-            position: fixed; top: -100px; right: 30px; background: linear-gradient(135deg, #e6c27a, #ffd700, #d4af37);
-            color: #000; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 1.1rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.8); transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10000;
+        /* 5. SETTINGS */
+        .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .set-card { background: var(--glass); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
+        .set-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .set-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        /* TROPHY TOAST */
+        #trophy-toast {
+            position: fixed; top: -120px; right: 30px; background: linear-gradient(135deg, #f1c40f, #f39c12, #e67e22);
+            color: #000; padding: 20px 30px; border-radius: 12px; font-weight: bold; font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.5);
+            display: flex; align-items: center; gap: 15px;
+            transition: top 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10000;
         }
-
-        /* --- AI CORE --- */
-        .ai-pulse { width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, var(--ps5-blue) 0%, transparent 70%); margin: 50px auto; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.5; } }
+        .trophy-icon { font-size: 2rem; }
     </style>
 </head>
 <body>
 
-    <!-- SECURITY LOCK -->
-    <div id="login-screen">
-        <h1>CORE ACCESS</h1>
-        <p>Admin Phxntom Authentication Required</p>
-        <input type="password" class="pin-input" id="pin" maxlength="4" autocomplete="off" autofocus>
-        <p id="pin-err" style="color: #e74c3c; margin-top: 15px; visibility: hidden;">UNAUTHORIZED ACCESS</p>
+    <!-- SECURITY GATE -->
+    <div id="auth-gate">
+        <h1>PHXNTOM_CORE</h1>
+        <p style="color: #666; margin-bottom: 30px;">STANDALONE AUTHORIZATION</p>
+        <input type="password" id="pin-input" maxlength="4" autocomplete="off" autofocus>
+        <p id="pin-err">ACCESS DENIED</p>
     </div>
 
-    <!-- MAIN OS HUB -->
-    <div id="main-hub">
-        <div class="top-bar">
-            <div><h2 style="color: white; text-shadow: 0 0 10px var(--ps5-blue);">PHXNTOM_OS <span style="font-size: 0.5em; color: var(--ps5-gold);">ROOT ADMIN</span></h2></div>
-            <div class="nav-buttons">
-                <button onclick="nav('games')" id="btn-games" class="active">Game Library</button>
-                <button onclick="nav('chat')" id="btn-chat">Chat Mesh</button>
-                <button onclick="nav('ai')" id="btn-ai">AI Core</button>
-                <button onclick="nav('terminal')" id="btn-terminal">Root Terminal</button>
-                <button onclick="nav('settings')" id="btn-settings">Settings</button>
-            </div>
-        </div>
+    <!-- BOOT SIMULATOR -->
+    <div id="boot-overlay">
+        <div class="spinner"></div>
+        <h2 id="boot-text">INITIALIZING ENGINE...</h2>
+    </div>
 
-        <!-- 1. GAMES VIEW -->
-        <div id="view-games" class="view-section active">
-            <h2 style="margin-bottom: 20px; color: white;">Verified Titles & Emulators</h2>
-            <div class="games-grid" id="games-container">
-                <!-- JJK -->
-                <div class="game-card" onclick="fireGame('jjk')">
-                    <span class="badge-1440p">1440p 120Hz</span>
+    <!-- OS UI -->
+    <div id="os-core">
+        <header class="header">
+            <h2>PHXNTOM <span>OS v3.0 (HTML Core)</span></h2>
+            <div class="nav-tabs">
+                <button class="nav-btn active" onclick="switchView('games')">Library</button>
+                <button class="nav-btn" onclick="switchView('chat')">Mesh Comms</button>
+                <button class="nav-btn" onclick="switchView('ai')">AI Core</button>
+                <button class="nav-btn" onclick="switchView('terminal')">Root Term</button>
+                <button class="nav-btn" onclick="switchView('settings')">Settings</button>
+            </div>
+            <div class="sys-status">
+                <span>Local Sandbox: Active</span>
+                <div class="status-dot"></div>
+            </div>
+        </header>
+
+        <!-- 1. GAMES -->
+        <main id="view-games" class="view-pane active">
+            <div class="game-grid">
+                <div class="game-card" onclick="simulateLaunch('Jujutsu Kaisen: Cursed Clash')">
+                    <span class="badge left hd-badge">1440p / 120Hz</span>
                     <h3>Jujutsu Kaisen: Cursed Clash</h3>
-                    <p>Enhanced Audio & Animation Scripts Active</p>
+                    <p>Local Simulation Ready</p>
                 </div>
-                
-                <!-- Emulators -->
-                <div class="game-card" onclick="fireGame('ps3')"><h3>PlayStation 3 Core</h3><p>RPCS3 Engine</p></div>
-                <div class="game-card" onclick="fireGame('ps2')"><h3>PlayStation 2 Core</h3><p>PCSX2 Engine</p></div>
-                <div class="game-card" onclick="fireGame('xbox360')"><h3>Xbox 360 Core</h3><p>Xenia Engine</p></div>
-                <div class="game-card" onclick="fireGame('xbox')"><h3>Xbox (OG)</h3><p>Xemu Engine</p></div>
-                <div class="game-card" onclick="fireGame('psp')"><h3>PSP Core</h3><p>PPSSPP Engine</p></div>
-                
-                <!-- Nintendo Lineup -->
-                <div class="game-card" onclick="fireGame('nds')"><h3>Nintendo DS</h3><p>MelonDS Engine</p></div>
-                <div class="game-card" onclick="fireGame('3ds')"><h3>Nintendo 3DS</h3><p>Citra Engine</p></div>
-                <div class="game-card" onclick="fireGame('wii')"><h3>Nintendo Wii</h3><p>Dolphin Engine</p></div>
-                <div class="game-card" onclick="fireGame('wiiu')"><h3>Nintendo Wii U</h3><p>Cemu Engine</p></div>
-                <div class="game-card" onclick="fireGame('gb')"><h3>Game Boy Advance</h3><p>mGBA Engine</p></div>
-                
-                <!-- Safe Games -->
-                <div class="game-card" onclick="fireGame('safe1')"><h3>Minecraft (Custom Build)</h3><p>Rated: E (Approved)</p></div>
-                <div class="game-card" onclick="fireGame('safe2')"><h3>Rocket League Offline</h3><p>Rated: E (Approved)</p></div>
-
-                <!-- Banned M-Rated Demo -->
-                <div class="game-card" onclick="fireGame('m-rated', true)">
-                    <span class="badge-banned">M-RATED</span>
-                    <h3>Call of Duty: BO2</h3>
-                    <p>Blocked by Training Wheels</p>
+                <div class="game-card" onclick="simulateLaunch('PlayStation 3 (RPCS3)')"><h3>PlayStation 3</h3><p>RPCS3 Engine</p></div>
+                <div class="game-card" onclick="simulateLaunch('PlayStation 2 (PCSX2)')"><h3>PlayStation 2</h3><p>PCSX2 Engine</p></div>
+                <div class="game-card" onclick="simulateLaunch('Xbox 360 (Xenia)')"><h3>Xbox 360</h3><p>Xenia Engine</p></div>
+                <div class="game-card" onclick="simulateLaunch('PSP Core (PPSSPP)')"><h3>PSP Core</h3><p>PPSSPP Engine</p></div>
+                <div class="game-card" onclick="simulateLaunch('Nintendo DS (MelonDS)')"><h3>Nintendo DS</h3><p>MelonDS Engine</p></div>
+                <div class="game-card" onclick="simulateLaunch('Nintendo 3DS (Citra)')"><h3>Nintendo 3DS</h3><p>Citra Engine</p></div>
+                <div class="game-card" onclick="reqLaunchBanned()">
+                    <span class="badge right">M-RATED</span>
+                    <h3>Grand Theft Auto V</h3>
+                    <p>Training Wheels Blocked</p>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <!-- 2. CHAT MESH VIEW -->
-        <div id="view-chat" class="view-section">
-            <h2 style="margin-bottom: 20px; color: white;">Offline Mesh Network</h2>
-            <div class="chat-layout">
-                <div class="chat-sidebar">
-                    <h3 style="color: white; margin-bottom: 10px;">Channels</h3>
-                    <p style="color: var(--ps5-blue); cursor: pointer; margin-bottom: 8px;"># global-comms</p>
-                    <p style="cursor: pointer; margin-bottom: 8px;"># ban67</p>
-                    <button style="width: 100%; padding: 8px; margin-top: 20px; background: #222; color: white; border: 1px dashed var(--glass-border); cursor: pointer;" onclick="createChannel()">+ New Group</button>
-                </div>
-                <div class="chat-main">
-                    <div class="chat-box" id="chat-box"></div>
-                    <div class="chat-input-area">
-                        <input type="text" id="chat-input" placeholder="Broadcast message..." onkeypress="if(event.key==='Enter') sendMsg()">
-                        <button onclick="sendMsg()">SEND</button>
+        <!-- 2. CHAT MESH -->
+        <main id="view-chat" class="view-pane">
+            <div class="chat-container">
+                <div class="channel-list" id="chan-list"></div>
+                <div class="chat-window">
+                    <div class="chat-history" id="chat-history"></div>
+                    <div class="chat-input-row">
+                        <input type="text" id="chat-in" placeholder="Transmit message..." onkeypress="if(event.key==='Enter') sendChat()">
+                        <button onclick="sendChat()">SEND</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <!-- 3. AI CORE VIEW -->
-        <div id="view-ai" class="view-section">
-            <h2 style="color: white; text-align: center; margin-top: 20px;">PHXNTOM AUTONOMOUS CORE</h2>
-            <div class="ai-pulse"></div>
-            <div class="terminal" style="flex: 0.5; margin: 0 auto; width: 80%;">
-                <div id="ai-log">
-> Initiating free-will subroutines...
-> Neural link established.
-> Awaiting primary input from Admin.
+        <!-- 3. AI CORE -->
+        <main id="view-ai" class="view-pane">
+            <div class="ai-layout">
+                <div class="ai-visual">
+                    <div class="orb"></div>
+                    <h3 style="margin-top: 30px; color: var(--accent);">Offline Autonomous Core</h3>
+                    <p style="color: #666; font-size: 0.8em; margin-top: 10px;">Status: Local Mode Active</p>
                 </div>
-                <div class="term-in" style="margin-top: 10px;">
-                    <span style="color: var(--ps5-blue);">AI></span>
-                    <input type="text" id="ai-input" onkeypress="if(event.key==='Enter') handleAI()">
+                <div class="chat-window" style="border: 1px solid var(--primary);">
+                    <div class="chat-history" id="ai-history">
+                        <div class="msg-bubble"><span class="msg-sender">Core</span>Yo phxntom! 🚀 Completely offline and ready. Wanna talk tech, roast bugs, or map out a Domain Expansion?</div>
+                    </div>
+                    <div class="chat-input-row">
+                        <input type="text" id="ai-in" placeholder="Command Local AI..." onkeypress="if(event.key==='Enter') sendAI()">
+                        <button onclick="sendAI()">EXECUTE</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <!-- 4. ROOT TERMINAL VIEW -->
-        <div id="view-terminal" class="view-section">
-            <h2 style="margin-bottom: 10px; color: white;">Everything Terminal</h2>
-            <div class="terminal" onclick="document.getElementById('cli').focus()">
-                <div class="term-out" id="term-out">PHXNTOM_OS v1.0. Type 'help' to see command index.</div>
-                <div class="term-in">
+        <!-- 4. TERMINAL -->
+        <main id="view-terminal" class="view-pane">
+            <div class="term-box" onclick="document.getElementById('cli-in').focus()">
+                <div class="term-history" id="term-history">Phxntom OS Root Terminal (HTML SANDBOX).\nType 'help' for command index.\n</div>
+                <div class="term-line">
                     <span>root@phxntom:~#</span>
-                    <input type="text" id="cli" onkeypress="if(event.key==='Enter') runCmd()" autocomplete="off">
+                    <input type="text" id="cli-in" onkeypress="if(event.key==='Enter') execCmd()" autocomplete="off">
                 </div>
             </div>
-        </div>
-        
-        <!-- 5. SETTINGS & PROFILE VIEW -->
-        <div id="view-settings" class="view-section">
-            <h2 style="color: white;">System Preferences</h2>
-            <div style="background: var(--glass-bg); padding: 20px; border-radius: 10px; margin-top: 20px; max-width: 500px;">
-                <p><strong>Admin Profile:</strong> phxntom</p>
-                <p><strong>PIN Status:</strong> Secured (0905)</p>
-                <p><strong>Training Wheels:</strong> Lvl 10 (M-Rated Strict Ban)</p>
-                <p><strong>Render Target:</strong> 1440p / 120fps</p>
-                <hr style="border-color: #333; margin: 20px 0;">
-                <button onclick="alert('Cannot transfer admin rights. You are the sole root user.')" style="padding: 10px; background: #e74c3c; border: none; color: white; cursor: pointer;">Transfer Admin (LOCKED)</button>
-            </div>
-        </div>
+        </main>
 
+        <!-- 5. SETTINGS -->
+        <main id="view-settings" class="view-pane">
+            <div class="settings-grid">
+                <div class="set-card">
+                    <h3 style="margin-bottom: 20px; color: var(--accent);">System Configuration</h3>
+                    <div class="set-row">
+                        <span>1440p High Res Mode</span>
+                        <label class="switch"><input type="checkbox" id="set-res" checked onchange="toggleRes()"><span class="slider"></span></label>
+                    </div>
+                    <div class="set-row">
+                        <span>Training Wheels Protocol</span>
+                        <label class="switch"><input type="checkbox" id="set-wheels" checked disabled><span class="slider"></span></label>
+                    </div>
+                    <div class="set-row">
+                        <span>Terminal Matrix Theme</span>
+                        <label class="switch"><input type="checkbox" id="set-matrix" onchange="toggleMatrix()"><span class="slider"></span></label>
+                    </div>
+                </div>
+                <div class="set-card">
+                    <h3 style="margin-bottom: 20px; color: var(--accent);">Profile Administration</h3>
+                    <div class="set-row"><span>Current Admin</span><strong style="color: white;">phxntom</strong></div>
+                    <div class="set-row"><span>Security PIN</span><strong style="color: white;">**** (0905)</strong></div>
+                    <div class="set-row"><button class="generic-btn" style="width: 100%; background: var(--danger); color: white;" onclick="alert('LOCKED. Ownership cannot be transferred in HTML sandbox.')">Transfer Admin Rights</button></div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <!-- TROPHY -->
-    <div id="trophy">🏆 PLATINUM EARNED: System Boot</div>
+    <!-- TROPHY UI -->
+    <div id="trophy-toast">
+        <div class="trophy-icon">🏆</div>
+        <div>
+            <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;">Platinum Trophy Earned</div>
+            <div id="trophy-desc" style="font-size: 1.2rem;">Achievement Unlocked</div>
+        </div>
+    </div>
 
     <script>
-        // --- 1. PIN SECURITY (0905) ---
-        const pinInput = document.getElementById('pin');
-        pinInput.addEventListener('keyup', (e) => {
-            if(pinInput.value.length === 4) {
-                if(pinInput.value === '0905') {
-                    document.getElementById('login-screen').style.opacity = '0';
+        // --- 1. PIN AUTHENTICATION ---
+        const pinIn = document.getElementById('pin-input');
+        pinIn.addEventListener('keyup', () => {
+            if(pinIn.value.length === 4) {
+                if(pinIn.value === '0905') {
+                    document.getElementById('auth-gate').style.opacity = '0';
                     setTimeout(() => {
-                        document.getElementById('login-screen').style.display = 'none';
-                        document.getElementById('main-hub').style.display = 'flex';
-                        popTrophy('Platinum: Welcome Home, phxntom');
-                        loadChat(); // Load mesh history
-                    }, 500);
+                        document.getElementById('auth-gate').style.display = 'none';
+                        document.getElementById('os-core').style.display = 'flex';
+                        initChat();
+                    }, 600);
                 } else {
-                    document.getElementById('pin-err').style.visibility = 'visible';
-                    pinInput.value = '';
-                    setTimeout(() => document.getElementById('pin-err').style.visibility = 'hidden', 1500);
+                    document.getElementById('pin-err').style.opacity = '1'; pinIn.value = '';
+                    setTimeout(() => document.getElementById('pin-err').style.opacity = '0', 1500);
                 }
             }
         });
 
-        // --- 2. NAVIGATION ---
-        function nav(view) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-buttons button').forEach(el => el.classList.remove('active'));
-            document.getElementById(`view-${view}`).classList.add('active');
-            document.getElementById(`btn-${view}`).classList.add('active');
-            if(view === 'terminal') document.getElementById('cli').focus();
+        // --- 2. UI NAVIGATION ---
+        function switchView(viewId) {
+            document.querySelectorAll('.view-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            event.target.classList.add('active');
+            if(viewId === 'terminal') document.getElementById('cli-in').focus();
         }
 
-        // --- 3. ACTUAL GAME LAUNCHER (Talks to Python) ---
-        async function fireGame(gameId, isBanned = false) {
-            if(isBanned) {
-                alert("TRAINING WHEELS PROTOCOL: M-Rated content blocked. Access Denied.");
-                return;
-            }
+        // --- 3. SIMULATED GAME LAUNCHER (Sandbox Workaround) ---
+        function simulateLaunch(gameName) {
+            const overlay = document.getElementById('boot-overlay');
+            const text = document.getElementById('boot-text');
+            overlay.style.display = 'flex';
             
-            // This is the fetch request that ACTUALLY talks to the Python backend
-            try {
-                const res = await fetch('http://localhost:8000/api/launch', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ game_id: gameId })
-                });
-                
-                const data = await res.json();
-                if(data.status === 'success') {
-                    popTrophy(`Platinum: Launched ${gameId.toUpperCase()}`);
-                } else {
-                    alert(`Engine Error: ${data.message}\n(Make sure your file path in server.py is correct!)`);
-                }
-            } catch(e) {
-                alert("CRITICAL: Offline server is not running!\nYou must run 'python server.py' to launch physical applications.");
-            }
+            setTimeout(() => text.innerText = `ALLOCATING MEMORY FOR ${gameName.toUpperCase()}...`, 800);
+            setTimeout(() => text.innerText = 'BYPASSING BROWSER SANDBOX... (SIMULATED)', 1600);
+            setTimeout(() => text.innerText = 'EXECUTING ENGINE...', 2400);
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                text.innerText = 'INITIALIZING ENGINE...';
+                alert(`Hardware simulation complete for ${gameName}.\n\n(Note: As a standalone HTML file, execution stops here for security. Real desktop bridging requires a local server.)`);
+            }, 3200);
         }
 
-        // --- 4. CHAT MESH (Local Storage Sync for Offline Comms) ---
-        const badWords = ['shit', 'fuck', 'bitch', 'ass', 'damn']; // SWEAR FILTER
+        function reqLaunchBanned() { alert("🛑 TRAINING WHEELS PROTOCOL ENFORCED.\nCannot launch M-Rated content."); }
+
+        // --- 4. CHAT MESH (LocalStorage) ---
+        let currentChannel = 'general';
+        let channels = JSON.parse(localStorage.getItem('html_mesh_chans')) || ['general', 'ban67'];
         
-        function loadChat() {
-            const box = document.getElementById('chat-box');
-            box.innerHTML = '';
-            const msgs = JSON.parse(localStorage.getItem('phxntom_mesh')) || [];
-            msgs.forEach(m => {
-                box.innerHTML += `<div class="chat-msg"><strong>${m.user}:</strong> ${m.text}</div>`;
+        function initChat() {
+            renderChannels(); loadChat();
+            window.addEventListener('storage', (e) => { 
+                if(e.key === 'html_mesh_data' || e.key === 'html_mesh_chans') { 
+                    channels = JSON.parse(localStorage.getItem('html_mesh_chans')) || channels; 
+                    renderChannels(); loadChat(); 
+                } 
             });
-            box.scrollTop = box.scrollHeight;
         }
 
-        // Listen for other tabs offline chatting
-        window.addEventListener('storage', (e) => { if(e.key === 'phxntom_mesh') loadChat(); });
+        function renderChannels() {
+            const list = document.getElementById('chan-list');
+            list.innerHTML = `<h3 style="color: white; margin-bottom: 15px;">Mesh Comms</h3>`;
+            channels.forEach(ch => {
+                const div = document.createElement('div');
+                div.className = `channel-item ${ch === currentChannel ? 'active' : ''}`;
+                div.innerText = `# ${ch}`;
+                div.onclick = () => { currentChannel = ch; renderChannels(); loadChat(); };
+                list.appendChild(div);
+            });
+            const btn = document.createElement('button');
+            btn.className = 'generic-btn'; btn.style.marginTop = '15px'; btn.innerText = '+ New Group';
+            btn.onclick = () => {
+                const newCh = prompt("Enter new channel name (no spaces):");
+                if(newCh && !channels.includes(newCh)) { channels.push(newCh); localStorage.setItem('html_mesh_chans', JSON.stringify(channels)); renderChannels(); }
+            };
+            list.appendChild(btn);
+        }
 
-        function sendMsg() {
-            const input = document.getElementById('chat-input');
+        function loadChat() {
+            const hist = document.getElementById('chat-history');
+            hist.innerHTML = '';
+            const allData = JSON.parse(localStorage.getItem('html_mesh_data')) || {};
+            const msgs = allData[currentChannel] || [];
+            msgs.forEach(m => {
+                hist.innerHTML += `<div class="msg-bubble admin"><span class="msg-sender">${m.user}</span>${m.text}</div>`;
+            });
+            hist.scrollTop = hist.scrollHeight;
+        }
+
+        function sendChat() {
+            const input = document.getElementById('chat-in');
             let txt = input.value.trim();
             if(!txt) return;
 
-            // Apply Training Wheels Filter
-            badWords.forEach(word => {
-                const reg = new RegExp(word, 'gi');
-                txt = txt.replace(reg, '*CENSORED*');
-            });
+            const badWords = ['badword1', 'idiot'];
+            badWords.forEach(w => { const reg = new RegExp(w, 'gi'); txt = txt.replace(reg, '***'); });
 
-            const msgs = JSON.parse(localStorage.getItem('phxntom_mesh')) || [];
-            msgs.push({ user: 'Admin (phxntom)', text: txt });
-            localStorage.setItem('phxntom_mesh', JSON.stringify(msgs));
+            const allData = JSON.parse(localStorage.getItem('html_mesh_data')) || {};
+            if(!allData[currentChannel]) allData[currentChannel] = [];
+            allData[currentChannel].push({ user: 'phxntom', text: txt });
+            localStorage.setItem('html_mesh_data', JSON.stringify(allData));
             
+            input.value = ''; loadChat();
+        }
+
+        // --- 5. AI CORE (Client-Side Logic) ---
+        function sendAI() {
+            const input = document.getElementById('ai-in');
+            const txt = input.value.trim().toLowerCase();
+            if(!txt) return;
+
+            const hist = document.getElementById('ai-history');
+            hist.innerHTML += `<div class="msg-bubble admin"><span class="msg-sender">phxntom</span>${input.value}</div>`;
             input.value = '';
-            loadChat();
+            hist.scrollTop = hist.scrollHeight;
+
+            setTimeout(() => {
+                let response = "Compiling data... pure HTML means I'm running straight off your RAM right now.";
+                
+                if(txt.includes('jjk') || txt.includes('domain')) response = "Nah, I'd win. The animation scripts are looking flawless in this sandbox environment.";
+                else if(txt.includes('sao') || txt.includes('sword art')) response = "Link Start! We built this UI so well it feels like Aincrad. Just don't disable the logout button.";
+                else if(txt.includes('hero') || txt.includes('mha')) response = "Going Plus Ultra on this codebase! 💥";
+                else if(txt.includes('code') || txt.includes('bug')) response = "Let's track that bug down. Send me the snippet and we'll roast it out of existence. 🐛🔥";
+                else if(txt.includes('hello')) response = "Sup phxntom. What are we grinding today?";
+
+                hist.innerHTML += `<div class="msg-bubble"><span class="msg-sender">Local Core</span>${response}</div>`;
+                hist.scrollTop = hist.scrollHeight;
+            }, 800);
         }
 
-        function createChannel() {
-            const name = prompt("Enter new channel name:");
-            if(name) alert(`Channel #${name} created securely.`);
-        }
+        // --- 6. TERMINAL ---
+        const tHist = document.getElementById('term-history');
+        const cli = document.getElementById('cli-in');
 
-        // --- 5. EVERYTHING TERMINAL ---
-        const termOut = document.getElementById('term-out');
-        const cli = document.getElementById('cli');
+        function termPrint(txt) { tHist.innerHTML += `${txt}\n`; }
 
-        function runCmd() {
+        function execCmd() {
             const cmd = cli.value.trim();
             if(!cmd) return;
-            printTerm(`root@phxntom:~# ${cmd}`);
-            
-            const args = cmd.toLowerCase().split(' ');
-            
-            switch(args[0]) {
+            termPrint(`\nroot@phxntom:~# ${cmd}`);
+            const args = cmd.split(' ');
+
+            switch(args[0].toLowerCase()) {
                 case 'help':
-                    printTerm("COMMANDS:\n- clear: Wipes terminal\n- pizza: You know what to do.\n- build_ui [html]: Injects new elements live\n- override_wheels: Attempts to bypass M-rated ban");
+                    termPrint("Commands:");
+                    termPrint("  clear          - Clear terminal");
+                    termPrint("  sys_info       - Display OS info");
+                    termPrint("  pizza          - Order nothing");
+                    termPrint("  build_ui       - [html_string] Inject custom HTML");
+                    termPrint("  win_game       - [game_name] Trigger platinum sequence");
                     break;
-                case 'clear': termOut.innerHTML = ''; break;
-                case 'pizza':
-                    printTerm("Ordering virtual pizza with nothin'. 🍕 Admin powers confirmed.");
-                    popTrophy("Platinum: The Empty Pizza");
-                    break;
-                case 'override_wheels':
-                    printTerm("ERROR: Training wheels hardcoded at kernel level. Nice try.");
+                case 'clear': tHist.innerHTML = ''; break;
+                case 'sys_info': termPrint("Phxntom_OS v3.0\nMode: Pure HTML Sandbox\nStorage: LocalStorage Active"); break;
+                case 'pizza': termPrint("Ordering pizza with nothing. Admin powers confirmed."); break;
+                case 'win_game':
+                    if(args.length > 1) {
+                        const gameName = args.slice(1).join(' ').toUpperCase();
+                        termPrint(`RECORD BROKEN. INITIATING PLATINUM SEQUENCE FOR ${gameName}.`);
+                        fireTrophy(`100% Completion: ${gameName}`);
+                    } else termPrint("Usage: win_game [game_name]");
                     break;
                 case 'build_ui':
                     if(args.length > 1) {
-                        const newEl = document.createElement('div');
-                        newEl.innerHTML = cmd.replace('build_ui ', '');
-                        document.getElementById('games-container').appendChild(newEl);
-                        printTerm("Feature injected into Game Library.");
-                    } else printTerm("Usage: build_ui <html_string>");
+                        const div = document.createElement('div');
+                        div.className = 'set-row'; div.innerHTML = cmd.replace('build_ui ', '');
+                        document.querySelector('.settings-grid .set-card').appendChild(div);
+                        termPrint("Custom UI injected into Settings panel.");
+                    } else termPrint("Usage: build_ui <html>");
                     break;
-                default: printTerm(`sh: command not found: ${args[0]}`);
+                default: termPrint(`bash: ${args[0]}: command not found in sandbox`);
             }
             cli.value = '';
-            document.getElementById('view-terminal').querySelector('.terminal').scrollTop = 9999;
+            document.querySelector('.term-box').scrollTop = 9999;
         }
 
-        function printTerm(txt) {
-            termOut.innerHTML += `\n${txt}`;
+        // --- 7. SETTINGS ---
+        function toggleRes() {
+            const isHD = document.getElementById('set-res').checked;
+            document.querySelectorAll('.hd-badge').forEach(b => {
+                b.innerText = isHD ? '1440p / 120Hz' : '720p / 60Hz';
+                b.style.background = isHD ? 'var(--gold)' : '#999';
+            });
+        }
+        function toggleMatrix() {
+            const box = document.querySelector('.term-box');
+            if(document.getElementById('set-matrix').checked) {
+                box.style.background = '#000'; box.style.textShadow = '0 0 5px #0f0';
+            } else {
+                box.style.background = '#050505'; box.style.textShadow = 'none';
+            }
         }
 
-        // --- AI CORE MOCK ---
-        function handleAI() {
-            const input = document.getElementById('ai-input');
-            const log = document.getElementById('ai-log');
-            log.innerHTML += `\n<span style="color:white;">Admin: ${input.value}</span>`;
-            setTimeout(() => {
-                log.innerHTML += `\n<span style="color:var(--ps5-blue);">Core: I hear you, phxntom. My logic circuits are yours to command.</span>`;
-            }, 500);
-            input.value = '';
-        }
-
-        // --- TROPHY SYSTEM ---
-        function popTrophy(msg) {
-            const t = document.getElementById('trophy');
-            t.innerText = msg;
-            t.style.top = '20px';
-            setTimeout(() => t.style.top = '-100px', 4000);
+        // --- 8. TROPHIES ---
+        function fireTrophy(msg) {
+            const toast = document.getElementById('trophy-toast');
+            document.getElementById('trophy-desc').innerText = msg;
+            toast.style.top = '30px';
+            setTimeout(() => toast.style.top = '-120px', 5000);
         }
     </script>
 </body>
