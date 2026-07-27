@@ -1,1521 +1,317 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PHXNTOM HUB | Offline Edition</title>
-  <style>
-    :root{
-      --bg:#070A12;
-      --bg2:#0B1220;
-      --panel:rgba(18,25,42,.72);
-      --panel2:rgba(255,255,255,.05);
-      --border:rgba(145, 178, 255, .16);
-      --text:#EAF1FF;
-      --muted:#9AA8C7;
-      --accent:#2D6BFF;
-      --accent2:#79D7FF;
-      --good:#4CE6A0;
-      --warn:#FFD166;
-      --bad:#FF6B7A;
-      --shadow: 0 18px 70px rgba(0,0,0,.45);
-      --radius: 24px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega-Million Games Hub V2</title>
+    <style>
+        :root {
+            --bg: #09090b;
+            --surface: #18181b;
+            --surface-hover: #27272a;
+            --accent: #8b5cf6;
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+        }
 
-```
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(circle at 18% 12%, rgba(45,107,255,.24), transparent 26%),
-    radial-gradient(circle at 82% 18%, rgba(121,215,255,.18), transparent 24%),
-    radial-gradient(circle at 50% 90%, rgba(76,230,160,.12), transparent 22%),
-    linear-gradient(180deg, #05070D 0%, #080D18 42%, #05070D 100%);
-  overflow:hidden;
-}
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-.bg-orb{
-  position:fixed; inset:auto;
-  width:48vw; height:48vw; border-radius:50%;
-  filter:blur(70px); opacity:.15; pointer-events:none;
-  background: radial-gradient(circle, rgba(121,215,255,.9), rgba(45,107,255,.25), transparent 68%);
-  left:-12vw; top:-10vw; animation: drift 18s ease-in-out infinite;
-}
-.bg-orb.two{
-  left:auto; top:auto; right:-16vw; bottom:-16vw;
-  opacity:.11;
-  background: radial-gradient(circle, rgba(76,230,160,.9), rgba(45,107,255,.18), transparent 66%);
-  animation-duration: 22s;
-}
-@keyframes drift{ 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(6vw,4vw) scale(1.12)} }
+        header {
+            width: 100%;
+            background: var(--surface);
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 2px solid var(--accent);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2);
+        }
 
-.shell{
-  display:grid;
-  grid-template-rows:auto 1fr auto;
-  height:100%;
-  padding:20px;
-  gap:18px;
-}
+        h1 {
+            margin: 0;
+            color: var(--text);
+            font-size: 3rem;
+            letter-spacing: -1px;
+        }
 
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  padding:16px 18px;
-  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  border:1px solid var(--border);
-  border-radius:28px;
-  backdrop-filter: blur(22px);
-  box-shadow: var(--shadow);
-}
+        h1 span {
+            color: var(--accent);
+        }
 
-.brand{
-  display:flex; align-items:center; gap:14px; min-width:0;
-}
-.ps-pill{
-  padding:10px 14px;
-  border-radius:999px;
-  background:linear-gradient(135deg, rgba(121,215,255,.18), rgba(45,107,255,.28));
-  border:1px solid rgba(121,215,255,.18);
-  color:#dff4ff;
-  font-weight:800;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  font-size:.82rem;
-  white-space:nowrap;
-}
-.title-wrap{ min-width:0; }
-.title{
-  font-size:1.15rem; font-weight:850; letter-spacing:.02em; margin:0;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.subtitle{ margin:3px 0 0; color:var(--muted); font-size:.92rem; }
+        .search-container {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+            display: inline-block;
+        }
 
-.status{
-  display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
-  color:var(--muted); font-size:.92rem;
-}
-.dot{ width:10px; height:10px; border-radius:999px; background:var(--good); box-shadow:0 0 0 6px rgba(76,230,160,.12); }
-.chip{
-  padding:9px 12px; border-radius:999px;
-  background:var(--panel2); border:1px solid var(--border);
-  color:var(--text); font-size:.88rem;
-}
+        #searchBar {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            border: 2px solid #3f3f46;
+            background-color: var(--bg);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.3s;
+        }
 
-.main{
-  display:grid;
-  grid-template-columns: 290px 1fr 360px;
-  gap:18px;
-  min-height:0;
-}
+        #searchBar:focus {
+            border-color: var(--accent);
+        }
 
-.panel{
-  background:linear-gradient(180deg, rgba(18,25,42,.86), rgba(11,16,28,.70));
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  backdrop-filter: blur(20px);
-  box-shadow: var(--shadow);
-  min-height:0;
-}
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1400px;
+            margin-top: 40px;
+        }
 
-.sidebar{
-  display:flex;
-  flex-direction:column;
-  padding:16px;
-  gap:14px;
-  min-height:0;
-}
+        /* Snake Game Container */
+        #active-game-zone {
+            background: var(--surface);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 50px;
+            text-align: center;
+            border: 1px solid #3f3f46;
+        }
 
-.nav-btn{
-  display:flex; align-items:center; gap:12px;
-  width:100%;
-  text-align:left;
-  border:1px solid transparent;
-  background:transparent;
-  color:var(--text);
-  padding:14px 14px;
-  border-radius:18px;
-  font:inherit;
-  cursor:pointer;
-  transition:.22s ease;
-}
-.nav-btn:hover{
-  background:rgba(255,255,255,.06);
-  border-color:var(--border);
-  transform:translateY(-1px);
-}
-.nav-btn.active{
-  background:linear-gradient(135deg, rgba(45,107,255,.24), rgba(121,215,255,.14));
-  border-color:rgba(121,215,255,.18);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
-}
-.nav-ico{
-  width:40px; height:40px; border-radius:14px;
-  display:grid; place-items:center;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.08);
-  font-size:1.08rem;
-}
-.nav-copy{ display:flex; flex-direction:column; gap:3px; }
-.nav-copy strong{ font-size:.96rem; }
-.nav-copy span{ font-size:.84rem; color:var(--muted); }
+        .score-board {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
 
-.side-card{
-  margin-top:auto;
-  padding:14px;
-  border-radius:20px;
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-}
-.mini-row{ display:flex; justify-content:space-between; gap:12px; margin-top:10px; color:var(--muted); font-size:.9rem; }
+        canvas {
+            background-color: #000;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+        }
 
-.content{
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-  overflow:hidden;
-}
+        /* Massive Grid */
+        .library-header {
+            width: 100%;
+            text-align: left;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #3f3f46;
+        }
 
-.hero{
-  padding:20px 20px 0;
-  display:grid;
-  gap:14px;
-}
-.hero-card{
-  padding:24px;
-  border-radius:28px;
-  background:
-    radial-gradient(circle at top left, rgba(121,215,255,.15), transparent 35%),
-    linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-  border:1px solid rgba(121,215,255,.14);
-}
-.hero-card h1{
-  margin:0;
-  font-size:clamp(2rem, 4vw, 3.4rem);
-  line-height:1.03;
-  letter-spacing:-.04em;
-}
-.hero-card p{
-  margin:12px 0 0;
-  max-width:64ch;
-  color:var(--muted);
-  font-size:1.02rem;
-  line-height:1.6;
-}
-.hero-actions{
-  margin-top:18px;
-  display:flex; gap:12px; flex-wrap:wrap;
-}
-.action{
-  appearance:none;
-  border:none;
-  cursor:pointer;
-  padding:13px 16px;
-  border-radius:16px;
-  font-weight:750;
-  color:var(--text);
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--border);
-  transition:.2s ease;
-}
-.action.primary{
-  background:linear-gradient(135deg, rgba(45,107,255,.95), rgba(121,215,255,.75));
-  color:#07101f;
-  border-color:transparent;
-}
-.action:hover{ transform:translateY(-1px); }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 50px;
+        }
 
-.grid{
-  padding:18px 20px 20px;
-  display:grid;
-  gap:18px;
-  min-height:0;
-  overflow:auto;
-}
+        .game-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #3f3f46;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            text-align: center;
+        }
 
-.section{
-  display:none;
-  min-height:0;
-}
-.section.active{ display:block; }
+        .game-card:hover {
+            transform: translateY(-5px);
+            background: var(--surface-hover);
+            border-color: var(--accent);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
+        }
 
-.card-grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap:14px;
-}
-.card{
-  position:relative;
-  padding:16px;
-  border-radius:22px;
-  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-  border:1px solid var(--border);
-  min-height:148px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:.22s ease;
-}
-.card:hover{ transform:translateY(-3px); border-color:rgba(121,215,255,.32); }
-.card .tag{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:7px 10px;
-  border-radius:999px;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.08);
-  color:#f6fbff;
-  font-size:.78rem;
-  font-weight:700;
-}
-.card h3{ margin:14px 0 6px; font-size:1.05rem; }
-.card p{ margin:0; color:var(--muted); font-size:.9rem; line-height:1.45; }
-.card .meta{
-  position:absolute;
-  right:14px; bottom:12px;
-  color:var(--accent2); font-size:.78rem;
-  font-weight:700;
-}
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
 
-.right{
-  display:grid;
-  grid-template-rows: 1fr 1fr;
-  gap:18px;
-  min-height:0;
-}
-
-.chat, .terminal{
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-  padding:16px;
-}
-.panel-head{
-  display:flex; justify-content:space-between; align-items:center; gap:12px;
-  margin-bottom:12px;
-}
-.panel-head h2{ margin:0; font-size:1rem; }
-.panel-head span{ color:var(--muted); font-size:.86rem; }
-
-.chat-feed, .term-out{
-  flex:1;
-  min-height:0;
-  overflow:auto;
-  padding-right:4px;
-}
-.msg{
-  margin-bottom:10px;
-  padding:12px 12px;
-  border-radius:18px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.06);
-}
-.msg.me{
-  background:rgba(45,107,255,.16);
-  border-color:rgba(121,215,255,.14);
-}
-.msg .who{
-  display:block;
-  color:var(--accent2);
-  font-size:.78rem;
-  font-weight:800;
-  margin-bottom:5px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-}
-.msg p{ margin:0; color:var(--text); line-height:1.45; }
-
-.input-row{
-  display:flex; gap:10px; margin-top:12px;
-}
-.input-row input, .input-row select, .input-row textarea{
-  flex:1;
-  width:100%;
-  color:var(--text);
-  background:rgba(0,0,0,.24);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:12px 14px;
-  outline:none;
-  font:inherit;
-}
-.input-row textarea{ resize:none; min-height:48px; max-height:140px; }
-.input-row button{
-  border:none; cursor:pointer;
-  border-radius:16px;
-  padding:12px 16px;
-  font:inherit; font-weight:800;
-  color:#07101f;
-  background:linear-gradient(135deg, rgba(121,215,255,.95), rgba(45,107,255,.95));
-}
-
-.term{
-  background:rgba(0,0,0,.30);
-  border:1px solid rgba(121,215,255,.12);
-}
-.term-out{
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size:.9rem;
-  line-height:1.55;
-  color:#CFF2FF;
-  white-space:pre-wrap;
-}
-.term-out .muted{ color:#86A7B6; }
-.term-line{
-  display:flex; gap:10px; margin-top:12px;
-}
-.term-line span{
-  padding:12px 12px;
-  border-radius:16px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.06);
-  color:#86A7B6;
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  white-space:nowrap;
-}
-
-.footer{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  align-items:center;
-  padding:0 6px 2px;
-  color:var(--muted);
-  font-size:.88rem;
-  flex-wrap:wrap;
-}
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(3,6,12,.66);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  z-index:50;
-}
-.modal.show{ display:flex; }
-.modal-card{
-  width:min(1100px, 100%);
-  max-height:min(92vh, 920px);
-  overflow:hidden;
-  border-radius:30px;
-  background:linear-gradient(180deg, rgba(15,21,36,.98), rgba(8,12,22,.98));
-  border:1px solid rgba(145,178,255,.16);
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-}
-.modal-top{
-  display:flex; justify-content:space-between; align-items:center; gap:12px;
-  padding:16px 18px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-.modal-top strong{ font-size:1rem; }
-.close{
-  border:none; cursor:pointer;
-  background:rgba(255,255,255,.08);
-  color:var(--text);
-  border:1px solid rgba(255,255,255,.08);
-  padding:10px 14px;
-  border-radius:14px;
-  font:inherit;
-}
-.modal-body{
-  padding:18px;
-  overflow:auto;
-}
-
-.game-wrap{
-  display:grid;
-  grid-template-columns: 1.2fr .8fr;
-  gap:18px;
-  align-items:start;
-}
-.canvas-card{
-  padding:14px;
-  border-radius:24px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(145,178,255,.14);
-}
-canvas{
-  width:100%;
-  height:auto;
-  background:radial-gradient(circle at top, rgba(45,107,255,.12), rgba(0,0,0,.24));
-  border-radius:18px;
-  display:block;
-  border:1px solid rgba(255,255,255,.08);
-}
-.game-info{
-  padding:16px;
-  border-radius:24px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(145,178,255,.14);
-}
-.game-info h3{ margin-top:0; }
-.kbd{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-width:34px; padding:6px 10px; border-radius:10px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  margin:0 4px 4px 0;
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size:.84rem;
-}
-
-.small{
-  font-size:.88rem;
-  color:var(--muted);
-  line-height:1.55;
-}
-
-.hidden{ display:none !important; }
-
-@media (max-width: 1180px){
-  body{ overflow:auto; }
-  .shell{ height:auto; min-height:100%; }
-  .main{ grid-template-columns:1fr; }
-  .right{ grid-template-rows:auto auto; }
-}
-```
-
-  </style>
+        .game-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .game-status {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
-  <div class="bg-orb"></div>
-  <div class="bg-orb two"></div>
 
-  <div class="shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="ps-pill">PS5 PRO UI</div>
-        <div class="title-wrap">
-          <h1 class="title">PHXNTOM HUB — Offline Build</h1>
-          <div class="subtitle">Local games, chat, admin tools, launcher slots, and an offline assistant.</div>
+    <header>
+        <h1>Mega-Million <span>Games Hub</span></h1>
+        <div class="search-container">
+            <input type="text" id="searchBar" placeholder="Search 10,000+ games...">
         </div>
-      </div>
-      <div class="status">
-        <span class="chip"><span class="dot"></span> Offline Ready</span>
-        <span class="chip" id="clock">--:--:--</span>
-        <span class="chip" id="roomCount">0 rooms</span>
-      </div>
     </header>
 
-```
-<div class="main">
-  <aside class="panel sidebar">
-    <button class="nav-btn active" data-section="home">
-      <div class="nav-ico">⌂</div>
-      <div class="nav-copy"><strong>Home</strong><span>Dashboard and quick launch</span></div>
-    </button>
-    <button class="nav-btn" data-section="games">
-      <div class="nav-ico">🎮</div>
-      <div class="nav-copy"><strong>Games</strong><span>Built-in offline games</span></div>
-    </button>
-    <button class="nav-btn" data-section="emu">
-      <div class="nav-ico">🗂</div>
-      <div class="nav-copy"><strong>Emulators</strong><span>Local launch targets</span></div>
-    </button>
-    <button class="nav-btn" data-section="chat">
-      <div class="nav-ico">💬</div>
-      <div class="nav-copy"><strong>Chat</strong><span>Discord-style local rooms</span></div>
-    </button>
-    <button class="nav-btn" data-section="term">
-      <div class="nav-ico">>_</div>
-      <div class="nav-copy"><strong>Admin Terminal</strong><span>Moderation and commands</span></div>
-    </button>
-    <button class="nav-btn" data-section="settings">
-      <div class="nav-ico">⚙</div>
-      <div class="nav-copy"><strong>Settings</strong><span>Theme and persistence</span></div>
-    </button>
-
-    <div class="side-card">
-      <strong>Local status</strong>
-      <div class="mini-row"><span>Storage</span><span id="storageState">Ready</span></div>
-      <div class="mini-row"><span>Assistant</span><span id="aiState">Offline</span></div>
-      <div class="mini-row"><span>Moderation</span><span id="modState">Local only</span></div>
-    </div>
-  </aside>
-
-  <main class="panel content">
-    <div class="hero">
-      <div class="hero-card">
-        <h1>Build one thing that feels expensive.</h1>
-        <p>
-          This hub is styled like a modern console dashboard, but everything runs locally in the browser.
-          It includes built-in mini-games, a chat system, an offline assistant, and an admin terminal.
-          Emulators are wired as local launch slots, so you can point them to emulator pages or apps you legally have on your machine.
-        </p>
-        <div class="hero-actions">
-          <button class="action primary" id="quickSnake">Launch Snake</button>
-          <button class="action" id="quickChat">Open Chat</button>
-          <button class="action" id="quickTerm">Open Terminal</button>
+    <div class="main-content">
+        <!-- Playable Snake Game -->
+        <div id="active-game-zone">
+            <div class="score-board">Snake Score: <span id="score">0</span></div>
+            <canvas id="gameCanvas" width="500" height="400"></canvas>
+            <p style="color: var(--text-muted); margin-top: 15px;">Use Arrow Keys to Play</p>
         </div>
-      </div>
+
+        <div class="library-header">
+            Database Library (<span id="gameCount">Loading...</span>)
+        </div>
+        
+        <!-- The Grid where JS will inject thousands of games -->
+        <div class="game-grid" id="gameGrid"></div>
     </div>
 
-    <div class="grid">
-      <section id="sec-home" class="section active">
-        <div class="card-grid" id="homeCards"></div>
-      </section>
+    <script>
+        // --- SNAKE GAME LOGIC ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
 
-      <section id="sec-games" class="section">
-        <div class="card-grid">
-          <div class="card" data-game="snake">
-            <div class="tag">Built-in</div>
-            <h3>Snake</h3>
-            <p>Fast, simple, and actually playable offline.</p>
-            <div class="meta">Canvas game</div>
-          </div>
-          <div class="card" data-game="tictactoe">
-            <div class="tag">Built-in</div>
-            <h3>Tic-Tac-Toe</h3>
-            <p>Two-player local match with a clean console-style board.</p>
-            <div class="meta">Local game</div>
-          </div>
-          <div class="card" data-game="memory">
-            <div class="tag">Built-in</div>
-            <h3>Memory Match</h3>
-            <p>Flip the cards and keep your brain awake.</p>
-            <div class="meta">Lightweight</div>
-          </div>
-          <div class="card" data-game="breaker">
-            <div class="tag">Built-in</div>
-            <h3>Breaker</h3>
-            <p>Simple block-breaker with paddle controls.</p>
-            <div class="meta">Canvas game</div>
-          </div>
-        </div>
-      </section>
+        const gridSize = 20;
+        let snake = [{ x: 10, y: 10 }];
+        let food = { x: 15, y: 15 };
+        let dx = 0;
+        let dy = 0;
+        let score = 0;
 
-      <section id="sec-emu" class="section">
-        <div class="card-grid">
-          <div class="card" data-emu="ps1">
-            <div class="tag">PS1</div>
-            <h3>PlayStation 1 Slot</h3>
-            <p>Launch a local PS1 emulator page or app from a path you choose.</p>
-            <div class="meta">Local target</div>
-          </div>
-          <div class="card" data-emu="ps2">
-            <div class="tag">PS2</div>
-            <h3>PlayStation 2 Slot</h3>
-            <p>Points to a local emulator build. BIOS and games are not bundled.</p>
-            <div class="meta">Local target</div>
-          </div>
-          <div class="card" data-emu="ps3">
-            <div class="tag">PS3</div>
-            <h3>PlayStation 3 Slot</h3>
-            <p>Use with a native emulator app or local web wrapper if you have one.</p>
-            <div class="meta">Local target</div>
-          </div>
-          <div class="card" data-emu="psp">
-            <div class="tag">PSP</div>
-            <h3>PSP Slot</h3>
-            <p>Launch PPSSPP locally if installed.</p>
-            <div class="meta">Local target</div>
-          </div>
-          <div class="card" data-emu="xog">
-            <div class="tag">OG Xbox</div>
-            <h3>Xbox OG Slot</h3>
-            <p>Local launch hook for an emulator or front-end.</p>
-            <div class="meta">Local target</div>
-          </div>
-          <div class="card" data-emu="x360">
-            <div class="tag">Xbox 360</div>
-            <h3>Xbox 360 Slot</h3>
-            <p>Set a local target to your emulator app or wrapper.</p>
-            <div class="meta">Local target</div>
-          </div>
-          <div class="card" data-emu="wii">
-            <div class="tag">Wii</div>
-            <h3>Wii Slot</h3>
-            <p>Launch Dolphin locally through a launcher path or custom page.</p>
-            <div class="meta">Local target</div>
-          </div>
-          <div class="card" data-emu="nintendo">
-            <div class="tag">Handhelds</div>
-            <h3>GB / GBC / GBA</h3>
-            <p>Local launch slots for handheld emulators and game files.</p>
-            <div class="meta">Local target</div>
-          </div>
-        </div>
-        <p class="small" style="margin-top:14px;">
-          Real emulation requires separate emulator software, BIOS files where legally required, and ROMs or discs you own.
-          This hub only provides the offline launcher and UI.
-        </p>
-      </section>
+        function drawSnakeGame() {
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+            
+            // Wall wrapping
+            if (head.x < 0) head.x = (canvas.width / gridSize) - 1;
+            if (head.x >= canvas.width / gridSize) head.x = 0;
+            if (head.y < 0) head.y = (canvas.height / gridSize) - 1;
+            if (head.y >= canvas.height / gridSize) head.y = 0;
 
-      <section id="sec-chat" class="section">
-        <div class="card-grid" style="grid-template-columns: 1fr;">
-          <div class="card" style="min-height:auto; cursor:default;">
-            <div class="tag">Local rooms</div>
-            <h3 style="margin-bottom:12px;">Discord-style chat</h3>
-            <p>Rooms and messages are saved in your browser. The assistant can answer with rule-based offline responses.</p>
-          </div>
-        </div>
-      </section>
+            snake.unshift(head);
 
-      <section id="sec-term" class="section">
-        <div class="card-grid" style="grid-template-columns: 1fr;">
-          <div class="card" style="min-height:auto; cursor:default;">
-            <div class="tag">Admin</div>
-            <h3 style="margin-bottom:12px;">Command terminal</h3>
-            <p>Moderation is local and simulated unless you later connect a backend. It still gives you a real command surface to build on.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="sec-settings" class="section">
-        <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
-          <div class="card" style="cursor:default;">
-            <div class="tag">Visuals</div>
-            <h3>Theme</h3>
-            <p>Choose a console-like dark look or a brighter neon mode.</p>
-            <div class="input-row" style="margin-top:12px;">
-              <select id="themePick">
-                <option value="dark">Dark</option>
-                <option value="blue">Blue</option>
-                <option value="neon">Neon</option>
-              </select>
-            </div>
-          </div>
-          <div class="card" style="cursor:default;">
-            <div class="tag">Persistence</div>
-            <h3>Local save</h3>
-            <p>Chat logs, rooms, moderation lists, and app settings stay in localStorage.</p>
-            <div class="hero-actions" style="margin-top:12px;">
-              <button class="action" id="exportBtn">Export JSON</button>
-              <button class="action" id="importBtn">Import JSON</button>
-            </div>
-          </div>
-          <div class="card" style="cursor:default;">
-            <div class="tag">Build notes</div>
-            <h3>How to expand it</h3>
-            <p>Add more games, connect a backend for real moderation, or point emulator slots to local app URLs.</p>
-          </div>
-        </div>
-      </section>
-    </div>
-  </main>
-
-  <aside class="panel right">
-    <section class="chat">
-      <div class="panel-head">
-        <h2>Chat</h2>
-        <span id="chatRoomName"># general</span>
-      </div>
-      <div class="chat-feed" id="chatFeed"></div>
-      <div class="input-row">
-        <select id="chatRoomSelect"></select>
-      </div>
-      <div class="input-row">
-        <input id="chatInput" type="text" placeholder="Type a message..." />
-        <button id="sendChat">Send</button>
-      </div>
-      <div class="input-row">
-        <input id="newRoomInput" type="text" placeholder="Create room..." />
-        <button id="createRoom">+</button>
-      </div>
-    </section>
-
-    <section class="terminal term">
-      <div class="panel-head">
-        <h2>Admin Terminal</h2>
-        <span>Type help</span>
-      </div>
-      <div class="term-out" id="termOut"></div>
-      <div class="term-line">
-        <span>admin@hub:~$</span>
-        <input id="termInput" type="text" placeholder="command" />
-      </div>
-    </section>
-  </aside>
-</div>
-
-<footer class="footer">
-  <span>Built for offline use in a browser. No cloud dependency.</span>
-  <span>Tip: use your own backend later for real moderation and user accounts.</span>
-</footer>
-```
-
-  </div>
-
-  <div class="modal" id="modal">
-    <div class="modal-card">
-      <div class="modal-top">
-        <strong id="modalTitle">Game</strong>
-        <button class="close" id="closeModal">Close</button>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
-
-  <input id="filePick" type="file" accept=".json,.txt,.html,.htm" class="hidden" />
-
-  <script>
-    const state = {
-      user: "phxntom",
-      rooms: JSON.parse(localStorage.getItem("phx_rooms") || '["general","school","games"]'),
-      chats: JSON.parse(localStorage.getItem("phx_chats") || "{}"),
-      bans: JSON.parse(localStorage.getItem("phx_bans") || "[]"),
-      kicks: JSON.parse(localStorage.getItem("phx_kicks") || "[]"),
-      theme: localStorage.getItem("phx_theme") || "dark",
-      activeRoom: localStorage.getItem("phx_room") || "general",
-      currentGame: null,
-      gameTimer: null,
-      snake: null,
-      breaker: null,
-      memory: null
-    };
-
-    const el = (id) => document.getElementById(id);
-
-    function saveAll(){
-      localStorage.setItem("phx_rooms", JSON.stringify(state.rooms));
-      localStorage.setItem("phx_chats", JSON.stringify(state.chats));
-      localStorage.setItem("phx_bans", JSON.stringify(state.bans));
-      localStorage.setItem("phx_kicks", JSON.stringify(state.kicks));
-      localStorage.setItem("phx_theme", state.theme);
-      localStorage.setItem("phx_room", state.activeRoom);
-      el("roomCount").textContent = `${state.rooms.length} rooms`;
-      el("chatRoomName").textContent = `# ${state.activeRoom}`;
-      renderRooms();
-      renderChat();
-    }
-
-    function logTerm(text){
-      const out = el("termOut");
-      out.textContent += text + "\\n";
-      out.scrollTop = out.scrollHeight;
-    }
-
-    function bootText(){
-      logTerm("PHXNTOM HUB loaded.");
-      logTerm("Type 'help' for commands.");
-      logTerm("");
-    }
-
-    function setTheme(theme){
-      state.theme = theme;
-      localStorage.setItem("phx_theme", theme);
-      document.body.dataset.theme = theme;
-      if(theme === "blue"){
-        document.documentElement.style.setProperty("--accent", "#2D6BFF");
-        document.documentElement.style.setProperty("--accent2", "#79D7FF");
-      } else if(theme === "neon"){
-        document.documentElement.style.setProperty("--accent", "#8B5CFF");
-        document.documentElement.style.setProperty("--accent2", "#42F5C5");
-      } else {
-        document.documentElement.style.setProperty("--accent", "#2D6BFF");
-        document.documentElement.style.setProperty("--accent2", "#79D7FF");
-      }
-      el("themePick").value = theme;
-    }
-
-    function renderRooms(){
-      const select = el("chatRoomSelect");
-      select.innerHTML = "";
-      state.rooms.forEach(room => {
-        const opt = document.createElement("option");
-        opt.value = room;
-        opt.textContent = room;
-        if(room === state.activeRoom) opt.selected = true;
-        select.appendChild(opt);
-      });
-      el("roomCount").textContent = `${state.rooms.length} rooms`;
-    }
-
-    function ensureChat(room){
-      if(!state.chats[room]) state.chats[room] = [];
-      return state.chats[room];
-    }
-
-    function pushChat(room, who, text, me=false){
-      ensureChat(room).push({ who, text, me, at: Date.now() });
-      saveAll();
-    }
-
-    function renderChat(){
-      const feed = el("chatFeed");
-      const msgs = ensureChat(state.activeRoom);
-      feed.innerHTML = "";
-      msgs.slice(-80).forEach(m => {
-        const div = document.createElement("div");
-        div.className = "msg" + (m.me ? " me" : "");
-        div.innerHTML = `<span class="who">${escapeHtml(m.who)}</span><p>${escapeHtml(m.text)}</p>`;
-        feed.appendChild(div);
-      });
-      feed.scrollTop = feed.scrollHeight;
-    }
-
-    function escapeHtml(s){
-      return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;");
-    }
-
-    function aiReply(input){
-      const t = input.toLowerCase();
-      let reply = "Offline mode active. I can help with UI, game ideas, terminal commands, and launcher wiring.";
-      if(t.includes("hello") || t.includes("hey")) reply = "Yo. Offline and locked in. What are we building? 😈";
-      else if(t.includes("code")) reply = "Paste the snippet and I’ll tear into it like a code review goblin.";
-      else if(t.includes("game")) reply = "We can add more mini-games, or wire up local emulator pages to this hub.";
-      else if(t.includes("emulator") || t.includes("rom")) reply = "I can create launcher slots, but the emulator binaries, BIOS files, and games need to be your legal local copies.";
-      else if(t.includes("admin")) reply = "Terminal has moderation commands, but real kicking/banning needs a backend. Local simulation is ready now.";
-      else if(t.includes("ui") || t.includes("style")) reply = "PS5 Pro vibes: big cards, glass panels, glow, spacing, and no crusty forum energy.";
-      else if(t.includes("offline")) reply = "Yep. Everything here stays local unless you later connect your own server.";
-      return reply;
-    }
-
-    function sendChatMessage(text){
-      if(!text.trim()) return;
-      if(state.bans.includes(state.user)) {
-        pushChat(state.activeRoom, "System", "You are banned in this local demo.");
-        return;
-      }
-      if(state.kicks.includes(state.user)) {
-        pushChat(state.activeRoom, "System", "You were kicked from this local demo.");
-        return;
-      }
-      pushChat(state.activeRoom, state.user, text, true);
-      const reply = aiReply(text);
-      setTimeout(() => pushChat(state.activeRoom, "Assistant", reply, false), 180);
-    }
-
-    function openModal(title, contentHtml){
-      el("modalTitle").textContent = title;
-      el("modalBody").innerHTML = contentHtml;
-      el("modal").classList.add("show");
-    }
-
-    function closeModal(){
-      el("modal").classList.remove("show");
-      stopGameLoop();
-    }
-
-    function stopGameLoop(){
-      if(state.gameTimer) cancelAnimationFrame(state.gameTimer);
-      state.gameTimer = null;
-      state.currentGame = null;
-    }
-
-    function startSnake(){
-      const html = `
-        <div class="game-wrap">
-          <div class="canvas-card">
-            <canvas id="snakeCanvas" width="700" height="460"></canvas>
-          </div>
-          <div class="game-info">
-            <h3>Snake</h3>
-            <p class="small">
-              Use <span class="kbd">WASD</span> or arrow keys. Eat the squares. Do not crash.
-            </p>
-            <p class="small">
-              Score: <strong id="snakeScore">0</strong>
-            </p>
-            <p class="small">This is fully offline and uses pure canvas.</p>
-          </div>
-        </div>`;
-      openModal("Snake", html);
-      const canvas = el("snakeCanvas");
-      const ctx = canvas.getContext("2d");
-      const grid = 20;
-      let snake = [{x:8,y:8},{x:7,y:8},{x:6,y:8}];
-      let dir = {x:1,y:0};
-      let next = {x:1,y:0};
-      let food = spawnFood();
-      let score = 0;
-      let tick = 0;
-
-      function spawnFood(){
-        return { x: Math.floor(Math.random() * (canvas.width / grid)), y: Math.floor(Math.random() * (canvas.height / grid)) };
-      }
-      function draw(){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = "rgba(255,255,255,.03)";
-        for(let x=0; x<canvas.width; x+=grid){
-          for(let y=0; y<canvas.height; y+=grid){
-            ctx.fillRect(x+1,y+1,grid-2,grid-2);
-          }
-        }
-        ctx.fillStyle = "#79D7FF";
-        ctx.fillRect(food.x*grid, food.y*grid, grid, grid);
-        snake.forEach((s,i) => {
-          ctx.fillStyle = i === 0 ? "#2D6BFF" : "rgba(121,215,255,.85)";
-          ctx.fillRect(s.x*grid, s.y*grid, grid, grid);
-        });
-      }
-      function step(){
-        if(state.currentGame !== "snake") return;
-        tick++;
-        if(tick % 7 === 0){
-          dir = next;
-          const head = {x:snake[0].x + dir.x, y:snake[0].y + dir.y};
-          if(head.x < 0 || head.y < 0 || head.x >= canvas.width/grid || head.y >= canvas.height/grid || snake.some(s => s.x===head.x && s.y===head.y)){
-            pushChat(state.activeRoom, "System", `Snake ended at score ${score}.`, false);
-            startSnake();
-            return;
-          }
-          snake.unshift(head);
-          if(head.x === food.x && head.y === food.y){
-            score++;
-            el("snakeScore").textContent = score;
-            food = spawnFood();
-          } else {
-            snake.pop();
-          }
-          draw();
-        }
-        state.gameTimer = requestAnimationFrame(step);
-      }
-      function onKey(e){
-        const k = e.key.toLowerCase();
-        if((k === "arrowup" || k === "w") && dir.y !== 1) next = {x:0,y:-1};
-        if((k === "arrowdown" || k === "s") && dir.y !== -1) next = {x:0,y:1};
-        if((k === "arrowleft" || k === "a") && dir.x !== 1) next = {x:-1,y:0};
-        if((k === "arrowright" || k === "d") && dir.x !== -1) next = {x:1,y:0};
-      }
-      document.addEventListener("keydown", onKey);
-      state.currentGame = "snake";
-      state.gameTimer = requestAnimationFrame(step);
-      draw();
-      const clean = () => document.removeEventListener("keydown", onKey);
-      el("closeModal").onclick = () => { clean(); closeModal(); };
-    }
-
-    function startTicTacToe(){
-      const html = `
-        <div class="game-wrap">
-          <div class="canvas-card">
-            <div id="tttBoard" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;"></div>
-          </div>
-          <div class="game-info">
-            <h3>Tic-Tac-Toe</h3>
-            <p class="small">Click a tile. Two-player local play. No backend, no nonsense.</p>
-            <p class="small">Turn: <strong id="tttTurn">X</strong></p>
-            <p class="small" id="tttStatus">Game on.</p>
-            <button class="action primary" id="tttReset">Reset</button>
-          </div>
-        </div>`;
-      openModal("Tic-Tac-Toe", html);
-      let board = Array(9).fill("");
-      let turn = "X";
-      const boardEl = el("tttBoard");
-      function win(){
-        const w = [
-          [0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]
-        ];
-        return w.find(line => board[line[0]] && board[line[0]]===board[line[1]] && board[line[1]]===board[line[2]]);
-      }
-      function draw(){
-        boardEl.innerHTML = "";
-        board.forEach((v,i) => {
-          const b = document.createElement("button");
-          b.className = "action";
-          b.style.minHeight = "92px";
-          b.style.fontSize = "2rem";
-          b.style.borderRadius = "22px";
-          b.textContent = v || "";
-          b.onclick = () => {
-            if(board[i] || win()) return;
-            board[i] = turn;
-            turn = turn === "X" ? "O" : "X";
-            el("tttTurn").textContent = turn;
-            const w = win();
-            if(w) el("tttStatus").textContent = `${board[w[0]]} wins.`;
-            else if(!board.includes("")) el("tttStatus").textContent = "Draw.";
-            draw();
-          };
-          boardEl.appendChild(b);
-        });
-      }
-      el("tttReset").onclick = () => { board = Array(9).fill(""); turn = "X"; el("tttTurn").textContent = "X"; el("tttStatus").textContent = "Game on."; draw(); };
-      draw();
-      el("closeModal").onclick = closeModal;
-    }
-
-    function startMemory(){
-      const values = ["🎮","🎧","⚡","💎","🎯","🌙","🎮","🎧","⚡","💎","🎯","🌙"];
-      let deck = values.sort(() => Math.random() - .5);
-      let open = [];
-      let matched = 0;
-      const html = `
-        <div class="game-wrap">
-          <div class="canvas-card">
-            <div id="memBoard" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;"></div>
-          </div>
-          <div class="game-info">
-            <h3>Memory Match</h3>
-            <p class="small">Find every pair. This one is stupidly addictive.</p>
-            <p class="small">Matched: <strong id="memCount">0/6</strong></p>
-            <button class="action primary" id="memReset">Shuffle</button>
-          </div>
-        </div>`;
-      openModal("Memory Match", html);
-      const board = el("memBoard");
-      function render(){
-        board.innerHTML = "";
-        deck.forEach((v,i) => {
-          const btn = document.createElement("button");
-          btn.className = "action";
-          btn.style.minHeight = "74px";
-          btn.style.fontSize = "1.7rem";
-          btn.style.borderRadius = "18px";
-          btn.textContent = open.includes(i) || deck[i] === "✓" ? v : "□";
-          btn.onclick = () => {
-            if(open.length === 2 || deck[i] === "✓" || open.includes(i)) return;
-            open.push(i);
-            if(open.length === 2){
-              setTimeout(() => {
-                const [a,b] = open;
-                if(deck[a] === deck[b]){
-                  deck[a] = "✓"; deck[b] = "✓"; matched++;
-                  el("memCount").textContent = `${matched}/6`;
-                }
-                open = [];
-                render();
-              }, 500);
+            // Eat food
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                scoreElement.innerText = score;
+                placeFood();
+            } else {
+                snake.pop(); 
             }
-            render();
-          };
-          board.appendChild(btn);
-        });
-      }
-      el("memReset").onclick = () => {
-        deck = values.sort(() => Math.random() - .5);
-        open = [];
-        matched = 0;
-        el("memCount").textContent = "0/6";
-        render();
-      };
-      render();
-      el("closeModal").onclick = closeModal;
-    }
 
-    function startBreaker(){
-      const html = `
-        <div class="game-wrap">
-          <div class="canvas-card">
-            <canvas id="brCanvas" width="760" height="500"></canvas>
-          </div>
-          <div class="game-info">
-            <h3>Breaker</h3>
-            <p class="small">Move with <span class="kbd">A</span> <span class="kbd">D</span> or arrows.</p>
-            <p class="small">This is a basic block-breaker with offline canvas physics.</p>
-            <p class="small">Score: <strong id="brScore">0</strong></p>
-          </div>
-        </div>`;
-      openModal("Breaker", html);
-      const canvas = el("brCanvas");
-      const ctx = canvas.getContext("2d");
-      const paddle = { x: 320, y: 470, w: 120, h: 14, vx: 0 };
-      const ball = { x: 380, y: 390, r: 8, vx: 4, vy: -4 };
-      let bricks = [];
-      let score = 0;
-      for(let r=0;r<5;r++) for(let c=0;c<9;c++) bricks.push({x: c*80 + 20, y: r*28 + 30, w: 68, h: 18, alive: true});
+            // Death by self-collision
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y && (dx !== 0 || dy !== 0)) {
+                    snake = [{ x: 10, y: 10 }];
+                    dx = 0; dy = 0; score = 0;
+                    scoreElement.innerText = score;
+                }
+            }
 
-      function draw(){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = "rgba(255,255,255,.06)";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
+            // Render
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        bricks.forEach(b => {
-          if(!b.alive) return;
-          ctx.fillStyle = "rgba(121,215,255,.92)";
-          ctx.fillRect(b.x,b.y,b.w,b.h);
-        });
+            ctx.fillStyle = '#ef4444'; 
+            ctx.fillRect(food.x * gridSize + 1, food.y * gridSize + 1, gridSize - 2, gridSize - 2);
 
-        ctx.fillStyle = "white";
-        ctx.fillRect(paddle.x,paddle.y,paddle.w,paddle.h);
+            ctx.fillStyle = '#8b5cf6'; 
+            snake.forEach(part => {
+                ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
+            });
 
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2);
-        ctx.fillStyle = "#79D7FF";
-        ctx.fill();
-
-        ctx.font = "bold 18px Inter, sans-serif";
-        ctx.fillStyle = "#EAF1FF";
-        ctx.fillText(`Score ${score}`, 20, 22);
-      }
-
-      function loop(){
-        if(state.currentGame !== "breaker") return;
-        ball.x += ball.vx;
-        ball.y += ball.vy;
-
-        if(ball.x < ball.r || ball.x > canvas.width - ball.r) ball.vx *= -1;
-        if(ball.y < ball.r) ball.vy *= -1;
-        if(ball.y > canvas.height + 30){
-          pushChat(state.activeRoom, "System", `Breaker ended at score ${score}.`);
-          startBreaker();
-          return;
+            setTimeout(drawSnakeGame, 100);
         }
 
-        if(ball.y + ball.r >= paddle.y && ball.x >= paddle.x && ball.x <= paddle.x + paddle.w) ball.vy *= -1;
+        function placeFood() {
+            food = {
+                x: Math.floor(Math.random() * (canvas.width / gridSize)),
+                y: Math.floor(Math.random() * (canvas.height / gridSize))
+            };
+        }
 
-        bricks.forEach(b => {
-          if(!b.alive) return;
-          if(ball.x > b.x && ball.x < b.x + b.w && ball.y > b.y && ball.y < b.y + b.h){
-            b.alive = false;
-            ball.vy *= -1;
-            score++;
-            el("brScore").textContent = score;
-          }
+        document.addEventListener('keydown', (e) => {
+            if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.code)) e.preventDefault();
+            if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -1; }
+            if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 1; }
+            if (e.key === 'ArrowLeft' && dx === 0) { dx = -1; dy = 0; }
+            if (e.key === 'ArrowRight' && dx === 0) { dx = 1; dy = 0; }
         });
 
-        if(paddle.x < 0) paddle.x = 0;
-        if(paddle.x + paddle.w > canvas.width) paddle.x = canvas.width - paddle.w;
-        draw();
-        state.gameTimer = requestAnimationFrame(loop);
-      }
-      function onKey(e){
-        if(["ArrowLeft","a","A"].includes(e.key)) paddle.vx = -7;
-        if(["ArrowRight","d","D"].includes(e.key)) paddle.vx = 7;
-      }
-      function onUp(e){
-        if(["ArrowLeft","a","A","ArrowRight","d","D"].includes(e.key)) paddle.vx = 0;
-      }
-      document.addEventListener("keydown", onKey);
-      document.addEventListener("keyup", onUp);
-      state.currentGame = "breaker";
-      state.gameTimer = requestAnimationFrame(function tick(){
-        if(state.currentGame !== "breaker") return;
-        paddle.x += paddle.vx;
-        loop();
-      });
-      el("closeModal").onclick = () => {
-        document.removeEventListener("keydown", onKey);
-        document.removeEventListener("keyup", onUp);
-        closeModal();
-      };
-    }
+        placeFood();
+        drawSnakeGame();
 
-    function openEmuSlot(key){
-      const labels = {
-        ps1: "PS1",
-        ps2: "PS2",
-        ps3: "PS3",
-        psp: "PSP",
-        xog: "Xbox OG",
-        x360: "Xbox 360",
-        wii: "Wii",
-        nintendo: "Handhelds"
-      };
-      openModal(labels[key] + " Launcher", `
-        <div class="game-wrap">
-          <div class="game-info" style="grid-column:1 / -1;">
-            <h3>${labels[key]} local launcher</h3>
-            <p class="small">
-              Paste a local file path, local URL, or emulator wrapper path you already have on your own machine.
-              This hub does not ship emulators or game files.
-            </p>
-            <div class="input-row">
-              <input id="emuPath" type="text" placeholder="Example: ./emulators/ppsspp/index.html or file:///C:/Apps/..." />
-              <button id="emuOpen">Launch</button>
-            </div>
-            <p class="small" style="margin-top:10px;">
-              For handhelds, this can point to a local front-end. For disc-based systems, keep everything legal and local.
-            </p>
-          </div>
-        </div>
-      `);
-      el("emuOpen").onclick = () => {
-        const path = el("emuPath").value.trim();
-        if(!path) return;
-        window.open(path, "_blank", "noopener,noreferrer");
-      };
-      el("closeModal").onclick = closeModal;
-    }
+        // --- MASSIVE GAME GENERATOR LOGIC ---
+        const gameGrid = document.getElementById('gameGrid');
+        const searchBar = document.getElementById('searchBar');
+        const gameCountDisplay = document.getElementById('gameCount');
+        
+        let gamesDatabase = [];
+        const emojis = ['👾', '🏎️', '⚔️', '🧩', '🃏', '🚀', '🎯', '🏀', '🎸', '🕹️'];
+        const prefixes = ['Super', 'Mega', 'Ultra', 'Cyber', 'Neon', 'Retro', 'Epic', 'Quantum'];
+        const suffixes = ['Quest', 'Racer', 'Strike', 'Puzzle', 'Fighter', 'Dash', 'Legends', 'Zone'];
 
-    function makeHomeCards(){
-      const data = [
-        { tag:"Quick launch", title:"Built-in games", desc:"Play Snake, Memory Match, Breaker, or Tic-Tac-Toe." },
-        { tag:"Offline AI", title:"Assistant chat", desc:"Rule-based responses run without a network." },
-        { tag:"Admin tools", title:"Terminal commands", desc:"Local moderation, room control, and system checks." },
-        { tag:"Launcher slots", title:"Emulator hub", desc:"Wire local paths to your emulator pages or apps." },
-        { tag:"Persistence", title:"Local saves", desc:"Rooms, chat logs, and settings stay in browser storage." },
-        { tag:"Future build", title:"Backend-ready", desc:"Add a server later for real users, bans, and permissions." }
-      ];
-      el("homeCards").innerHTML = data.map((x,i)=>`
-        <div class="card" data-home="${i}">
-          <div class="tag">${x.tag}</div>
-          <h3>${x.title}</h3>
-          <p>${x.desc}</p>
-          <div class="meta">Offline</div>
-        </div>
-      `).join("");
-    }
+        // Dynamically generate 10,000 games
+        console.log("Booting up rendering engine...");
+        for(let i = 1; i <= 10000; i++) {
+            let randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            let randomName = prefixes[Math.floor(Math.random() * prefixes.length)] + ' ' + suffixes[Math.floor(Math.random() * suffixes.length)];
+            
+            // Hardcode the first few to look realistic
+            if(i === 1) { randomName = "Snake"; randomEmoji = "🐍"; }
+            if(i === 2) { randomName = "Pong"; randomEmoji = "🏓"; }
+            if(i === 3) { randomName = "Breakout"; randomEmoji = "🧱"; }
 
-    function switchSection(name){
-      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-      el("sec-" + name).classList.add("active");
-      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.section === name));
-    }
-
-    function executeCommand(raw){
-      const cmd = raw.trim();
-      if(!cmd) return;
-      logTerm(`> ${cmd}`);
-      const [head, ...rest] = cmd.split(" ");
-      const args = rest.join(" ");
-      const lower = head.toLowerCase();
-
-      if(lower === "help"){
-        logTerm("Commands:");
-        logTerm(" help");
-        logTerm(" clear");
-        logTerm(" rooms");
-        logTerm(" switch <room>");
-        logTerm(" create <room>");
-        logTerm(" kick <user>");
-        logTerm(" ban <user>");
-        logTerm(" unban <user>");
-        logTerm(" permaban <user>");
-        logTerm(" unkick <user>");
-        logTerm(" whoami");
-        logTerm(" sysinfo");
-        logTerm(" echo <text>");
-        logTerm(" open <url-or-path>");
-        logTerm(" launch <snake|tictactoe|memory|breaker>");
-        logTerm(" emu <ps1|ps2|ps3|psp|xog|x360|wii|nintendo>");
-        return;
-      }
-
-      if(lower === "clear"){ el("termOut").textContent = ""; return; }
-      if(lower === "rooms"){ logTerm("Rooms: " + state.rooms.join(", ")); return; }
-      if(lower === "whoami"){ logTerm(`User: ${state.user}`); return; }
-      if(lower === "sysinfo"){
-        logTerm("PHXNTOM HUB v1");
-        logTerm("Mode: Offline browser build");
-        logTerm("Storage: localStorage");
-        logTerm("AI: offline rule engine");
-        return;
-      }
-      if(lower === "echo"){ logTerm(args || ""); return; }
-      if(lower === "switch"){
-        if(!args) return logTerm("Usage: switch <room>");
-        if(!state.rooms.includes(args)) return logTerm("Room not found.");
-        state.activeRoom = args;
-        saveAll();
-        renderChat();
-        return;
-      }
-      if(lower === "create"){
-        if(!args) return logTerm("Usage: create <room>");
-        if(state.rooms.includes(args)) return logTerm("Room already exists.");
-        state.rooms.push(args);
-        state.chats[args] = state.chats[args] || [];
-        state.activeRoom = args;
-        saveAll();
-        renderChat();
-        return;
-      }
-      if(lower === "kick"){
-        if(!args) return logTerm("Usage: kick <user>");
-        if(!state.kicks.includes(args)) state.kicks.push(args);
-        saveAll();
-        logTerm(`Kicked ${args} locally.`);
-        return;
-      }
-      if(lower === "ban" || lower === "permaban"){
-        if(!args) return logTerm(`Usage: ${lower} <user>`);
-        if(!state.bans.includes(args)) state.bans.push(args);
-        saveAll();
-        logTerm(`${lower === "ban" ? "Banned" : "Permabanned"} ${args} locally.`);
-        return;
-      }
-      if(lower === "unban"){
-        if(!args) return logTerm("Usage: unban <user>");
-        state.bans = state.bans.filter(x => x !== args);
-        saveAll();
-        logTerm(`Unbanned ${args}.`);
-        return;
-      }
-      if(lower === "unkick"){
-        if(!args) return logTerm("Usage: unkick <user>");
-        state.kicks = state.kicks.filter(x => x !== args);
-        saveAll();
-        logTerm(`Unkicked ${args}.`);
-        return;
-      }
-      if(lower === "open"){
-        if(!args) return logTerm("Usage: open <url-or-path>");
-        window.open(args, "_blank", "noopener,noreferrer");
-        return;
-      }
-      if(lower === "launch"){
-        const g = args.toLowerCase();
-        if(g === "snake") return startSnake();
-        if(g === "tictactoe") return startTicTacToe();
-        if(g === "memory") return startMemory();
-        if(g === "breaker") return startBreaker();
-        return logTerm("Unknown game.");
-      }
-      if(lower === "emu"){
-        const map = { ps1:"PS1", ps2:"PS2", ps3:"PS3", psp:"PSP", xog:"Xbox OG", x360:"Xbox 360", wii:"Wii", nintendo:"Handhelds" };
-        if(!map[args]) return logTerm("Unknown emulator slot.");
-        openEmuSlot(args);
-        return;
-      }
-
-      logTerm(`Unknown command: ${head}`);
-    }
-
-    function syncClock(){
-      const now = new Date();
-      el("clock").textContent = now.toLocaleTimeString([], { hour:"2-digit", minute:"2-digit", second:"2-digit" });
-    }
-
-    function exportData(){
-      const data = {
-        rooms: state.rooms,
-        chats: state.chats,
-        bans: state.bans,
-        kicks: state.kicks,
-        theme: state.theme,
-        activeRoom: state.activeRoom
-      };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "phxntom_hub_backup.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function importData(file){
-      const reader = new FileReader();
-      reader.onload = () => {
-        try{
-          const data = JSON.parse(reader.result);
-          if(data.rooms) state.rooms = data.rooms;
-          if(data.chats) state.chats = data.chats;
-          if(data.bans) state.bans = data.bans;
-          if(data.kicks) state.kicks = data.kicks;
-          if(data.theme) setTheme(data.theme);
-          if(data.activeRoom) state.activeRoom = data.activeRoom;
-          saveAll();
-          renderRooms();
-          renderChat();
-          logTerm("Imported backup successfully.");
-        }catch(e){
-          logTerm("Import failed.");
+            gamesDatabase.push({
+                id: i,
+                title: randomName + (i > 3 ? ` ${i}` : ''),
+                icon: randomEmoji,
+                status: i === 1 ? 'Active' : 'Offline / Loading'
+            });
         }
-      };
-      reader.readAsText(file);
-    }
 
-    // events
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-      btn.addEventListener("click", () => switchSection(btn.dataset.section));
-    });
+        // Render function (only renders first 500 so the browser doesn't explode, but searches all 10,000)
+        function renderGames(filterText = "") {
+            gameGrid.innerHTML = "";
+            let count = 0;
+            
+            for(let i = 0; i < gamesDatabase.length; i++) {
+                if(gamesDatabase[i].title.toLowerCase().includes(filterText.toLowerCase())) {
+                    if (count < 200) { // Limit DOM nodes for performance
+                        const card = document.createElement('div');
+                        card.className = 'game-card';
+                        card.innerHTML = `
+                            <div class="game-icon">${gamesDatabase[i].icon}</div>
+                            <div class="game-title">${gamesDatabase[i].title}</div>
+                            <div class="game-status">${gamesDatabase[i].status}</div>
+                        `;
+                        gameGrid.appendChild(card);
+                    }
+                    count++;
+                }
+            }
+            gameCountDisplay.innerText = `${count.toLocaleString()} Games Found`;
+        }
 
-    document.querySelectorAll(".card[data-game]").forEach(card => {
-      card.addEventListener("click", () => {
-        const g = card.dataset.game;
-        if(g === "snake") startSnake();
-        if(g === "tictactoe") startTicTacToe();
-        if(g === "memory") startMemory();
-        if(g === "breaker") startBreaker();
-      });
-    });
+        // Live Search Listener
+        searchBar.addEventListener('input', (e) => {
+            renderGames(e.target.value);
+        });
 
-    document.querySelectorAll(".card[data-emu]").forEach(card => {
-      card.addEventListener("click", () => openEmuSlot(card.dataset.emu));
-    });
-
-    el("sendChat").addEventListener("click", () => {
-      sendChatMessage(el("chatInput").value);
-      el("chatInput").value = "";
-    });
-
-    el("chatInput").addEventListener("keydown", e => {
-      if(e.key === "Enter"){
-        sendChatMessage(el("chatInput").value);
-        el("chatInput").value = "";
-      }
-    });
-
-    el("createRoom").addEventListener("click", () => {
-      const room = el("newRoomInput").value.trim();
-      if(!room) return;
-      if(!state.rooms.includes(room)){
-        state.rooms.push(room);
-        state.chats[room] = state.chats[room] || [];
-      }
-      state.activeRoom = room;
-      el("newRoomInput").value = "";
-      saveAll();
-      renderChat();
-    });
-
-    el("chatRoomSelect").addEventListener("change", e => {
-      state.activeRoom = e.target.value;
-      saveAll();
-      renderChat();
-    });
-
-    el("termInput").addEventListener("keydown", e => {
-      if(e.key === "Enter"){
-        executeCommand(el("termInput").value);
-        el("termInput").value = "";
-      }
-    });
-
-    el("quickSnake").addEventListener("click", startSnake);
-    el("quickChat").addEventListener("click", () => switchSection("chat"));
-    el("quickTerm").addEventListener("click", () => switchSection("term"));
-
-    el("themePick").addEventListener("change", e => setTheme(e.target.value));
-    el("exportBtn").addEventListener("click", exportData);
-    el("importBtn").addEventListener("click", () => el("filePick").click());
-    el("filePick").addEventListener("change", e => {
-      if(e.target.files[0]) importData(e.target.files[0]);
-      e.target.value = "";
-    });
-
-    el("modal").addEventListener("click", (e) => {
-      if(e.target === el("modal")) closeModal();
-    });
-    el("closeModal").addEventListener("click", closeModal);
-
-    document.addEventListener("keydown", e => {
-      if(e.key === "Escape") closeModal();
-    });
-
-    // initialize
-    makeHomeCards();
-    setTheme(state.theme);
-    renderRooms();
-    renderChat();
-    bootText();
-    saveAll();
-    syncClock();
-    setInterval(syncClock, 1000);
-
-    if(!state.chats[state.activeRoom]) state.chats[state.activeRoom] = [];
-    pushChat(state.activeRoom, "System", "Offline hub booted successfully.");
-    el("chatRoomName").textContent = `# ${state.activeRoom}`;
-    el("storageState").textContent = "Online";
-    el("aiState").textContent = "Ready";
-    el("modState").textContent = "Local simulation";
-
-    // seed room messages once
-    if(!localStorage.getItem("phx_seeded")){
-      localStorage.setItem("phx_seeded", "1");
-      pushChat("general", "Assistant", "Welcome. Everything here works offline.");
-      pushChat("general", "Assistant", "Use the terminal or launch a game from the cards.");
-    }
-  </script>
-
+        // Initial Render
+        renderGames();
+    </script>
 </body>
 </html>
