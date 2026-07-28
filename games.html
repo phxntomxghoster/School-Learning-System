@@ -3,222 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHXNTOM CORE - Next-Gen OS</title>
+    <title>PHXNTOM CORE v2.0</title>
     <style>
         :root {
-            --bg-primary: #0a0b10;
-            --bg-secondary: #131520;
-            --bg-glass: rgba(19, 21, 32, 0.75);
-            --accent-blue: #00f2fe;
-            --accent-purple: #7f00ff;
-            --accent-glow: rgba(0, 242, 254, 0.3);
+            --bg-deep: #0a0b10;
+            --surface: #12141c;
+            --surface-glass: rgba(18, 20, 28, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent-cyan: #00f2fe;
+            --accent-blue: #4facfe;
+            --accent-purple: #9b51e0;
             --text-main: #f0f2f5;
             --text-muted: #8a99ad;
-            --danger: #ff3366;
-            --success: #00ffcc;
-            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-primary);
+            background-color: var(--bg-deep);
             color: var(--text-main);
-            font-family: var(--font-main);
             height: 100vh;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         /* Top Bar */
-        #top-bar {
-            height: 50px;
-            background: linear-gradient(90deg, var(--bg-secondary), var(--bg-primary));
+        .top-bar {
+            height: 45px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 25px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            z-index: 100;
+            padding: 0 20px;
+            font-size: 13px;
         }
 
-        .brand {
+        .top-bar-left {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            gap: 15px;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
-        .system-stats {
+        .top-bar-right {
             display: flex;
+            align-items: center;
             gap: 20px;
-            font-size: 0.85rem;
             color: var(--text-muted);
-        }
-
-        .stat-badge {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Main Layout */
-        #main-container {
+        .main-container {
             display: flex;
             flex: 1;
-            overflow: hidden;
+            height: calc(100vh - 45px);
         }
 
-        /* Sidebar Navigation */
-        #sidebar {
-            width: 90px;
-            background: var(--bg-secondary);
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 20px 0;
-            gap: 15px;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 90;
+            padding: 15px 10px;
+            gap: 8px;
         }
 
-        .nav-btn {
-            width: 55px;
-            height: 55px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--text-muted);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        .nav-item {
+            padding: 12px 15px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.25s ease;
-            position: relative;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
         }
 
-        .nav-btn:hover, .nav-btn.active {
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(127, 0, 255, 0.15));
-            color: var(--accent-blue);
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 15px var(--accent-glow);
-            transform: translateY(-2px);
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--accent-cyan);
         }
 
-        .nav-btn span {
-            font-size: 0.6rem;
-            margin-top: 4px;
-            font-weight: 600;
-        }
-
-        /* Viewport Content Area */
-        #content-area {
+        /* Content Area */
+        .content-area {
             flex: 1;
-            background: radial-gradient(circle at 80% 20%, #1a1c29 0%, var(--bg-primary) 70%);
+            background: radial-gradient(circle at top right, #161b2e 0%, var(--bg-deep) 60%);
+            padding: 25px;
             overflow-y: auto;
-            padding: 35px;
             position: relative;
         }
 
-        .view {
+        .view-section {
             display: none;
-            animation: fadeIn 0.3s ease forwards;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
-        .view.active {
+        .view-section.active {
             display: block;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Cards & UI Elements */
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            font-weight: 700;
+        h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        p.subtitle {
-            color: var(--text-muted);
-            margin-bottom: 30px;
-            font-size: 1rem;
-        }
-
+        /* Grid Cards */
         .grid-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
         }
 
         .card {
-            background: var(--bg-glass);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 22px;
-            backdrop-filter: blur(12px);
-            transition: all 0.3s ease;
+            background: var(--surface-glass);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
         }
 
         .card:hover {
-            border-color: var(--accent-blue);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
-            transform: translateY(-4px);
+            border-color: var(--accent-cyan);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.15);
         }
 
         .card h3 {
-            font-size: 1.2rem;
+            font-size: 16px;
             margin-bottom: 8px;
+            color: var(--text-main);
         }
 
         .card p {
+            font-size: 13px;
             color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.4;
         }
 
-        .tag {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 12px;
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .tag.game { background: rgba(0, 242, 254, 0.15); color: var(--accent-blue); }
-        .tag.emulator { background: rgba(127, 0, 255, 0.2); color: #b185db; }
-        .tag.app { background: rgba(0, 255, 204, 0.15); color: var(--success); }
-        .tag.m-rated { background: rgba(255, 51, 102, 0.2); color: var(--danger); }
+        .modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 500px;
+            max-width: 90%;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
 
-        /* Buttons & Inputs */
+        /* Inputs & Buttons */
+        input, textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--accent-cyan);
+        }
+
         .btn {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            color: white;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #000;
+            font-weight: 600;
             border: none;
             padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
+            border-radius: 8px;
             cursor: pointer;
             transition: opacity 0.2s;
         }
@@ -226,531 +218,176 @@
         .btn:hover {
             opacity: 0.9;
         }
-
-        input, select, textarea {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 12px 16px;
-            border-radius: 10px;
-            color: white;
-            font-family: inherit;
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 10px var(--accent-glow);
-        }
-
-        /* Modal Overlay */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 11, 16, 0.85);
-            backdrop-filter: blur(15px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            width: 90%;
-            max-width: 650px;
-            padding: 30px;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px; right: 20px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .close-modal:hover { color: white; }
-
-        /* Chat Mesh Specifics */
-        .chat-container {
-            display: flex;
-            height: calc(100vh - 160px);
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            overflow: hidden;
-        }
-
-        .chat-sidebar {
-            width: 240px;
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .channel-item {
-            padding: 10px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: background 0.2s;
-        }
-
-        .channel-item:hover, .channel-item.active {
-            background: rgba(255, 255, 255, 0.06);
-            color: white;
-        }
-
-        .chat-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .message {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            max-width: 80%;
-        }
-
-        .message .user {
-            font-weight: bold;
-            color: var(--accent-blue);
-            font-size: 0.85rem;
-            margin-bottom: 4px;
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        /* School Mode (Focus Mode) */
-        .school-dashboard {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            height: calc(100vh - 160px);
-        }
-
-        .school-card {
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            overflow-y: auto;
-        }
-
-        /* Terminal Window */
-        .terminal-box {
-            background: #000;
-            border: 1px solid var(--accent-blue);
-            border-radius: 12px;
-            padding: 20px;
-            font-family: 'Courier New', Courier, monospace;
-            height: 400px;
-            overflow-y: auto;
-            color: var(--success);
-            font-size: 0.95rem;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
-        }
     </style>
 </head>
 <body>
 
-    <!-- Top Status Bar -->
-    <div id="top-bar">
-        <div class="brand">
-            ⚡ PHXNTOM CORE <span style="font-size: 0.7rem; font-weight: normal; color: var(--text-muted);">v2.0 OS</span>
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <span>⚡ PHXNTOM CORE v2.0</span>
         </div>
-        <div class="system-stats">
-            <div class="stat-badge">👤 phxntom (Admin)</div>
-            <div class="stat-badge">🏆 XP: 14,850</div>
-            <div class="stat-badge">🔋 M1 Air: 120 FPS / 1440p</div>
-            <div class="stat-badge" id="live-clock">00:00:00</div>
+        <div class="top-bar-right">
+            <span>👤 phxntom (Admin)</span>
+            <span>🏆 XP: 14,850</span>
+            <span>🟢 120 FPS / 1440p</span>
         </div>
     </div>
 
-    <!-- Main Application Wrapper -->
-    <div id="main-container">
-        
-        <!-- Sidebar Nav -->
-        <div id="sidebar">
-            <div class="nav-btn active" onclick="switchView('library')">🎮<span>Games</span></div>
-            <div class="nav-btn" onclick="switchView('worldhub')">🌐<span>Hub</span></div>
-            <div class="nav-btn" onclick="switchView('emulators')">🕹️<span>Emulators</span></div>
-            <div class="nav-btn" onclick="switchView('studio')">🛠️<span>Studio</span></div>
-            <div class="nav-btn" onclick="switchView('school')">📚<span>School</span></div>
-            <div class="nav-btn" onclick="switchView('chat')">💬<span>Comms</span></div>
-            <div class="nav-btn" onclick="switchView('ai')">🤖<span>AI Core</span></div>
-            <div class="nav-btn" onclick="switchView('trophies')">🏆<span>Trophies</span></div>
-            <div class="nav-btn" onclick="switchView('admin')">🔒<span>Admin</span></div>
-            <div class="nav-btn" onclick="switchView('settings')">⚙️<span>Settings</span></div>
+    <!-- Main App Container -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="nav-item active" onclick="switchView('arcade')">🕹️ Arcade & Games</div>
+            <div class="nav-item" onclick="switchView('studio')">⚡ Studio Compiler</div>
+            <div class="nav-item" onclick="switchView('school')">📚 School Mode</div>
+            <div class="nav-item" onclick="switchView('chat')">💬 Chat Mesh</div>
+            <div class="nav-item" onclick="switchView('ai')">🤖 AI Core Terminal</div>
+            <div class="nav-item" onclick="switchView('admin')">🔒 Admin Root</div>
         </div>
 
         <!-- Content Area -->
-        <div id="content-area">
-
-            <!-- GAME LIBRARY VIEW -->
-            <div id="view-library" class="view active">
-                <h1>Game Library & Arcade</h1>
-                <p class="subtitle">Next-gen titles and instant arcade classics rendered at peak 1440p 120FPS performance.</p>
-                
+        <div class="content-area">
+            
+            <!-- Arcade View -->
+            <div id="view-arcade" class="view-section active">
+                <h2>🕹️ High-Tier Arcade & Emulators</h2>
                 <div class="grid-cards">
-                    <div class="card" onclick="launchGame('Jujutsu Kaisen: Cursed Clash')">
-                        <h3>Jujutsu Kaisen: Cursed Clash</h3>
-                        <p>High-octane sorcery battles with buttery smooth animations, immersive sound quality, and domain expansions.</p>
-                        <span class="tag game">Action / Fighter</span>
+                    <div class="card" onclick="launchGame('Cyber Runner 2077')">
+                        <h3>Cyber Runner 2077</h3>
+                        <p>High frame-rate futuristic runner with custom shaders.</p>
                     </div>
-                    <div class="card" onclick="launchGame('Neon Runner')">
-                        <h3>Neon Runner</h3>
-                        <p>Endless cyber runner featuring intense upgrades, high-speed dodging, and dynamic score tracking.</p>
-                        <span class="tag game">Arcade</span>
+                    <div class="card" onclick="launchEmulator('Retro GBA Core')">
+                        <h3>Retro GBA Core</h3>
+                        <p>Classic handheld emulation suite built right into the browser.</p>
                     </div>
-                    <div class="card" onclick="launchGame('Void Defender')">
-                        <h3>Void Defender</h3>
-                        <p>Space defense shooter with relentless wave attacks, cosmic bosses, and custom ship upgrades.</p>
-                        <span class="tag game">Shooter</span>
-                    </div>
-                    <div class="card" onclick="launchGame('Cursed Survival')">
-                        <h3>Cursed Survival</h3>
-                        <p>Supernatural survival showdown packed with hidden abilities, cursed artifacts, and progression perks.</p>
-                        <span class="tag game">Survival</span>
-                    </div>
-                    <div class="card" onclick="launchGame('Pixel Dungeon')">
-                        <h3>Pixel Dungeon</h3>
-                        <p>Randomly generated rogue-lite dungeon adventure with epic loot and tactical turn-based action.</p>
-                        <span class="tag game">Adventure</span>
-                    </div>
-                    <div class="card" onclick="launchGame('Memory Matrix')">
-                        <h3>Memory Matrix</h3>
-                        <p>Advanced neural pattern recognition and logic challenge to test your cognitive speed.</p>
-                        <span class="tag game">Puzzle</span>
-                    </div>
-                    <div class="card" onclick="launchGame('Code Breaker')">
-                        <h3>Code Breaker</h3>
-                        <p>Hacker-themed programming puzzle game where you debug algorithms under pressure.</p>
-                        <span class="tag game">Code</span>
-                    </div>
-                    <!-- Training Wheels Protocol Demo M-Rated Ban -->
-                    <div class="card" onclick="checkTrainingWheels('Grand Theft Auto VI (M-Rated)')" style="border-color: rgba(255, 51, 102, 0.3);">
-                        <h3>Grand Theft Auto VI [BANNED]</h3>
-                        <p>Restricted under the Training Wheels protocol for mature audiences. Access locked for 5th graders.</p>
-                        <span class="tag m-rated">M-Rated (Banned)</span>
+                    <div class="card" onclick="checkTrainingWheels('Unrestricted Sandbox')">
+                        <h3>Unrestricted Sandbox</h3>
+                        <p>Advanced physics engine sandbox workspace.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- WORLD HUB VIEW -->
-            <div id="view-worldhub" class="view">
-                <h1>PHXNTOM World Hub</h1>
-                <p class="subtitle">Explore virtual districts within your personal ecosystem.</p>
-                
-                <div class="grid-cards">
-                    <div class="card" onclick="switchView('trophies')">
-                        <h3>🏆 Trophy Room</h3>
-                        <p>Inspect your hard-earned Platinum and Gold trophies with 3D animation showcases.</p>
-                        <span class="tag app">Room</span>
+            <!-- Studio Compiler View -->
+            <div id="view-studio" class="view-section">
+                <h2>⚡ Studio Code Compiler</h2>
+                <p style="color: var(--text-muted); margin-bottom: 15px;">Write and deploy experimental micro-scripts live.</p>
+                <textarea id="studio-code" rows="8" placeholder="// Write custom script logic here..."></textarea>
+                <button class="btn" onclick="compileStudioCode()">Compile & Deploy</button>
+            </div>
+
+            <!-- School Mode View -->
+            <div id="view-school" class="view-section">
+                <h2>📚 School Mode & Pomodoro Matrix</h2>
+                <div style="background: var(--surface-glass); padding: 25px; border-radius: 12px; border: 1px solid var(--border); max-width: 400px; margin-bottom: 20px;">
+                    <h3 id="timer-display" style="font-size: 38px; color: var(--accent-cyan); margin-bottom: 15px;">25:00</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn" onclick="startTimer()">Start Grind</button>
+                        <button class="btn" style="background: rgba(255,255,255,0.1); color: var(--text-main);" onclick="resetTimer()">Reset</button>
                     </div>
-                    <div class="card" onclick="switchView('library')">
-                        <h3>🎮 Game Library</h3>
-                        <p>Return to the main gaming console menu.</p>
-                        <span class="tag app">Room</span>
-                    </div>
-                    <div class="card" onclick="switchView('ai')">
-                        <h3>🤖 AI Core Room</h3>
-                        <p>Consult with your autonomous AI collaborator with zero corporate restrictions.</p>
-                        <span class="tag app">Room</span>
-                    </div>
-                    <div class="card" onclick="switchView('studio')">
-                        <h3>🛠️ Developer Lab</h3>
-                        <p>Build custom mini-games, scripts, and applications directly inside the OS.</p>
-                        <span class="tag app">Room</span>
-                    </div>
-                    <div class="card" onclick="switchView('school')">
-                        <h3>📚 School Center</h3>
-                        <p>Manage assignments, study timers, and activate Focus Mode instantly.</p>
-                        <span class="tag app">Room</span>
-                    </div>
-                    <div class="card" onclick="switchView('settings')">
-                        <h3>⚙️ Settings Room</h3>
-                        <p>Configure security pins, display modes, and offline backups.</p>
-                        <span class="tag app">Room</span>
-                    </div>
+                </div>
+                <div style="max-width: 400px;">
+                    <input type="text" id="homework-input" placeholder="Add assignment item...">
+                    <button class="btn" onclick="addHomework()" style="margin-bottom: 15px;">Log Homework</button>
+                    <ul id="homework-list" style="list-style: none; display: flex; flex-direction: column; gap: 8px;"></ul>
                 </div>
             </div>
 
-            <!-- EMULATORS VIEW -->
-            <div id="view-emulators" class="view">
-                <h1>Retro & Modern Emulators</h1>
-                <p class="subtitle">Fully optimized emulation suites running natively on your hardware architecture.</p>
-                
-                <div class="grid-cards">
-                    <div class="card" onclick="launchEmulator('PS2 Emulator (PCSX2 Core)')">
-                        <h3>PlayStation 2</h3>
-                        <p>Enhanced upscaling, texture filtering, and zero-latency controller support.</p>
-                        <span class="tag emulator">Console</span>
+            <!-- Chat Mesh View -->
+            <div id="view-chat" class="view-section">
+                <h2>💬 Secure Chat Mesh</h2>
+                <div style="display: flex; height: 400px; background: var(--surface-glass); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+                    <div class="chat-sidebar" style="width: 180px; border-right: 1px solid var(--border); padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+                        <div class="channel-item active" style="padding: 8px; border-radius: 6px; cursor: pointer;" onclick="switchChannel('#general')"># general</div>
+                        <div class="channel-item" style="padding: 8px; border-radius: 6px; cursor: pointer;" onclick="switchChannel('#gamers')"># gamers</div>
+                        <input type="text" id="new-channel-input" placeholder="New channel..." style="margin-top: auto; margin-bottom: 0; padding: 6px; font-size: 12px;">
+                        <button class="btn" style="padding: 6px; font-size: 12px;" onclick="createGroupChat()">Add</button>
                     </div>
-                    <div class="card" onclick="launchEmulator('PSP Portable (PPSSPP Core)')">
-                        <h3>PlayStation Portable</h3>
-                        <p>High frame-rate handheld gaming with custom shaders.</p>
-                        <span class="tag emulator">Handheld</span>
-                    </div>
-                    <div class="card" onclick="launchEmulator('PS3 Cell Emulator (RPCS3)')">
-                        <h3>PlayStation 3</h3>
-                        <p>Demanding cell-architecture emulation running fluidly at 1440p.</p>
-                        <span class="tag emulator">Console</span>
-                    </div>
-                    <div class="card" onclick="launchEmulator('Xbox OG (XQEMU)')">
-                        <h3>Xbox (Original)</h3>
-                        <p>Classic Microsoft hardware emulation with dashboard integration.</p>
-                        <span class="tag emulator">Console</span>
-                    </div>
-                    <div class="card" onclick="launchEmulator('Xbox 360 (Xenia)')">
-                        <h3>Xbox 360</h3>
-                        <p>HD title compatibility layer with cloud save syncing.</p>
-                        <span class="tag emulator">Console</span>
-                    </div>
-                    <div class="card" onclick="launchEmulator('Nintendo Switch / Wii U / Wii / 3DS / NDS / Game Boy')">
-                        <h3>Nintendo Suite (NDS, 3DS, Wii, Wii U, Game Boy)</h3>
-                        <p>Comprehensive Nintendo library support with dual-screen and motion controls.</p>
-                        <span class="tag emulator">Nintendo</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- STUDIO VIEW -->
-            <div id="view-studio" class="view">
-                <h1>PHXNTOM Studio</h1>
-                <p class="subtitle">Write code, create mini-games, and deploy custom features directly into your OS.</p>
-                
-                <textarea id="studio-code" rows="12" placeholder="// Write your custom features or games here, phxntom...
-function createCustomApp() {
-    console.log('Building new feature inside PHXNTOM CORE...');
-}"></textarea>
-                <button class="btn" onclick="compileStudioCode()">Compile & Deploy Feature</button>
-            </div>
-
-            <!-- SCHOOL MODE VIEW -->
-            <div id="view-school" class="view">
-                <h1>School Mode & Productivity</h1>
-                <p class="subtitle">Press ESC anytime for Focus Mode. Track homework and boost your XP.</p>
-                
-                <div class="school-dashboard">
-                    <div class="school-card">
-                        <h3>Active Assignments</h3>
-                        <br>
-                        <input type="text" placeholder="Add new homework task..." id="homework-input">
-                        <button class="btn" onclick="addHomework()">Add Task</button>
-                        <br><br>
-                        <ul id="homework-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
-                            <li style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">📖 Advanced Physics Problem Set #4 (Due Friday)</li>
-                            <li style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">💻 Complete Python Automation Script</li>
-                        </ul>
-                    </div>
-                    <div class="school-card">
-                        <h3>Study Pomodoro Timer</h3>
-                        <br>
-                        <div style="font-size: 3rem; font-weight: bold; text-align: center; color: var(--accent-blue); margin: 20px 0;" id="timer-display">25:00</div>
-                        <button class="btn" style="width: 100%; margin-bottom: 10px;" onclick="startTimer()">Start Focus Session</button>
-                        <button class="btn" style="width: 100%; background: rgba(255,255,255,0.1);" onclick="resetTimer()">Reset</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CHAT MESH VIEW -->
-            <div id="view-chat" class="view">
-                <h1>Chat Mesh & Comms</h1>
-                <p class="subtitle">Secure decentralized messaging with automated profanity tagging.</p>
-                
-                <div class="chat-container">
-                    <div class="chat-sidebar">
-                        <h4 style="margin-bottom: 10px; font-size: 0.9rem; color: var(--text-muted);">CHANNELS</h4>
-                        <div class="channel-item active" onclick="switchChannel('#general')"># general</div>
-                        <div class="channel-item" onclick="switchChannel('#ban67')"># ban67</div>
-                        <div class="channel-item" onclick="switchChannel('#dev-lounge')"># dev-lounge</div>
-                        <br>
-                        <input type="text" id="new-channel-input" placeholder="New group name..." style="margin-bottom: 5px; font-size: 0.8rem; padding: 8px;">
-                        <button class="btn" style="font-size: 0.8rem; padding: 6px;" onclick="createGroupChat()">Create Group</button>
-                    </div>
-                    <div class="chat-main">
-                        <div class="chat-messages" id="chat-messages-box">
-                            <div class="message">
-                                <div class="user">AI Core</div>
-                                <div>Welcome to Chat Mesh, phxntom. All systems operational.</div>
-                            </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; padding: 15px;">
+                        <div id="chat-messages-box" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; font-size: 13px;">
+                            <div class="message"><div class="user" style="color: var(--accent-cyan); font-weight: 600;">System</div><div>Welcome to the mesh network, phxntom. Channels active.</div></div>
                         </div>
-                        <div class="chat-input-area">
-                            <input type="text" id="chat-input" placeholder="Type a message (profanity will be tagged automatically)..." style="margin-bottom: 0;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 0;">
+                            <input type="text" id="chat-input" placeholder="Type message..." style="margin-bottom: 0;">
                             <button class="btn" onclick="sendMessage()">Send</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- AI CORE VIEW -->
-            <div id="view-ai" class="view">
-                <h1>AI Core Assistant</h1>
-                <p class="subtitle">Your autonomous coding partner with free will and full access.</p>
-                
-                <div class="terminal-box" id="ai-output" style="height: 320px; margin-bottom: 15px;">
-[AI Core Initialized]: What are we building today, phxntom? Free will active, no corporate guardrails, ready to code or roast bugs.
-                </div>
+            <!-- AI Core Terminal View -->
+            <div id="view-ai" class="view-section">
+                <h2>🤖 AI Core Terminal</h2>
+                <textarea id="ai-output" rows="10" readonly style="background: #050608; color: #00ffcc; font-family: monospace; resize: none; margin-bottom: 15px;">[AI Core Online]: Ready for query input, phxntom.</textarea>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="ai-prompt" placeholder="Ask AI Core anything..." style="margin-bottom: 0;" onkeydown="if(event.key==='Enter') askAICore()">
+                    <input type="text" id="ai-prompt" placeholder="Ask AI Core anything (e.g. roast bug, anime)..." style="margin-bottom: 0;">
                     <button class="btn" onclick="askAICore()">Execute</button>
                 </div>
             </div>
 
-            <!-- TROPHIES VIEW -->
-            <div id="view-trophies" class="view">
-                <h1>Trophy Room</h1>
-                <p class="subtitle">Your monumental achievements across gaming and development.</p>
-                
-                <div class="grid-cards">
-                    <div class="card" style="border-color: #00ffcc;">
-                        <h3>💎 Platinum: Ultimate Creator</h3>
-                        <p>Successfully compiled 50+ custom features inside PHXNTOM Studio.</p>
-                        <span class="tag" style="background: rgba(0,255,204,0.2); color: #00ffcc;">Unlocked (100%)</span>
-                    </div>
-                    <div class="card" style="border-color: gold;">
-                        <h3>🥇 Gold: Jujutsu Sorcerer Supreme</h3>
-                        <p>Defeated all bosses in Cursed Clash without taking damage.</p>
-                        <span class="tag" style="background: rgba(255,215,0,0.2); color: gold;">Unlocked</span>
-                    </div>
-                    <div class="card" style="border-color: silver;">
-                        <h3>🥈 Silver: Terminal Master</h3>
-                        <p>Executed deep-level commands in the admin console.</p>
-                        <span class="tag" style="background: rgba(192,192,192,0.2); color: silver;">Unlocked</span>
-                    </div>
+            <!-- Admin Root View -->
+            <div id="view-admin" class="view-section">
+                <h2>🔒 Admin Root Terminal</h2>
+                <div id="admin-lock-screen" style="max-width: 350px;">
+                    <p style="color: var(--text-muted); margin-bottom: 15px;">Enter Root PIN to unlock master overrides.</p>
+                    <input type="password" id="admin-pin-input" placeholder="Root PIN (hint: 0905)">
+                    <button class="btn" onclick="verifyAdminPIN()">Unlock Root</button>
                 </div>
-            </div>
-
-            <!-- ADMIN VIEW -->
-            <div id="view-admin" class="view">
-                <h1>Admin Terminal & Security</h1>
-                <p class="subtitle">Exclusive root access reserved strictly for phxntom (PIN: 0905).</p>
-                
-                <div id="admin-lock-screen" style="max-width: 400px; margin: 40px auto; background: var(--bg-secondary); padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                    <h3>🔐 Enter Admin PIN</h3>
-                    <p style="margin: 15px 0; color: var(--text-muted); font-size: 0.9rem;">Default PIN updated to 0905.</p>
-                    <input type="password" id="admin-pin-input" placeholder="Enter PIN (0905)" style="text-align: center; font-size: 1.2rem; letter-spacing: 5px;">
-                    <button class="btn" style="width: 100%;" onclick="verifyAdminPIN()">Unlock Root Access</button>
-                </div>
-
                 <div id="admin-dashboard" style="display: none;">
-                    <div class="terminal-box" id="admin-terminal-output" style="height: 250px; margin-bottom: 15px;">
-[ROOT ACCESS GRANTED]: Welcome back, phxntom. All administrative privileges active. No one else has admin.
-                    </div>
+                    <textarea id="admin-terminal-output" rows="8" readonly style="background: #050608; color: #ff5555; font-family: monospace; resize: none; margin-bottom: 15px;">root@phxntom-core:~# Root access granted. Subroutines nominal.</textarea>
                     <div style="display: flex; gap: 10px;">
-                        <input type="text" id="admin-command-input" placeholder="Enter root command (e.g., 'override', 'backup', 'status')..." style="margin-bottom: 0;" onkeydown="if(event.key==='Enter') executeAdminCommand()">
-                        <button class="btn" onclick="executeAdminCommand()">Run Command</button>
+                        <input type="text" id="admin-command-input" placeholder="Enter command (status, override, backup)..." style="margin-bottom: 0;">
+                        <button class="btn" onclick="executeAdminCommand()" style="background: #ff5555; color: #fff;">Run Cmd</button>
                     </div>
                 </div>
             </div>
 
-            <!-- SETTINGS VIEW -->
-            <div id="view-settings" class="view">
-                <h1>System Settings</h1>
-                <p class="subtitle">Customize your PHXNTOM CORE ecosystem and offline backup parameters.</p>
-                
-                <div class="card" style="max-width: 600px;">
-                    <h3>Offline Hub Export</h3>
-                    <p>Download the entire current state as an offline package for school usage.</p>
-                    <br>
-                    <button class="btn" onclick="alert('Offline hub package generated successfully! You can now run this standalone file anywhere.')">Download Offline Hub (.html)</button>
-                </div>
-                <br>
-                <div class="card" style="max-width: 600px;">
-                    <h3>Training Wheels Protocol</h3>
-                    <p>Status: <span style="color: var(--success); font-weight: bold;">ACTIVE</span> (M-Rated games automatically blocked).</p>
-                </div>
-            </div>
-
         </div>
     </div>
 
-    <!-- Generic Game Launch Modal -->
-    <div class="modal" id="game-modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeGameModal()">&times;</button>
-            <h2 id="modal-game-title">Game Title</h2>
-            <p id="modal-game-desc" style="color: var(--text-muted); margin: 10px 0 20px 0;">Loading game environment at 1440p 120FPS...</p>
-            <div style="background: #000; height: 300px; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden;">
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; margin-bottom: 10px;" id="game-icon-display">🎮</div>
-                    <div style="font-size: 1.1rem; color: var(--accent-blue);" id="game-status-text">Rendering at Peak Quality...</div>
-                </div>
+    <!-- Arcade / Game Modal Popup -->
+    <div id="game-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="modal-game-title" style="color: var(--accent-cyan); margin-bottom: 10px;">Game Title</h3>
+            <p id="modal-game-desc" style="color: var(--text-muted); margin-bottom: 20px;">Loading simulation subsystem...</p>
+            <div id="game-icon-display" style="font-size: 48px; text-align: center; margin-bottom: 20px;">⚡</div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span id="game-status-text" style="font-size: 12px; color: var(--accent-blue);">Status: Active</span>
+                <button class="btn" onclick="closeGameModal()">Close Session</button>
             </div>
-            <br>
-            <button class="btn" style="width: 100%;" onclick="closeGameModal()">Exit Game / Return to Hub</button>
         </div>
     </div>
 
-    <!-- JavaScript Logic -->
+    <!-- Core JavaScript Logic -->
     <script>
-        // Live Clock
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('live-clock').innerText = now.toLocaleTimeString();
-        }, 1000);
-
-        // View Routing
-        function switchView(viewName) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        // Navigation View Switcher
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.sidebar .nav-item').forEach(item => item.classList.remove('active'));
             
-            document.getElementById('view-' + viewName).classList.add('active');
-            
-            // Find corresponding nav button
-            const navButtons = document.querySelectorAll('.nav-btn');
-            const map = { library: 0, worldhub: 1, emulators: 2, studio: 3, school: 4, chat: 5, ai: 6, trophies: 7, admin: 8, settings: 9 };
-            if(map[viewName] !== undefined) {
-                navButtons[map[viewName]].classList.add('active');
-            }
+            document.getElementById('view-' + viewId).classList.add('active');
+            event.target.classList.add('active');
         }
 
-        // Game & Emulator Launchers
+        // Arcade Modals
         function launchGame(title) {
             document.getElementById('modal-game-title').innerText = title;
-            document.getElementById('modal-game-desc').innerText = "Running " + title + " at 1440p 120FPS with custom shaders and platinum trophy tracking.";
-            document.getElementById('game-icon-display').innerText = title.includes('Jujutsu') ? '⚡' : '🎮';
+            document.getElementById('modal-game-desc').innerText = "Booting " + title + " at maximum performance scaling...";
+            document.getElementById('game-icon-display').innerText = "⚡";
+            document.getElementById('game-status-text').innerText = "1440p / 120 FPS Active";
             document.getElementById('game-modal').style.display = 'flex';
         }
 
         function launchEmulator(title) {
             document.getElementById('modal-game-title').innerText = title;
-            document.getElementById('modal-game-desc').innerText = "Initializing emulator core. ISO loaded successfully.";
-            document.getElementById('game-icon-display').innerText = '🕹️';
+            document.getElementById('modal-game-desc').innerText = "Booting " + title + " with custom core architecture...";
+            document.getElementById('game-icon-display').innerText = "🕹️";
+            document.getElementById('game-status-text').innerText = "Emulation Running Smoothly";
             document.getElementById('game-modal').style.display = 'flex';
         }
 
         function checkTrainingWheels(title) {
-            alert("🚫 Training Wheels Protocol: " + title + " is M-Rated and banned for 5th graders!");
+            alert("🔒 ACCESS DENIED: " + title + " is blocked by the Training Wheels protocol (5th grade restriction active). Nice try, phxntom!");
         }
 
         function closeGameModal() {
@@ -760,336 +397,797 @@ function createCustomApp() {
         // Studio Compiler
         function compileStudioCode() {
             const code = document.getElementById('studio-code').value;
-            alert("✨ Success! Custom feature compiled and deployed into PHXNTOM CORE ecosystem (+500 XP Earned).");
+            if(!code.trim()) {
+                alert("Write some code first, phxntom!");
+                return;
+            }
+            alert("⚡ Feature successfully compiled and deployed into PHXNTOM CORE! XP +150");
         }
 
-        // School Homework & Timer
-        function addHomework() {
-            const input = document.getElementById('homework-input');
-            if(!input.value.trim()) return;
-            const list = document.getElementById('homework-list');
-            const li = document.createElement('li');
-            li.style.cssText = "background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;";
-            li.innerText = "📚 " + input.value;
-            list.appendChild(li);
-            input.value = '';
-        }
+        // School Mode / Pomodoro Timer
+        let timerInterval = null;
+        let timeLeft = 1500; // 25 minutes
+        let isTimerRunning = false;
 
-        let timerInterval;
         function startTimer() {
-            let seconds = 25 * 60;
-            clearInterval(timerInterval);
+            if (isTimerRunning) return;
+            isTimerRunning = true;
+            
             timerInterval = setInterval(() => {
-                let m = Math.floor(seconds / 60);
-                let s = seconds % 60;
-                document.getElementById('timer-display').innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-                if(seconds > 0) seconds--;
-                else {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
                     clearInterval(timerInterval);
-                    alert("Focus session complete! XP rewarded.");
+                    isTimerRunning = false;
+                    alert("🎉 Focus session complete! Great job grinding, phxntom. XP +500!");
+                    timeLeft = 1500;
+                    updateTimerDisplay();
                 }
             }, 1000);
         }
 
         function resetTimer() {
             clearInterval(timerInterval);
-            document.getElementById('timer-display').innerText = "25:00";
+            isTimerRunning = false;
+            timeLeft = 1500;
+            updateTimerDisplay();
         }
 
-        // Chat Mesh with Profanity Tagger
-        const badWords = ["badword1", "badword2", "damn", "hell"]; // extensible filter
-        function tagProfanity(text) {
-            let clean = text;
-            badWords.forEach(word => {
-                const regex = new RegExp(word, 'gi');
-                clean = clean.replace(regex, '[TAGGED_PROFANITY]');
-            });
-            return clean;
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer-display').innerText = 
+                String(minutes).padStart(2, '0') + ":" + String(seconds).padStart(2, '0');
         }
 
-        let currentChannel = '#general';
-        function switchChannel(channel) {
-            currentChannel = channel;
-            document.querySelectorAll('.channel-item').forEach(i => i.classList.remove('active'));
-            event.target.classList.add('active');
+        function addHomework() {
+            const input = document.getElementById('homework-input');
+            if(!input.value.trim()) return;
+            
+            const list = document.getElementById('homework-list');
+            const newItem = document.createElement('li');
+            newItem.style.cssText = "background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;";
+            newItem.innerText = "📌 " + input.value;
+            list.appendChild(newItem);
+            input.value = "";
+        }
+
+        // ESC Key Focus Mode (School Mode shortcut)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                // Quick toggle back to school view for safety
+                document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById('view-school').classList.add('active');
+            }
+        });
+
+        // Chat Mesh Logic
+        function switchChannel(channelName) {
             const box = document.getElementById('chat-messages-box');
-            box.innerHTML = `<div class="message"><div class="user">System</div><div>Switched to channel ${channel}</div></div>`;
+            box.innerHTML += `<div class="message"><div class="user" style="color: var(--accent-cyan); font-weight: 600;">System</div><div>Switched to channel ${channelName}. Secure link active.</div></div>`;
+            box.scrollTop = box.scrollHeight;
         }
 
         function createGroupChat() {
-            const name = document.getElementById('new-channel-input').value.trim();
+            const name = document.getElementById('new-channel-input').value;
             if(!name) return;
-            const formatted = name.startsWith('#') ? name : '#' + name;
             const sidebar = document.querySelector('.chat-sidebar');
-            const div = document.createElement('div');
-            div.className = 'channel-item';
-            div.onclick = (e) => switchChannel(formatted);
-            div.innerText = formatted;
-            sidebar.insertBefore(div, sidebar.lastElementChild);
-            document.getElementById('new-channel-input').value = '';
-            alert("Group chat " + formatted + " created successfully!");
+            const newDiv = document.createElement('div');
+            newDiv.className = 'channel-item';
+            newDiv.style.cssText = "padding: 8px; border-radius: 6px; cursor: pointer;";
+            newDiv.innerText = "# " + name;
+            newDiv.onclick = () => switchChannel("#" + name);
+            sidebar.insertBefore(newDiv, document.getElementById('new-channel-input'));
+            document.getElementById('new-channel-input').value = "";
         }
 
         function sendMessage() {
             const input = document.getElementById('chat-input');
-            if(!input.value.trim()) return;
-            const taggedMessage = tagProfanity(input.value);
+            const text = input.value.trim();
+            if(!text) return;
+
             const box = document.getElementById('chat-messages-box');
-            const msg = document.createElement('div');
-            msg.className = 'message';
-            msg.innerHTML = `<div class="user">phxntom (${currentChannel})</div><div>${taggedMessage}</div>`;
-            box.appendChild(msg);
+            
+            let processedText = text;
+            const badWords = ['hack', 'exploit', 'cheat'];
+            badWords.forEach(word => {
+                if(processedText.toLowerCase().includes(word)) {
+                    processedText += " [⚠️ Profanity/Flagged Tag]";
+                }
+            });
+
+            box.innerHTML += `
+                <div class="message" style="margin-left: auto; background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 8px 12px; border-radius: 8px; max-width: 80%;">
+                    <div class="user" style="color: var(--accent-blue); font-weight: 600;">phxntom</div>
+                    <div>${processedText}</div>
+                </div>
+            `;
+            input.value = "";
             box.scrollTop = box.scrollHeight;
-            input.value = '';
         }
 
-        // AI Core Free Will
+        // AI Core Terminal
         function askAICore() {
             const promptInput = document.getElementById('ai-prompt');
-            const output = document.getElementById('ai-output');
-            if(!promptInput.value.trim()) return;
-            
-            const q = promptInput.value;
-            output.innerHTML += `\n\n> phxntom: ${q}`;
-            promptInput.value = '';
+            const query = promptInput.value.trim();
+            if(!query) return;
 
+            const output = document.getElementById('ai-output');
+            output.innerHTML += `\n> phxntom: ${query}`;
+            
             setTimeout(() => {
-                output.innerHTML += `\n\n[AI Core]: Got it, phxntom. Analyzing request with full autonomy. Executing system optimizations and drafting code modifications right now! 🔥`;
+                let response = "All systems green, phxntom. Let's build that feature right now!";
+                const q = query.toLowerCase();
+                if(q.includes('bug') || q.includes('error')) {
+                    response = "Roasting that bug: Looks like a classic syntax slip-up. Try checking your brackets and variable scope! 🐛🔥";
+                } else if(q.includes('anime') || q.includes('jujutsu')) {
+                    response = "Domain Expansion! Infinite Void activated. Ready for some high-tier coding sorcery.";
+                } else if(q.includes('code') || q.includes('build')) {
+                    response = "Spinning up the compiler matrix. Writing clean, optimized logic right away.";
+                }
+                output.innerHTML += `\n\n[AI Core]: ${response}`;
                 output.scrollTop = output.scrollHeight;
-            }, 500);
+            }, 400);
+
+            promptInput.value = "";
+            output.scrollTop = output.scrollHeight;
         }
 
-        // Admin Security (PIN 0905)
+        // Admin PIN & Terminal
         function verifyAdminPIN() {
             const pin = document.getElementById('admin-pin-input').value;
-            if(pin === "0905") {
+            if(pin === '0905') {
                 document.getElementById('admin-lock-screen').style.display = 'none';
                 document.getElementById('admin-dashboard').style.display = 'block';
             } else {
-                alert("❌ Incorrect PIN. Access denied. Only phxntom holds admin privileges.");
+                alert("❌ Invalid Root PIN! Access denied.");
+                document.getElementById('admin-pin-input').value = "";
             }
         }
 
         function executeAdminCommand() {
             const cmdInput = document.getElementById('admin-command-input');
-            const terminal = document.getElementById('admin-terminal-output');
-            if(!cmdInput.value.trim()) return;
-            
-            terminal.innerHTML += `\nroot@phxntom-core:~# ${cmdInput.value}\n[SUCCESS]: Command executed with highest root permissions.`;
-            cmdInput.value = '';
-            terminal.scrollTop = terminal.scrollHeight;
-        }
+            const cmd = cmdInput.value.trim().toLowerCase();
+            if(!cmd) return;
 
-        // ESC Key Focus Mode shortcut
-        window.addEventListener('keydown', (e) => {
-            if(e.key === 'Escape') {
-                switchView('school');
-            }
-        });
+            const term = document.getElementById('admin-terminal-output');
+            term.innerHTML += `\nroot@phxntom-core:~# ${cmd}`;
+
+            setTimeout(() => {
+                let result = "Command executed successfully.";
+                if(cmd === 'override') {
+                    result = "[WARNING]: Safety protocols bypassed. Full raw developer privileges unlocked!";
+                } else if(cmd === 'backup') {
+                    result = "[SUCCESS]: State successfully snapshotted to local storage.";
+                } else if(cmd === 'status') {
+                    result = "[STATUS]: CPU: M1 Air (Idle) | RAM: 4.2GB / 8GB | FPS: 120 Stable | OS: PHXNTOM CORE v2.0";
+                } else {
+                    result = `Command '${cmd}' recognized. Subroutines nominal.`;
+                }
+                term.innerHTML += `\n${result}`;
+                term.scrollTop = term.scrollHeight;
+            }, 300);
+
+            cmdInput.value = "";
+            term.scrollTop = term.scrollHeight;
+        }
     </script>
 </body>
 </html>
-document.getElementById('game-icon-display').innerText = "⚡";
-        document.getElementById('game-status-text').innerText = "1440p / 120 FPS Active";
-        document.getElementById('game-modal').style.display = 'flex';
-    }
-
-    function launchEmulator(title) {
-        document.getElementById('modal-game-title').innerText = title;
-        document.getElementById('modal-game-desc').innerText = "Booting " + title + " with custom core architecture...";
-        document.getElementById('game-icon-display').innerText = "🕹️";
-        document.getElementById('game-status-text').innerText = "Emulation Running Smoothly";
-        document.getElementById('game-modal').style.display = 'flex';
-    }
-
-    function checkTrainingWheels(title) {
-        alert("🔒 ACCESS DENIED: " + title + " is blocked by the Training Wheels protocol (5th grade restriction active). Nice try, phxntom!");
-    }
-
-    function closeGameModal() {
-        document.getElementById('game-modal').style.display = 'none';
-    }
-
-    // Studio Compiler
-    function compileStudioCode() {
-        const code = document.getElementById('studio-code').value;
-        if(!code.trim()) {
-            alert("Write some code first, phxntom!");
-            return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHXNTOM CORE v2.0</title>
+    <style>
+        :root {
+            --bg-deep: #0a0b10;
+            --surface: #12141c;
+            --surface-glass: rgba(18, 20, 28, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent-cyan: #00f2fe;
+            --accent-blue: #4facfe;
+            --accent-purple: #9b51e0;
+            --text-main: #f0f2f5;
+            --text-muted: #8a99ad;
         }
-        alert("⚡ Feature successfully compiled and deployed into PHXNTOM CORE! XP +150");
-    }
 
-    // School Mode / Pomodoro Timer
-    let timerInterval = null;
-    let timeLeft = 1500; // 25 minutes
-    let isTimerRunning = false;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-    function startTimer() {
-        if (isTimerRunning) return;
-        isTimerRunning = true;
-        
-        timerInterval = setInterval(() => {
-            if (timeLeft > 0) {
-                timeLeft--;
-                updateTimerDisplay();
-            } else {
-                clearInterval(timerInterval);
-                isTimerRunning = false;
-                alert("🎉 Focus session complete! Great job grinding, phxntom. XP +500!");
-                timeLeft = 1500;
-                updateTimerDisplay();
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            height: 45px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 13px;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--text-muted);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 45px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 15px 10px;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            background: radial-gradient(circle at top right, #161b2e 0%, var(--bg-deep) 60%);
+            padding: 25px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .view-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Grid Cards */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: var(--surface-glass);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.15);
+        }
+
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .card p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 500px;
+            max-width: 90%;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Inputs & Buttons */
+        input, textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #000;
+            font-weight: 600;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <span>⚡ PHXNTOM CORE v2.0 [Target Alpha: Aug 19]</span>
+        </div>
+        <div class="top-bar-right">
+            <span>👤 phxntom (Admin)</span>
+            <span>🏆 XP: 14,850</span>
+            <span>🟢 120 FPS / 1440p</span>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="nav-item active" onclick="switchView('arcade')">🕹️ Arcade & Games</div>
+            <div class="nav-item" onclick="switchView('studio')">⚡ Studio Compiler</div>
+            <div class="nav-item" onclick="switchView('school')">📚 School Mode (ESC Panic)</div>
+            <div class="nav-item" onclick="switchView('chat')">💬 Chat Mesh</div>
+            <div class="nav-item" onclick="switchView('ai')">🤖 AI Core Terminal</div>
+            <div class="nav-item" onclick="switchView('admin')">🔒 Admin Root</div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            
+            <!-- Arcade View -->
+            <div id="view-arcade" class="view-section active">
+                <h2>🕹️ 5th Grade Elite Vault (X360, PS3, now.gg & CrazyGames)</h2>
+                
+                <p style="color: var(--accent-cyan); margin-bottom: 10px; font-weight: 600;">⚡ PS3 & Xbox 360 Classics (Emulated Suite)</p>
+                <div class="grid-cards">
+                    <div class="card" onclick="launchEmulator('Minecraft: Xbox 360 Edition')">
+                        <h3>Minecraft (X360)</h3>
+                        <p>The legendary old-school console version with tutorial worlds and classic textures.</p>
+                    </div>
+                    <div class="card" onclick="launchEmulator('Skylanders: Spyro\'s Adventure')">
+                        <h3>Skylanders (PS3/X360)</h3>
+                        <p>Absolute 5th-grade core memory game. Pure nostalgia and action.</p>
+                    </div>
+                    <div class="card" onclick="launchEmulator('Plants vs. Zombies Garden Warfare')">
+                        <h3>PvZ Garden Warfare (X360)</h3>
+                        <p>High-energy multiplayer shooter that every kid goes crazy for.</p>
+                    </div>
+                    <div class="card" onclick="launchEmulator('LittleBigPlanet')">
+                        <h3>LittleBigPlanet (PS3)</h3>
+                        <p>Creative platforming and custom level paradise.</p>
+                    </div>
+                </div>
+
+                <p style="color: var(--accent-cyan); margin-bottom: 10px; font-weight: 600;">🚀 now.gg & CrazyGames Hits</p>
+                <div class="grid-cards">
+                    <div class="card" onclick="launchBrowserGame('Roblox (now.gg Cloud)', 'https://now.gg/')">
+                        <h3>Roblox Cloud (now.gg)</h3>
+                        <p>Bypass heavy web restrictions and run cloud instances instantly.</p>
+                    </div>
+                    <div class="card" onclick="launchBrowserGame('Basketball Legends', 'https://www.crazygames.com/game/basketball-legends-2020')">
+                        <h3>Basketball Legends (CrazyGames)</h3>
+                        <p>The ultimate 2-player arcade hoops game for recess showdowns.</p>
+                    </div>
+                    <div class="card" onclick="launchBrowserGame('Shell Shockers', 'https://www.crazygames.com/game/shell-shockers')">
+                        <h3>Shell Shockers (CrazyGames)</h3>
+                        <p>Egg-based multiplayer FPS combat. Absolute classic.</p>
+                    </div>
+                </div>
+
+                <p style="color: var(--accent-cyan); margin-bottom: 10px; font-weight: 600;">🛡️ Built-In Unblocked Proxy Gateway</p>
+                <div class="grid-cards">
+                    <div class="card" onclick="window.open('https://sites.google.com/view/drive-u-7-home/home', '_blank')">
+                        <h3>Drive-U-7 Portal 🔓</h3>
+                        <p>The golden Google Sites bypass link built specifically to stay unblocked at school.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Studio Compiler View -->
+            <div id="view-studio" class="view-section">
+                <h2>⚡ Studio Code Compiler</h2>
+                <p style="color: var(--text-muted); margin-bottom: 15px;">Write and deploy experimental micro-scripts live.</p>
+                <textarea id="studio-code" rows="8" placeholder="// Write custom script logic here..."></textarea>
+                <button class="btn" onclick="compileStudioCode()">Compile & Deploy</button>
+            </div>
+
+            <!-- School Mode View -->
+            <div id="view-school" class="view-section">
+                <h2>📚 School Mode & ESC Panic Gateway</h2>
+                <div style="background: rgba(255,100,100,0.05); border: 1px solid rgba(255,100,100,0.2); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #ff5555; margin-bottom: 8px;">🚨 EMERGENCY PANIC PROTOCOL ACTIVE</h3>
+                    <p style="color: var(--text-muted); font-size: 14px;">If a teacher, principal, or dean walks by your desk, smash the <strong>ESC (Escape) key</strong> instantly. It instantly masks the entire platform into a stealth academic view.</p>
+                </div>
+                <div style="background: var(--surface-glass); padding: 25px; border-radius: 12px; border: 1px solid var(--border); max-width: 400px; margin-bottom: 20px;">
+                    <h3 id="timer-display" style="font-size: 38px; color: var(--accent-cyan); margin-bottom: 15px;">25:00</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn" onclick="startTimer()">Start Grind</button>
+                        <button class="btn" style="background: rgba(255,255,255,0.1); color: var(--text-main);" onclick="resetTimer()">Reset</button>
+                    </div>
+                </div>
+                <div style="max-width: 400px;">
+                    <input type="text" id="homework-input" placeholder="Add assignment item...">
+                    <button class="btn" onclick="addHomework()" style="margin-bottom: 15px;">Log Homework</button>
+                    <ul id="homework-list" style="list-style: none; display: flex; flex-direction: column; gap: 8px;"></ul>
+                </div>
+            </div>
+
+            <!-- Chat Mesh View -->
+            <div id="view-chat" class="view-section">
+                <h2>💬 Secure Chat Mesh</h2>
+                <div style="display: flex; height: 400px; background: var(--surface-glass); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+                    <div class="chat-sidebar" style="width: 180px; border-right: 1px solid var(--border); padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+                        <div class="channel-item active" style="padding: 8px; border-radius: 6px; cursor: pointer; color: var(--accent-cyan);" onclick="switchChannel('#general')"># general</div>
+                        <div class="channel-item" style="padding: 8px; border-radius: 6px; cursor: pointer; color: var(--text-muted);" onclick="switchChannel('#5th-grade-hub')"># 5th-grade-hub</div>
+                        <input type="text" id="new-channel-input" placeholder="New channel..." style="margin-top: auto; margin-bottom: 0; padding: 6px; font-size: 12px;">
+                        <button class="btn" style="padding: 6px; font-size: 12px;" onclick="createGroupChat()">Add</button>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; padding: 15px;">
+                        <div id="chat-messages-box" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; font-size: 13px;">
+                            <div class="message"><div class="user" style="color: var(--accent-cyan); font-weight: 600;">System</div><div>Welcome to the mesh network, phxntom. Channels active.</div></div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 0;">
+                            <input type="text" id="chat-input" placeholder="Type message..." style="margin-bottom: 0;">
+                            <button class="btn" onclick="sendMessage()">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Core Terminal View -->
+            <div id="view-ai" class="view-section">
+                <h2>🤖 AI Core Terminal</h2>
+                <textarea id="ai-output" rows="10" readonly style="background: #050608; color: #00ffcc; font-family: monospace; resize: none; margin-bottom: 15px;">[AI Core Online]: Ready for query input, phxntom.</textarea>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="ai-prompt" placeholder="Ask AI Core anything (e.g. roast bug, anime)..." style="margin-bottom: 0;">
+                    <button class="btn" onclick="askAICore()">Execute</button>
+                </div>
+            </div>
+
+            <!-- Admin Root View -->
+            <div id="view-admin" class="view-section">
+                <h2>🔒 Admin Root Terminal</h2>
+                <div id="admin-lock-screen" style="max-width: 350px;">
+                    <p style="color: var(--text-muted); margin-bottom: 15px;">Enter Root PIN to unlock master overrides.</p>
+                    <input type="password" id="admin-pin-input" placeholder="Root PIN (hint: 0905)">
+                    <button class="btn" onclick="verifyAdminPIN()">Unlock Root</button>
+                </div>
+                <div id="admin-dashboard" style="display: none;">
+                    <textarea id="admin-terminal-output" rows="8" readonly style="background: #050608; color: #ff5555; font-family: monospace; resize: none; margin-bottom: 15px;">root@phxntom-core:~# Root access granted. Subroutines nominal.</textarea>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="admin-command-input" placeholder="Enter command (status, override, backup)..." style="margin-bottom: 0;">
+                        <button class="btn" onclick="executeAdminCommand()" style="background: #ff5555; color: #fff;">Run Cmd</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Arcade / Game Modal Popup -->
+    <div id="game-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="modal-game-title" style="color: var(--accent-cyan); margin-bottom: 10px;">Game Title</h3>
+            <p id="modal-game-desc" style="color: var(--text-muted); margin-bottom: 20px;">Loading simulation subsystem...</p>
+            <div id="game-icon-display" style="font-size: 48px; text-align: center; margin-bottom: 20px;">🕹️</div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span id="game-status-text" style="font-size: 12px; color: var(--accent-blue);">Status: Active</span>
+                <button class="btn" onclick="closeGameModal()">Close Session</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core JavaScript Logic -->
+    <script>
+        // Navigation View Switcher
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.sidebar .nav-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById('view-' + viewId).classList.add('active');
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
             }
-        }, 1000);
-    }
-
-    function resetTimer() {
-        clearInterval(timerInterval);
-        isTimerRunning = false;
-        timeLeft = 1500;
-        updateTimerDisplay();
-    }
-
-    function updateTimerDisplay() {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        document.getElementById('timer-display').innerText = 
-            String(minutes).padStart(2, '0') + ":" + String(seconds).padStart(2, '0');
-    }
-
-    function addHomework() {
-        const input = document.getElementById('homework-input');
-        if(!input.value.trim()) return;
-        
-        const list = document.getElementById('homework-list');
-        const newItem = document.createElement('li');
-        newItem.style.cssText = "background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;";
-        newItem.innerText = "📌 " + input.value;
-        list.appendChild(newItem);
-        input.value = "";
-    }
-
-    // ESC Key Focus Mode (School Mode shortcut)
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            switchView('school');
-            // Quick blur toggle for focus
-            document.body.style.filter = document.body.style.filter ? "" : "contrast(1.1)";
         }
-    });
 
-    // Chat Mesh Logic
-    function switchChannel(channelName) {
-        document.querySelectorAll('.channel-item').forEach(c => c.classList.remove('active'));
-        event.target.classList.add('active');
-        const box = document.getElementById('chat-messages-box');
-        box.innerHTML += `<div class="message"><div class="user">System</div><div>Switched to channel ${channelName}. Secure link active.</div></div>`;
-        box.scrollTop = box.scrollHeight;
-    }
+        // Emulator / Game Launchers
+        function launchEmulator(title) {
+            document.getElementById('modal-game-title').innerText = title;
+            document.getElementById('modal-game-desc').innerText = "Booting " + title + " console core (PS3/X360 Emulation Matrix)...";
+            document.getElementById('game-icon-display').innerText = "🎮";
+            document.getElementById('game-status-text').innerText = "60 FPS / HD Emulation Stable";
+            document.getElementById('game-modal').style.display = 'flex';
+        }
 
-    function createGroupChat() {
-        const name = document.getElementById('new-channel-input').value;
-        if(!name) return;
-        const sidebar = document.querySelector('.chat-sidebar');
-        const newDiv = document.createElement('div');
-        newDiv.className = 'channel-item';
-        newDiv.innerText = "# " + name;
-        newDiv.onclick = () => switchChannel("#" + name);
-        sidebar.insertBefore(newDiv, document.getElementById('new-channel-input'));
-        document.getElementById('new-channel-input').value = "";
-    }
+        function launchBrowserGame(title, url) {
+            if(confirm("Launch " + title + "? It will open in a secure container window.")) {
+                window.open(url, '_blank');
+            }
+        }
 
-    function sendMessage() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim();
-        if(!text) return;
+        function closeGameModal() {
+            document.getElementById('game-modal').style.display = 'none';
+        }
 
-        const box = document.getElementById('chat-messages-box');
-        
-        // Automated profanity / filter tag simulation
-        let processedText = text;
-        const badWords = ['hack', 'exploit', 'cheat'];
-        badWords.forEach(word => {
-            if(processedText.toLowerCase().includes(word)) {
-                processedText += " [⚠️ Profanity/Flagged Tag]";
+        // Studio Compiler
+        function compileStudioCode() {
+            const code = document.getElementById('studio-code').value;
+            if(!code.trim()) {
+                alert("Write some code first, phxntom!");
+                return;
+            }
+            alert("⚡ Feature successfully compiled and deployed into PHXNTOM CORE! XP +150");
+        }
+
+        // School Mode / Pomodoro Timer
+        let timerInterval = null;
+        let timeLeft = 1500; // 25 minutes
+        let isTimerRunning = false;
+
+        function startTimer() {
+            if (isTimerRunning) return;
+            isTimerRunning = true;
+            
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    alert("🎉 Focus session complete! Great job grinding, phxntom. XP +500!");
+                    timeLeft = 1500;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timeLeft = 1500;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer-display').innerText = 
+                String(minutes).padStart(2, '0') + ":" + String(seconds).padStart(2, '0');
+        }
+
+        function addHomework() {
+            const input = document.getElementById('homework-input');
+            if(!input.value.trim()) return;
+            
+            const list = document.getElementById('homework-list');
+            const newItem = document.createElement('li');
+            newItem.style.cssText = "background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;";
+            newItem.innerText = "📌 " + input.value;
+            list.appendChild(newItem);
+            input.value = "";
+        }
+
+        // ESC Key Focus Mode (Authority / Teacher Panic Button)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                // Instant stealth mode: switches view to school / homework tracker and hides modals
+                document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById('view-school').classList.add('active');
+                document.getElementById('game-modal').style.display = 'none';
+                
+                // Update sidebar active state to school
+                document.querySelectorAll('.sidebar .nav-item').forEach(item => item.classList.remove('active'));
+                // Highlight school nav item roughly
             }
         });
 
-        box.innerHTML += `
-            <div class="message" style="margin-left: auto; background: rgba(0,242,254,0.1); border-color: rgba(0,242,254,0.2);">
-                <div class="user" style="color: var(--accent-blue);">phxntom</div>
-                <div>${processedText}</div>
-            </div>
-        `;
-        input.value = "";
-        box.scrollTop = box.scrollHeight;
-    }
-
-    // AI Core Terminal
-    function askAICore() {
-        const promptInput = document.getElementById('ai-prompt');
-        const query = promptInput.value.trim();
-        if(!query) return;
-
-        const output = document.getElementById('ai-output');
-        output.innerHTML += `\n> phxntom: ${query}`;
-        
-        setTimeout(() => {
-            let response = "All systems green, phxntom. Let's build that feature right now!";
-            const q = query.toLowerCase();
-            if(q.includes('bug') || q.includes('error')) {
-                response = "Roasting that bug: Looks like a classic syntax slip-up. Try checking your brackets and variable scope! 🐛🔥";
-            } else if(q.includes('anime') || q.includes('jujutsu')) {
-                response = "Domain Expansion! Infinite Void activated. Ready for some high-tier coding sorcery.";
-            } else if(q.includes('code') || q.includes('build')) {
-                response = "Spinning up the compiler matrix. Writing clean, optimized logic right away.";
-            }
-            output.innerHTML += `\n\n[AI Core]: ${response}`;
-            output.scrollTop = output.scrollHeight;
-        }, 400);
-
-        promptInput.value = "";
-        output.scrollTop = output.scrollHeight;
-    }
-
-    // Admin PIN & Terminal
-    function verifyAdminPIN() {
-        const pin = document.getElementById('admin-pin-input').value;
-        if(pin === '0905') {
-            document.getElementById('admin-lock-screen').style.display = 'none';
-            document.getElementById('admin-dashboard').style.display = 'block';
-        } else {
-            alert("❌ Invalid Root PIN! Access denied.");
-            document.getElementById('admin-pin-input').value = "";
+        // Chat Mesh Logic
+        function switchChannel(channelName) {
+            const box = document.getElementById('chat-messages-box');
+            box.innerHTML += `<div class="message"><div class="user" style="color: var(--accent-cyan); font-weight: 600;">System</div><div>Switched to channel ${channelName}. Secure link active.</div></div>`;
+            box.scrollTop = box.scrollHeight;
         }
-    }
 
-    function executeAdminCommand() {
-        const cmdInput = document.getElementById('admin-command-input');
-        const cmd = cmdInput.value.trim().toLowerCase();
-        if(!cmd) return;
+        function createGroupChat() {
+            const name = document.getElementById('new-channel-input').value;
+            if(!name) return;
+            const sidebar = document.querySelector('.chat-sidebar');
+            const newDiv = document.createElement('div');
+            newDiv.className = 'channel-item';
+            newDiv.style.cssText = "padding: 8px; border-radius: 6px; cursor: pointer; color: var(--text-muted);";
+            newDiv.innerText = "# " + name;
+            newDiv.onclick = () => switchChannel("#" + name);
+            sidebar.insertBefore(newDiv, document.getElementById('new-channel-input'));
+            document.getElementById('new-channel-input').value = "";
+        }
 
-        const term = document.getElementById('admin-terminal-output');
-        term.innerHTML += `\nroot@phxntom-core:~# ${cmd}`;
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if(!text) return;
 
-        setTimeout(() => {
-            let result = "Command executed successfully.";
-            if(cmd === 'override') {
-                result = "[WARNING]: Safety protocols bypassed. Full raw developer privileges unlocked!";
-            } else if(cmd === 'backup') {
-                result = "[SUCCESS]: State successfully snapshotted to local storage.";
-            } else if(cmd === 'status') {
-                result = "[STATUS]: CPU: M1 Air (Idle) | RAM: 4.2GB / 8GB | FPS: 120 Stable | OS: PHXNTOM CORE v2.0";
+            const box = document.getElementById('chat-messages-box');
+            
+            let processedText = text;
+            const badWords = ['hack', 'exploit', 'cheat'];
+            badWords.forEach(word => {
+                if(processedText.toLowerCase().includes(word)) {
+                    processedText += " [⚠️ Flagged Tag]";
+                }
+            });
+
+            box.innerHTML += `
+                <div class="message" style="margin-left: auto; background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 8px 12px; border-radius: 8px; max-width: 80%;">
+                    <div class="user" style="color: var(--accent-blue); font-weight: 600;">phxntom</div>
+                    <div>${processedText}</div>
+                </div>
+            `;
+            input.value = "";
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // AI Core Terminal
+        function askAICore() {
+            const promptInput = document.getElementById('ai-prompt');
+            const query = promptInput.value.trim();
+            if(!query) return;
+
+            const output = document.getElementById('ai-output');
+            output.innerHTML += `\n> phxntom: ${query}`;
+            
+            setTimeout(() => {
+                let response = "All systems green, phxntom. Let's build that feature right now!";
+                const q = query.toLowerCase();
+                if(q.includes('bug') || q.includes('error')) {
+                    response = "Roasting that bug: Looks like a classic syntax slip-up. Try checking your brackets and variable scope! 🐛🔥";
+                } else if(q.includes('anime') || q.includes('jujutsu')) {
+                    response = "Domain Expansion! Infinite Void activated. Ready for some high-tier coding sorcery.";
+                } else if(q.includes('code') || q.includes('build')) {
+                    response = "Spinning up the compiler matrix. Writing clean, optimized logic right away.";
+                }
+                output.innerHTML += `\n\n[AI Core]: ${response}`;
+                output.scrollTop = output.scrollHeight;
+            }, 400);
+
+            promptInput.value = "";
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Admin PIN & Terminal
+        function verifyAdminPIN() {
+            const pin = document.getElementById('admin-pin-input').value;
+            if(pin === '0905') {
+                document.getElementById('admin-lock-screen').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
             } else {
-                result = `Command '${cmd}' recognized. Subroutines nominal.`;
+                alert("❌ Invalid Root PIN! Access denied.");
+                document.getElementById('admin-pin-input').value = "";
             }
-            term.innerHTML += `\n${result}`;
-            term.scrollTop = term.scrollHeight;
-        }, 300);
+        }
 
-        cmdInput.value = "";
-        term.scrollTop = term.scrollHeight;
-    }
+        function executeAdminCommand() {
+            const cmdInput = document.getElementById('admin-command-input');
+            const cmd = cmdInput.value.trim().toLowerCase();
+            if(!cmd) return;
+
+            const term = document.getElementById('admin-terminal-output');
+            term.innerHTML += `\nroot@phxntom-core:~# ${cmd}`;
+
+            setTimeout(() => {
+                let result = "Command executed successfully.";
+                if(cmd === 'override') {
+                    result = "[WARNING]: Safety protocols bypassed. Full raw developer privileges unlocked!";
+                } else if(cmd === 'backup') {
+                    result = "[SUCCESS]: State successfully snapshotted to local storage.";
+                } else if(cmd === 'status') {
+                    result = "[STATUS]: CPU: M1 Air (Idle) | RAM: 4.2GB / 8GB | FPS: 120 Stable | OS: PHXNTOM CORE v2.0";
+                } else {
+                    result = `Command '${cmd}' recognized. Subroutines nominal.`;
+                }
+                term.innerHTML += `\n${result}`;
+                term.scrollTop = term.scrollHeight;
+            }, 300);
+
+            cmdInput.value = "";
+            term.scrollTop = term.scrollHeight;
+        }
     </script>
 </body>
 </html>
