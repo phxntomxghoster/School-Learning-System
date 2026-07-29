@@ -3,338 +3,361 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORION OS | Alpha 0.2 Core</title>
+<title>ORION OS | The Ultimate Classroom Resource</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
-/* --- OS THEME ENGINE --- */
+/* ==========================================
+   CSS CORE & THEMES
+========================================== */
 :root {
-    --theme-bg: #0b0e14; --theme-accent: #00f2fe; --theme-accent-glow: rgba(0, 242, 254, 0.4);
-    --glass-bg: rgba(255, 255, 255, 0.03); --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-hover: rgba(255, 255, 255, 0.12); --text-main: #ffffff; --text-muted: #8a99ad;
-    --panel-bg: rgba(11, 14, 20, 0.85); --success: #00ff88; --danger: #ff3366;
+    /* PS5 Blue Default */
+    --theme-bg: #0b111e;
+    --theme-accent: #0043ff;
+    --theme-accent-glow: rgba(0, 67, 255, 0.5);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-hover: rgba(255, 255, 255, 0.15);
+    --text-main: #ffffff;
+    --text-muted: #8a99ad;
+    --panel-bg: rgba(11, 17, 30, 0.9);
+    --success: #00ff88;
+    --danger: #ff3366;
+    --warn: #ffb000;
 }
-[data-theme="cyberpunk"] { --theme-bg: #0d0221; --theme-accent: #ff00ff; --theme-accent-glow: rgba(255, 0, 255, 0.4); }
-[data-theme="retro"] { --theme-bg: #2b2b2b; --theme-accent: #ffb000; --theme-accent-glow: rgba(255, 176, 0, 0.4); }
-[data-theme="anime"] { --theme-bg: #1a0b2e; --theme-accent: #ff66b2; --theme-accent-glow: rgba(255, 102, 178, 0.5); }
-[data-theme="midnight"] { --theme-bg: #000000; --theme-accent: #ffffff; --theme-accent-glow: rgba(255, 255, 255, 0.2); }
+/* Theme Matrix */
+[data-theme="cyberpunk"] { --theme-bg: #090114; --theme-accent: #ff007c; --theme-accent-glow: rgba(255, 0, 124, 0.6); --panel-bg: rgba(9, 1, 20, 0.9); }
+[data-theme="anime"] { --theme-bg: #1a0b2e; --theme-accent: #ff66b2; --theme-accent-glow: rgba(255, 102, 178, 0.6); --panel-bg: rgba(26, 11, 46, 0.9); }
+[data-theme="midnight"] { --theme-bg: #000000; --theme-accent: #ffffff; --theme-accent-glow: rgba(255, 255, 255, 0.3); --panel-bg: rgba(10, 10, 10, 0.9); }
+[data-theme="retro"] { --theme-bg: #2b2b2b; --theme-accent: #ffb000; --theme-accent-glow: rgba(255, 176, 0, 0.5); --panel-bg: rgba(30, 30, 30, 0.9); }
+[data-theme="forest"] { --theme-bg: #0a1f11; --theme-accent: #00ff66; --theme-accent-glow: rgba(0, 255, 102, 0.5); --panel-bg: rgba(10, 31, 17, 0.9); }
+[data-theme="galaxy"] { --theme-bg: #050014; --theme-accent: #9d00ff; --theme-accent-glow: rgba(157, 0, 255, 0.6); --panel-bg: rgba(5, 0, 20, 0.9); }
 
-* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; font-family: 'Outfit', sans-serif; }
-::-webkit-scrollbar { display: none; }
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; font-family: 'Outfit', sans-serif; outline: none; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--theme-accent); }
+
 body { background: var(--theme-bg); color: var(--text-main); height: 100vh; overflow: hidden; transition: background 0.8s ease; }
 
-/* --- BACKGROUNDS & EFFECTS --- */
+/* Visual Effects */
 #ambient-canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.vignette { position: absolute; inset: 0; box-shadow: inset 0 0 150px rgba(0,0,0,0.9); z-index: 1; pointer-events: none; }
+.vignette { position: absolute; inset: 0; box-shadow: inset 0 0 200px rgba(0,0,0,0.9); z-index: 1; pointer-events: none; }
 .glass { background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-/* --- BOOT SEQUENCE --- */
+/* ==========================================
+   BOOT SEQUENCE
+========================================== */
 #boot-screen { position: fixed; inset: 0; background: #000; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s, visibility 1s; }
-.bios-text { position: absolute; top: 20px; left: 20px; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; opacity: 0.8; text-align: left; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
-.orion-logo { font-size: 5rem; font-weight: 900; letter-spacing: 20px; background: linear-gradient(90deg, #fff, var(--theme-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse 2s infinite; opacity: 0; transition: opacity 1s; }
-@keyframes pulse { 0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 10px var(--theme-accent-glow)); } 50% { opacity: 1; filter: drop-shadow(0 0 30px var(--theme-accent-glow)); } }
+.bios-text { position: absolute; top: 20px; left: 20px; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; opacity: 0.8; text-align: left; text-shadow: 0 0 5px rgba(255,255,255,0.5); line-height: 1.5; }
+.orion-logo { font-size: 6rem; font-weight: 900; letter-spacing: 25px; background: linear-gradient(90deg, #fff, var(--theme-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse 2s infinite; opacity: 0; transition: opacity 1s; }
+@keyframes pulse { 0%, 100% { filter: drop-shadow(0 0 10px var(--theme-accent-glow)); transform: scale(1); } 50% { filter: drop-shadow(0 0 30px var(--theme-accent-glow)); transform: scale(1.02); } }
 
-/* --- MAIN OS CORE --- */
+/* ==========================================
+   OS CORE UI
+========================================== */
 #os-core { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; opacity: 0; transition: opacity 1s ease-in; }
 
-/* Header */
-header { display: flex; justify-content: space-between; align-items: center; padding: 40px 60px; }
-.profile-card { display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 20px; border-radius: 20px; transition: 0.3s; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); }
-.profile-card:hover { background: var(--glass-hover); border-color: var(--theme-accent); transform: translateY(-2px); }
-.avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--theme-accent); box-shadow: 0 0 15px var(--theme-accent-glow); background: url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=150&q=80') center/cover; position: relative; }
-.status-dot { position: absolute; bottom: 0; right: 0; width: 15px; height: 15px; background: var(--success); border-radius: 50%; border: 3px solid var(--theme-bg); }
-.user-info h2 { font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-.badge { background: linear-gradient(45deg, #ffd700, #ff8c00); padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; color: #000; font-weight: 900; }
-.xp-container { width: 160px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 5px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); }
-.xp-fill { height: 100%; width: 45%; background: var(--theme-accent); box-shadow: 0 0 10px var(--theme-accent); transition: width 0.5s; }
+/* Header & Profile */
+header { display: flex; justify-content: space-between; align-items: center; padding: 40px 60px; z-index: 20; }
+.profile-card { display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 20px; border-radius: 20px; transition: 0.3s; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); }
+.profile-card:hover { background: var(--glass-hover); border-color: var(--theme-accent); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+.avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--theme-accent); box-shadow: 0 0 15px var(--theme-accent-glow); background: url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=200&q=80') center/cover; position: relative; }
+.status-dot { position: absolute; bottom: 2px; right: 2px; width: 16px; height: 16px; background: var(--success); border-radius: 50%; border: 3px solid var(--theme-bg); }
+.user-info h2 { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.badge { background: linear-gradient(45deg, #ff007c, #9d00ff); padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; color: #fff; font-weight: 900; letter-spacing: 1px; }
+.xp-container { width: 180px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); }
+.xp-fill { height: 100%; width: 0%; background: var(--theme-accent); box-shadow: 0 0 10px var(--theme-accent); transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
 
-.search-bar { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 25px; padding: 12px 25px; display: flex; align-items: center; gap: 15px; width: 300px; transition: 0.3s; }
-.search-bar:focus-within { border-color: var(--theme-accent); box-shadow: 0 0 20px var(--theme-accent-glow); background: rgba(0,0,0,0.4); }
-.search-bar input { background: transparent; border: none; outline: none; color: white; width: 100%; font-size: 1rem; }
+/* Search & Tools */
+.search-bar { background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 15px 30px; display: flex; align-items: center; gap: 15px; width: 350px; transition: 0.3s; }
+.search-bar:focus-within { border-color: var(--theme-accent); box-shadow: 0 0 25px var(--theme-accent-glow); background: rgba(0,0,0,0.6); width: 450px; }
+.search-bar input { background: transparent; border: none; color: white; width: 100%; font-size: 1.1rem; font-weight: 500; }
+.search-bar input::placeholder { color: var(--text-muted); }
 
-.top-tools { display: flex; gap: 25px; align-items: center; font-size: 1.4rem; color: var(--text-muted); }
-.tool-btn { cursor: pointer; transition: 0.3s; position: relative; padding: 10px; border-radius: 50%; }
-.tool-btn:hover, .tool-btn.active { color: var(--text-main); background: var(--glass-hover); text-shadow: 0 0 15px var(--theme-accent-glow); transform: scale(1.1); }
-.badge-count { position: absolute; top: 0; right: 0; background: var(--danger); color: #fff; font-size: 0.7rem; font-weight: 900; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--theme-bg); }
+.top-tools { display: flex; gap: 25px; align-items: center; font-size: 1.5rem; color: var(--text-muted); }
+.tool-btn { cursor: pointer; transition: 0.3s; position: relative; padding: 12px; border-radius: 50%; background: rgba(0,0,0,0.2); border: 1px solid transparent; }
+.tool-btn:hover { color: var(--text-main); background: var(--glass-hover); border-color: var(--glass-border); text-shadow: 0 0 15px var(--theme-accent-glow); transform: scale(1.1); }
+.badge-count { position: absolute; top: -2px; right: -2px; background: var(--danger); color: #fff; font-size: 0.75rem; font-weight: 900; padding: 2px 7px; border-radius: 12px; border: 2px solid var(--theme-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
 
-/* Carousel */
-.carousel-viewport { flex-grow: 1; display: flex; align-items: center; padding: 0 60px; overflow: hidden; position: relative; }
-.carousel-track { display: flex; gap: 50px; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
-.game-card { min-width: 340px; height: 500px; border-radius: 24px; position: relative; overflow: hidden; cursor: pointer; transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform-origin: center bottom; }
-.game-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 50%, transparent 100%); z-index: 1; transition: 0.5s; }
-.game-card.active { transform: scale(1.12) translateY(-25px); border-color: var(--theme-accent); box-shadow: 0 30px 60px var(--theme-accent-glow); z-index: 5; }
-.game-card:not(.active) { opacity: 0.5; filter: grayscale(60%) blur(2px); transform: scale(0.95); }
-.game-card.active::after { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%); }
+/* ==========================================
+   CAROUSEL ENGINE
+========================================== */
+.carousel-viewport { flex-grow: 1; display: flex; align-items: center; padding: 0 60px; overflow: hidden; position: relative; z-index: 15; perspective: 1000px; }
+.carousel-track { display: flex; gap: 40px; transition: transform 0.6s cubic-bezier(0.2, 1, 0.3, 1); padding: 50px 0; }
+.game-card { min-width: 360px; height: 520px; border-radius: 24px; position: relative; overflow: hidden; cursor: pointer; transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1); border: 1px solid var(--glass-border); box-shadow: 0 15px 50px rgba(0,0,0,0.6); transform-origin: center center; }
+.game-card::before { content: ''; position: absolute; inset: 0; border: 2px solid transparent; border-radius: 24px; transition: 0.5s; z-index: 3; }
+.game-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 40%, transparent 100%); z-index: 1; transition: 0.5s; }
 
-.game-bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; transition: transform 0.8s; }
-.game-card.active .game-bg { transform: scale(1.1); animation: panBg 20s infinite alternate linear; }
+.game-card.active { transform: scale(1.15) translateZ(50px); box-shadow: 0 30px 80px var(--theme-accent-glow); z-index: 10; }
+.game-card.active::before { border-color: var(--theme-accent); }
+.game-card:not(.active) { opacity: 0.4; filter: grayscale(70%) blur(3px); transform: scale(0.9) translateZ(-50px); }
+
+.game-bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; transition: transform 8s ease-out; }
+.game-card.active .game-bg { transform: scale(1.15); animation: panBg 20s infinite alternate linear; }
 @keyframes panBg { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
-.game-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px; z-index: 2; display: flex; flex-direction: column; gap: 10px; }
-.g-sub { font-size: 0.9rem; color: var(--theme-accent); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
-.g-title { font-size: 2.2rem; font-weight: 900; line-height: 1.1; text-shadow: 0 5px 20px rgba(0,0,0,0.8); }
-.g-stats { display: flex; gap: 15px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-top: 5px; }
-.g-actions { display: flex; gap: 12px; margin-top: 15px; opacity: 0; transform: translateY(10px); transition: all 0.4s; }
-.game-card.active .g-actions { opacity: 1; transform: translateY(0); }
-.btn-primary { flex-grow: 1; background: var(--text-main); color: #000; font-weight: 900; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.2s; box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
-.btn-primary:hover, .game-card.active .btn-primary.hover-sim { background: var(--theme-accent); transform: scale(1.05); box-shadow: 0 5px 20px var(--theme-accent-glow); }
-.btn-icon { background: var(--glass-bg); border: 1px solid var(--glass-border); color: #fff; padding: 14px 18px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 1.2rem; }
-.btn-icon:hover { background: rgba(255,51,102,0.2); border-color: var(--danger); color: var(--danger); }
+.game-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 35px; z-index: 2; display: flex; flex-direction: column; gap: 12px; }
+.g-sub { font-size: 0.95rem; color: var(--theme-accent); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+.g-title { font-size: 2.5rem; font-weight: 900; line-height: 1.05; text-shadow: 0 5px 20px rgba(0,0,0,0.9); }
+.g-stats { display: flex; gap: 20px; font-size: 0.9rem; color: #ddd; font-weight: 700; margin-top: 5px; }
+.g-actions { display: flex; gap: 15px; margin-top: 20px; opacity: 0; transform: translateY(20px); transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1); }
+.game-card.active .g-actions { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
 
-/* Footer */
-footer { display: flex; justify-content: space-between; align-items: center; padding: 30px 60px; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); }
-.hw-info { display: flex; gap: 20px; align-items: center; }
-.hw-item { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.4); padding: 8px 15px; border-radius: 10px; border: 1px solid var(--glass-border); }
-.btn-hints { display: flex; gap: 25px; }
-.hint { display: flex; align-items: center; gap: 10px; }
-.key { background: #fff; color: #000; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-family: 'JetBrains Mono'; box-shadow: 0 3px 0 rgba(0,0,0,0.3); }
+.btn-primary { flex-grow: 1; background: var(--text-main); color: #000; font-weight: 900; border: none; padding: 16px; border-radius: 14px; cursor: pointer; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 12px; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
+.btn-primary:hover, .btn-primary:active { background: var(--theme-accent); color: #fff; transform: scale(1.05); box-shadow: 0 8px 25px var(--theme-accent-glow); }
+.btn-icon { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); color: #fff; padding: 16px 20px; border-radius: 14px; cursor: pointer; transition: 0.3s; font-size: 1.3rem; }
+.btn-icon:hover { background: rgba(255,51,102,0.3); border-color: var(--danger); color: var(--danger); transform: scale(1.1); box-shadow: 0 0 15px rgba(255,51,102,0.5); }
 
-/* --- SIDE PANELS (Chat & AI) --- */
-.side-panel { position: fixed; top: 0; width: 420px; height: 100vh; background: var(--panel-bg); backdrop-filter: blur(30px); z-index: 100; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
-#chat-mesh { right: -450px; border-left: 1px solid var(--glass-border); }
+/* ==========================================
+   FOOTER & HARDWARE
+========================================== */
+footer { display: flex; justify-content: space-between; align-items: center; padding: 30px 60px; font-size: 1rem; font-weight: 700; color: var(--text-muted); z-index: 20; position: relative; }
+.hw-info { display: flex; gap: 25px; align-items: center; }
+.hw-item { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--glass-border); backdrop-filter: blur(10px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.btn-hints { display: flex; gap: 30px; }
+.hint { display: flex; align-items: center; gap: 12px; }
+.key { background: #fff; color: #000; padding: 6px 14px; border-radius: 8px; font-weight: 900; font-family: 'JetBrains Mono'; box-shadow: 0 4px 0 rgba(0,0,0,0.4); text-transform: uppercase; letter-spacing: 1px; }
+.key.green { background: var(--success); }
+.key.red { background: var(--danger); color: #fff; }
+
+/* ==========================================
+   CONTROL CENTER (ESC)
+========================================== */
+#control-center { position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); width: 90vw; max-width: 1200px; padding: 35px; border-radius: 35px 35px 0 0; z-index: 150; transition: bottom 0.5s cubic-bezier(0.2, 1, 0.3, 1); display: flex; justify-content: space-between; background: rgba(5,7,10,0.95); backdrop-filter: blur(50px); border: 1px solid var(--glass-border); border-bottom: none; box-shadow: 0 -15px 60px rgba(0,0,0,0.9); }
+#control-center.open { bottom: 0; }
+.cc-group { display: flex; gap: 20px; }
+.cc-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px 30px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: 0.3s; color: var(--text-muted); min-width: 110px; position: relative; overflow: hidden; }
+.cc-btn i { font-size: 2rem; transition: 0.3s; }
+.cc-btn span { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+.cc-btn::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--theme-accent); transform: scaleX(0); transition: 0.3s; }
+.cc-btn:hover, .cc-btn.active { background: var(--glass-hover); border-color: var(--theme-accent); color: var(--text-main); transform: translateY(-8px); box-shadow: 0 15px 30px var(--theme-accent-glow); }
+.cc-btn:hover i { transform: scale(1.2); color: var(--theme-accent); }
+.cc-btn:hover::before { transform: scaleX(1); }
+
+/* ==========================================
+   SIDE PANELS (Chat, AI)
+========================================== */
+.side-panel { position: fixed; top: 0; width: 450px; height: 100vh; background: var(--panel-bg); backdrop-filter: blur(40px); z-index: 200; transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: 0 0 60px rgba(0,0,0,0.9); }
+#chat-mesh { right: -500px; border-left: 1px solid var(--glass-border); }
 #chat-mesh.open { right: 0; }
-#ai-core { left: -450px; border-right: 1px solid var(--glass-border); }
+#ai-core { left: -500px; border-right: 1px solid var(--glass-border); }
 #ai-core.open { left: 0; }
 
-.p-head { padding: 25px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 1.3rem; }
-.p-body { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-.p-input { padding: 20px; border-top: 1px solid var(--glass-border); display: flex; gap: 10px; background: rgba(0,0,0,0.3); }
-.p-input input { flex-grow: 1; background: rgba(0,0,0,0.6); border: 1px solid var(--glass-border); padding: 15px 20px; border-radius: 15px; color: #fff; outline: none; font-size: 1rem; }
-.p-input input:focus { border-color: var(--theme-accent); }
-.p-input button { background: var(--theme-accent); border: none; width: 50px; height: 50px; border-radius: 15px; color: #000; cursor: pointer; font-size: 1.2rem; transition: 0.2s; font-weight: 900; }
-.p-input button:hover { transform: scale(1.1); box-shadow: 0 0 15px var(--theme-accent-glow); }
+.p-head { padding: 30px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 1.5rem; letter-spacing: 1px; }
+.p-body { flex-grow: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+.p-input { padding: 25px; border-top: 1px solid var(--glass-border); display: flex; gap: 15px; background: rgba(0,0,0,0.4); }
+.p-input input { flex-grow: 1; background: rgba(0,0,0,0.7); border: 1px solid var(--glass-border); padding: 18px 25px; border-radius: 20px; color: #fff; outline: none; font-size: 1.1rem; transition: 0.3s; }
+.p-input input:focus { border-color: var(--theme-accent); box-shadow: 0 0 15px var(--theme-accent-glow); }
+.p-input button { background: var(--theme-accent); border: none; width: 60px; height: 60px; border-radius: 20px; color: #fff; cursor: pointer; font-size: 1.5rem; transition: 0.3s; font-weight: 900; box-shadow: 0 5px 15px var(--theme-accent-glow); }
+.p-input button:hover { transform: scale(1.1) rotate(5deg); }
 
-/* Chat Bubbles */
-.msg { display: flex; flex-direction: column; max-width: 85%; }
-.msg.sys { align-self: center; color: var(--theme-accent); font-size: 0.85rem; font-weight: 700; text-align: center; margin: 10px 0; }
+.msg { display: flex; flex-direction: column; max-width: 85%; animation: slideIn 0.3s ease-out; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.msg.sys { align-self: center; color: var(--theme-accent); font-size: 0.9rem; font-weight: 800; text-align: center; margin: 15px 0; text-transform: uppercase; letter-spacing: 1px; }
 .msg.bot { align-self: flex-start; }
 .msg.me { align-self: flex-end; }
-.bubble { padding: 14px 18px; border-radius: 18px; font-size: 1rem; line-height: 1.4; }
-.bot .bubble { background: rgba(255,255,255,0.1); border-bottom-left-radius: 4px; border: 1px solid var(--glass-border); }
-.me .bubble { background: var(--theme-accent); color: #000; font-weight: 600; border-bottom-right-radius: 4px; }
-.sender { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; padding: 0 5px; font-weight: 700; }
+.bubble { padding: 16px 22px; border-radius: 20px; font-size: 1.05rem; line-height: 1.5; }
+.bot .bubble { background: rgba(255,255,255,0.08); border-bottom-left-radius: 4px; border: 1px solid var(--glass-border); }
+.me .bubble { background: var(--theme-accent); color: #fff; font-weight: 700; border-bottom-right-radius: 4px; box-shadow: 0 5px 15px var(--theme-accent-glow); }
+.sender { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; padding: 0 8px; font-weight: 800; text-transform: uppercase; }
 
-/* --- CONTROL CENTER (ESC Menu) --- */
-#control-center { position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); width: 85vw; max-width: 1000px; padding: 25px; border-radius: 30px 30px 0 0; border-bottom: none; z-index: 150; transition: bottom 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; justify-content: space-between; background: rgba(5,7,10,0.9); backdrop-filter: blur(40px); border: 1px solid var(--glass-border); box-shadow: 0 -10px 50px rgba(0,0,0,0.8); }
-#control-center.open { bottom: 0; }
-.cc-group { display: flex; gap: 15px; }
-.cc-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 15px 25px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s; color: var(--text-muted); min-width: 90px; }
-.cc-btn:hover, .cc-btn.active { background: var(--glass-hover); border-color: var(--theme-accent); color: var(--text-main); transform: translateY(-5px); box-shadow: 0 10px 20px var(--theme-accent-glow); }
-.cc-btn i { font-size: 1.6rem; }
-.cc-btn span { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
+/* ==========================================
+   APP WINDOWS & OVERLAYS
+========================================== */
+#app-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(30px); z-index: 300; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.4s; }
+#app-overlay.open { opacity: 1; pointer-events: all; }
+.app-window { width: 80vw; max-width: 1000px; height: 75vh; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 30px; display: flex; flex-direction: column; box-shadow: 0 20px 80px rgba(0,0,0,0.8); overflow: hidden; transform: scale(0.95); transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); }
+#app-overlay.open .app-window { transform: scale(1); }
+.app-header { padding: 25px 35px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); }
+.app-header h2 { font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 15px; }
+.close-app { background: rgba(255,51,102,0.2); color: var(--danger); border: 1px solid var(--danger); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; font-size: 1.2rem; }
+.close-app:hover { background: var(--danger); color: #fff; box-shadow: 0 0 15px var(--danger); transform: rotate(90deg); }
+.app-content { flex-grow: 1; position: relative; }
 
-/* --- DASHBOARD OVERLAY --- */
-#dashboard { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(25px); z-index: 200; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.4s; flex-direction: column; }
-#dashboard.open { opacity: 1; pointer-events: all; }
-.dash-grid { width: 90vw; max-width: 1400px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; padding: 40px; }
-.dash-card { padding: 30px; display: flex; flex-direction: column; justify-content: center; }
-.dash-card h3 { color: var(--theme-accent); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-.stat-large { font-size: 3.5rem; font-weight: 900; line-height: 1; }
-.stat-sub { color: var(--text-muted); font-weight: 600; margin-top: 5px; }
+/* Game iframe launcher */
+#game-iframe { width: 100%; height: 100%; border: none; background: #000; }
 
-/* --- GAME ENGINE OVERLAY --- */
-#game-overlay { position: fixed; inset: 0; background: #000; z-index: 300; display: none; flex-direction: column; align-items: center; justify-content: center; }
-#game-canvas { border: 2px solid var(--theme-accent); border-radius: 12px; box-shadow: 0 0 50px var(--theme-accent-glow); background: #0b111e; }
-.game-hud { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); text-align: center; color: #fff; text-shadow: 0 2px 10px #000; }
-.game-hud h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: 2px; }
-.game-hud p { font-size: 1.2rem; font-weight: 700; color: var(--theme-accent); }
-.exit-hint { position: absolute; bottom: 40px; color: var(--text-muted); font-weight: 700; font-size: 1.1rem; }
+/* Calculator UI */
+#calc-app { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 30px; height: 100%; background: #000; }
+#calc-display { grid-column: span 4; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px; font-size: 3rem; text-align: right; font-family: 'JetBrains Mono'; border: 1px solid var(--glass-border); margin-bottom: 15px; overflow: hidden; }
+.calc-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.8rem; font-weight: 700; border-radius: 15px; cursor: pointer; transition: 0.2s; }
+.calc-btn:hover { background: var(--glass-hover); transform: scale(1.05); }
+.calc-btn.op { background: var(--theme-accent); box-shadow: 0 5px 15px var(--theme-accent-glow); }
+.calc-btn.eq { background: var(--success); grid-column: span 2; }
 
-/* --- NOTIFICATIONS --- */
-#notif-hub { position: fixed; top: 30px; right: 30px; z-index: 1000; display: flex; flex-direction: column; gap: 15px; pointer-events: none; }
-.toast { background: var(--panel-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-left: 4px solid var(--theme-accent); padding: 18px 25px; border-radius: 12px; display: flex; align-items: center; gap: 20px; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 40px rgba(0,0,0,0.6); pointer-events: all; }
+/* Notes UI */
+#notes-app { display: flex; flex-direction: column; height: 100%; }
+#notes-area { flex-grow: 1; background: transparent; border: none; padding: 30px; color: #fff; font-size: 1.2rem; resize: none; font-family: 'JetBrains Mono'; line-height: 1.6; outline: none; }
+.notes-toolbar { padding: 20px 30px; border-top: 1px solid var(--glass-border); display: flex; justify-content: flex-end; background: rgba(0,0,0,0.3); }
+
+/* ==========================================
+   NOTIFICATIONS
+========================================== */
+#notif-hub { position: fixed; top: 40px; right: 40px; z-index: 9999; display: flex; flex-direction: column; gap: 20px; pointer-events: none; }
+.toast { background: var(--panel-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-left: 5px solid var(--theme-accent); padding: 20px 30px; border-radius: 16px; display: flex; align-items: center; gap: 25px; transform: translateX(120%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 50px rgba(0,0,0,0.8); pointer-events: all; }
 .toast.show { transform: translateX(0); }
-.toast-icon { font-size: 1.8rem; color: var(--theme-accent); }
-.toast-body h4 { font-size: 1.05rem; font-weight: 800; margin-bottom: 4px; }
-.toast-body p { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+.toast-icon { font-size: 2.2rem; color: var(--theme-accent); text-shadow: 0 0 15px var(--theme-accent-glow); }
+.toast-body h4 { font-size: 1.15rem; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+.toast-body p { font-size: 0.95rem; color: var(--text-muted); font-weight: 600; }
 </style>
 </head>
 <body>
 
-<!-- Boot Screen -->
+<!-- Bios / Boot Screen -->
 <div id="boot-screen">
     <div class="bios-text" id="bios"></div>
     <div class="orion-logo" id="logo">ORION OS</div>
 </div>
 
+<!-- Background Canvas -->
 <canvas id="ambient-canvas"></canvas>
 <div class="vignette"></div>
 
-<!-- Main UI -->
+<!-- Main UI Container -->
 <div id="os-core">
+    <!-- Top Bar -->
     <header>
-        <div class="profile-card" onclick="toggleDashboard()">
+        <div class="profile-card" onclick="uiAction('profile')">
             <div class="avatar"><div class="status-dot"></div></div>
             <div class="user-info">
                 <h2>phxntom <span class="badge">PRO</span></h2>
                 <div class="xp-container"><div class="xp-fill" id="ui-xp"></div></div>
-                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; font-weight: 700;" id="ui-level">Level 42 | 12,450 XP</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; font-weight: 800;" id="ui-level">Level 42 | 12,450 XP</div>
             </div>
         </div>
         
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search system, games, apps...">
+            <input type="text" placeholder="Search OS, Games, Apps, Users..." onkeypress="handleSearch(event)">
         </div>
 
         <div class="top-tools">
-            <div class="tool-btn" onclick="togglePanel('chat-mesh')">
-                <i class="fas fa-comment-dots"></i><div class="badge-count">3</div>
-            </div>
-            <div class="tool-btn" onclick="togglePanel('ai-core')">
-                <i class="fas fa-brain"></i>
-            </div>
-            <div class="tool-btn" onclick="forceSave()">
-                <i class="fas fa-cloud"></i>
-            </div>
-            <div class="tool-btn" id="clock" style="font-weight: 800; font-family: 'JetBrains Mono'; font-size: 1.1rem; padding: 0 10px;">00:00</div>
+            <div class="tool-btn" onclick="togglePanel('chat-mesh')"><i class="fas fa-comment-dots"></i><div class="badge-count" id="msg-badge">3</div></div>
+            <div class="tool-btn" onclick="togglePanel('ai-core')"><i class="fas fa-brain"></i></div>
+            <div class="tool-btn" onclick="uiAction('sync')"><i class="fas fa-cloud"></i></div>
+            <div class="tool-btn" id="clock" style="font-weight: 900; font-family: 'JetBrains Mono'; font-size: 1.2rem; padding: 0 15px; border:none; background:transparent;">00:00</div>
         </div>
     </header>
 
+    <!-- Games Carousel -->
     <div class="carousel-viewport">
         <div class="carousel-track" id="track">
-            <!-- Injected by JS -->
+            <!-- Injected by JavaScript Engine -->
         </div>
     </div>
 
+    <!-- Footer Bar -->
     <footer>
         <div class="hw-info">
+            <div class="hw-item"><i class="fas fa-microchip" style="color: var(--theme-accent);"></i> <span id="hw-chip">M-Series Ready</span></div>
             <div class="hw-item"><i class="fas fa-wifi" style="color: var(--success);"></i> ORION_NET_5G</div>
-            <div class="hw-item"><i class="fas fa-battery-three-quarters"></i> 84%</div>
-            <div class="hw-item"><i class="fas fa-microchip"></i> Alpha 0.2</div>
+            <div class="hw-item"><i class="fas fa-battery-full"></i> 100%</div>
         </div>
         <div class="btn-hints">
             <div class="hint"><span class="key">ESC</span> Control Center</div>
-            <div class="hint"><span class="key">ENTER</span> / <span class="key" style="background:#00ff88;">A</span> Launch</div>
-            <div class="hint"><span class="key">←</span> <span class="key">→</span> / <span class="key">D-PAD</span> Navigate</div>
+            <div class="hint"><span class="key green">ENTER</span> Launch</div>
+            <div class="hint"><span class="key">←</span> <span class="key">→</span> Navigate</div>
         </div>
     </footer>
 </div>
 
-<!-- Chat Mesh -->
+<!-- ==============================================================
+     MODALS & PANELS 
+=============================================================== -->
+
+<!-- Chat Panel -->
 <div id="chat-mesh" class="side-panel">
     <div class="p-head">
-        <span><i class="fas fa-hashtag"></i> general-chat</span>
+        <span><i class="fas fa-hashtag"></i> dev-logs</span>
         <i class="fas fa-times" style="cursor:pointer;" onclick="togglePanel('chat-mesh')"></i>
     </div>
     <div class="p-body" id="chat-box">
-        <div class="msg sys">Node Connected. End-to-End Encrypted.</div>
-        <div class="msg bot"><div class="sender">AdminBot [Lvl 99]</div><div class="bubble">Welcome to the Alpha 0.2 build, phxntom.</div></div>
+        <div class="msg sys">Node Connected. Encrypted via ORION.</div>
+        <div class="msg bot"><div class="sender">Admin [Lvl 99]</div><div class="bubble">Build 0.3 deployed. MacBooks arriving Aug 10th. Optimization verified.</div></div>
     </div>
     <div class="p-input">
-        <input type="text" id="chat-input" placeholder="Message #general..." onkeypress="handleChat(event)">
+        <input type="text" id="chat-input" placeholder="Message #dev-logs..." onkeypress="if(event.key==='Enter') sendChat()">
         <button onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
     </div>
 </div>
 
-<!-- AI Core -->
+<!-- AI Panel -->
 <div id="ai-core" class="side-panel">
     <div class="p-head" style="color: var(--theme-accent);">
-        <span><i class="fas fa-brain"></i> ORION AI Core</span>
+        <span><i class="fas fa-brain"></i> ORION AI</span>
         <i class="fas fa-times" style="cursor:pointer;" onclick="togglePanel('ai-core')"></i>
     </div>
     <div class="p-body" id="ai-box">
-        <div class="msg sys">System resources optimal.</div>
-        <div class="msg bot"><div class="sender">ORION OS</div><div class="bubble">I am active. Try asking me to "/play snake" or "/theme retro".</div></div>
+        <div class="msg sys">System AI Online.</div>
+        <div class="msg bot"><div class="sender">ORION</div><div class="bubble">I am your assistant. Type "/theme anime" or "/calc" or "/notes" to execute commands.</div></div>
     </div>
     <div class="p-input">
-        <input type="text" id="ai-input" placeholder="Command AI..." onkeypress="handleAI(event)">
+        <input type="text" id="ai-input" placeholder="Command line..." onkeypress="if(event.key==='Enter') sendAI()">
         <button onclick="sendAI()"><i class="fas fa-terminal"></i></button>
     </div>
 </div>
 
-<!-- Control Center -->
+<!-- Control Center (ESC) -->
 <div id="control-center">
     <div class="cc-group">
-        <div class="cc-btn active" onclick="closeModals()"><i class="fas fa-home"></i><span>Home</span></div>
-        <div class="cc-btn" onclick="launchApp('Games')"><i class="fas fa-gamepad"></i><span>Games</span></div>
-        <div class="cc-btn" onclick="launchApp('Media')"><i class="fas fa-music"></i><span>Media</span></div>
+        <div class="cc-btn active" onclick="closeAll()"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="cc-btn" onclick="openApp('notes')"><i class="fas fa-edit"></i><span>Notes</span></div>
+        <div class="cc-btn" onclick="openApp('calc')"><i class="fas fa-calculator"></i><span>Calc</span></div>
     </div>
     <div class="cc-group">
-        <div class="cc-btn" onclick="toggleTheme()"><i class="fas fa-paint-brush"></i><span>Theme</span></div>
+        <div class="cc-btn" onclick="cycleTheme()"><i class="fas fa-palette"></i><span id="theme-lbl">Theme</span></div>
         <div class="cc-btn" onclick="toggleFullscreen()"><i class="fas fa-expand"></i><span>Screen</span></div>
-        <div class="cc-btn"><i class="fas fa-volume-up"></i><span>Audio</span></div>
-        <div class="cc-btn"><i class="fas fa-cog"></i><span>Settings</span></div>
+        <div class="cc-btn" onclick="uiAction('vol')"><i class="fas fa-volume-up"></i><span>Vol 100%</span></div>
+        <div class="cc-btn" onclick="uiAction('settings')"><i class="fas fa-cog"></i><span>Settings</span></div>
     </div>
     <div class="cc-group">
-        <div class="cc-btn" onclick="powerOff()"><i class="fas fa-power-off" style="color:var(--danger);"></i><span>Power</span></div>
+        <div class="cc-btn" onclick="uiAction('power')"><i class="fas fa-power-off" style="color:var(--danger);"></i><span>Power</span></div>
     </div>
 </div>
 
-<!-- Dashboard Overlay -->
-<div id="dashboard">
-    <div class="dash-grid">
-        <div class="dash-card glass" style="grid-column: span 2;">
-            <h3><i class="fas fa-microchip"></i> System Performance</h3>
-            <div style="display:flex; justify-content:space-around; align-items:center;">
-                <div style="text-align:center;"><div class="stat-large">120</div><div class="stat-sub">FPS Lock</div></div>
-                <div style="text-align:center;"><div class="stat-large">28<span style="font-size:1.5rem">°C</span></div><div class="stat-sub">Core Temp</div></div>
-                <div style="text-align:center;"><div class="stat-large">4.2<span style="font-size:1.5rem">GB</span></div><div class="stat-sub">RAM Usage</div></div>
-            </div>
+<!-- Universal App Window Overlay -->
+<div id="app-overlay">
+    <div class="app-window">
+        <div class="app-header">
+            <h2 id="app-title"><i class="fas fa-cube"></i> Application</h2>
+            <div class="close-app" onclick="closeApp()"><i class="fas fa-times"></i></div>
         </div>
-        <div class="dash-card glass">
-            <h3><i class="fas fa-cloud-sun"></i> Local Weather</h3>
-            <div class="stat-large">72°F <i class="fas fa-sun" style="color:#ffd700;"></i></div>
-            <div class="stat-sub" style="margin-top:10px;">Clear. Perfect for gaming.</div>
-        </div>
-        <div class="dash-card glass">
-            <h3><i class="fas fa-book"></i> Tasks</h3>
-            <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; font-weight:600; font-size:1.05rem;">
-                <li><i class="far fa-circle"></i> Comp Sci Project</li>
-                <li><i class="far fa-check-circle" style="color:var(--success);"></i> Math Homework</li>
-            </ul>
-        </div>
-        <div class="dash-card glass" style="grid-column: span 4;">
-            <h3><i class="fas fa-trophy"></i> Achievement Unlocked</h3>
-            <div style="display:flex; gap:20px;">
-                <div style="background:rgba(255,215,0,0.1); border:1px solid #ffd700; padding:15px; border-radius:16px; display:flex; gap:15px; align-items:center;">
-                    <i class="fas fa-medal" style="color:#ffd700; font-size:2rem;"></i>
-                    <div><div style="font-weight:900; font-size:1.1rem;">Alpha Tester</div><div class="stat-sub">Booted OS v0.2</div></div>
-                </div>
-                <div style="background:rgba(0,242,254,0.1); border:1px solid #00f2fe; padding:15px; border-radius:16px; display:flex; gap:15px; align-items:center;">
-                    <i class="fas fa-gamepad" style="color:#00f2fe; font-size:2rem;"></i>
-                    <div><div style="font-weight:900; font-size:1.1rem;">First Blood</div><div class="stat-sub">Played a local game</div></div>
-                </div>
-            </div>
+        <div class="app-content" id="app-content-area">
+            <!-- Injected via JS -->
         </div>
     </div>
-    <div class="hint" style="margin-top:20px; font-size:1.2rem;"><span class="key">ESC</span> Close Dashboard</div>
 </div>
 
-<!-- Embedded Game Engine Overlay -->
-<div id="game-overlay">
-    <div class="game-hud">
-        <h1 id="gh-title">GAME_TITLE</h1>
-        <p id="gh-score">SCORE: 0</p>
-    </div>
-    <canvas id="game-canvas" width="800" height="500"></canvas>
-    <div class="exit-hint"><span class="key">ESC</span> ABORT MISSION & RETURN TO OS</div>
-</div>
-
+<!-- Notifications Hub -->
 <div id="notif-hub"></div>
 
+<!-- ==============================================================
+     JAVASCRIPT KERNEL 
+=============================================================== -->
 <script>
-// ==========================================
-// ORION OS KERNEL (JavaScript Core)
-// ==========================================
-
 // --- State Management ---
-const AppState = {
-    user: { xp: 12450, level: 42, name: 'phxntom' },
-    themes: ['default', 'cyberpunk', 'retro', 'anime', 'midnight'],
+const OS = {
+    user: { name: 'phxntom', level: 42, xp: 12450 },
+    themes: ['default', 'cyberpunk', 'anime', 'midnight', 'retro', 'forest', 'galaxy'],
     themeIdx: 0,
     games: [
-        { id: 'snake', title: "Python Protocol", sub: "Classic Snake Mod", bg: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80", prog: 100, time: "42h 10m", icon: "fa-bug" },
-        { id: 'pong', title: "Velocity Engine", sub: "Physics Sandbox", bg: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80", prog: 78, time: "24h 12m", icon: "fa-rocket" },
-        { id: 'locked1', title: "Emulator Hub", sub: "Offline Encrypted", bg: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80", prog: 0, time: "0h", icon: "fa-lock" },
-        { id: 'locked2', title: "Voxel Builder", sub: "3D Environment", bg: "https://images.unsplash.com/photo-1614285457768-646f65ca8548?w=800&q=80", prog: 12, time: "1h 30m", icon: "fa-cube" }
+        { id: 'cg_shell', title: 'Shell Shockers', sub: 'CrazyGames FPS', bg: 'https://images.crazygames.com/shellshockersio/20230811091523/shellshockersio-cover?auto=format%2Ccompress&q=75&cs=strip&ch=DPR&w=1200', type: 'iframe', url: 'https://www.crazygames.com/embed/shellshockersio' },
+        { id: 'cg_smash', title: 'Smash Karts', sub: 'CrazyGames Racing', bg: 'https://images.crazygames.com/smash-karts/20201019153549/smash-karts-cover?auto=format%2Ccompress&q=75&cs=strip&ch=DPR&w=1200', type: 'iframe', url: 'https://www.crazygames.com/embed/smash-karts' },
+        { id: 'sao', title: 'SAO: Hollow Realization', sub: 'RPG Module', bg: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&q=80', type: 'error', msg: 'Awaiting local ROM decryption.' },
+        { id: 'jjk', title: 'JJK: Cursed Clash', sub: 'Fighter Module', bg: 'https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=1200&q=80', type: 'error', msg: 'Cloud save sync required.' },
+        { id: 'drive', title: 'Drive-U-7 Hub', sub: 'Legacy unblocked', bg: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80', type: 'error', msg: 'Proxy bypassed. Link restricted by admin.' },
+        { id: 'nowgg', title: 'Roblox Engine', sub: 'Now.gg Cloud', bg: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=1200&q=80', type: 'error', msg: 'Now.gg embedding restricted via CORS.' }
     ],
-    currentIndex: 0,
-    activeEngine: null
+    currIdx: 0,
+    activeApp: null,
+    konami: [],
+    konamiCode: ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a']
 };
 
-// --- Audio Synthesizer (Web Audio API) ---
+// --- Web Audio API (Synthesizer) ---
 const actx = new (window.AudioContext || window.webkitAudioContext)();
 function sfx(type) {
     if (actx.state === 'suspended') actx.resume();
@@ -343,44 +366,43 @@ function sfx(type) {
     const now = actx.currentTime;
     
     if (type === 'boot') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(300, now + 1.5);
-        gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(0.15, now + 0.5); gain.gain.exponentialRampToValueAtTime(0.01, now + 2.5);
-        osc.start(now); osc.stop(now + 2.5);
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(400, now + 1.5);
+        gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(0.2, now + 0.5); gain.gain.exponentialRampToValueAtTime(0.01, now + 3);
+        osc.start(now); osc.stop(now + 3);
     } else if (type === 'nav') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
         gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
         osc.start(now); osc.stop(now + 0.1);
     } else if (type === 'select') {
-        osc.type = 'square'; osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(800, now + 0.15);
-        gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.type = 'square'; osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(900, now + 0.15);
+        gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
         osc.start(now); osc.stop(now + 0.15);
     } else if (type === 'toast') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.setValueAtTime(1200, now + 0.1);
-        gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-        osc.start(now); osc.stop(now + 0.3);
-    } else if (type === 'game_beep') {
-        osc.type = 'square'; osc.frequency.setValueAtTime(400, now);
-        gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-        osc.start(now); osc.stop(now + 0.1);
-    } else if (type === 'game_crash') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(40, now + 0.4);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.setValueAtTime(1200, now + 0.1); osc.frequency.setValueAtTime(1600, now + 0.2);
+        gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.start(now); osc.stop(now + 0.4);
+    } else if (type === 'error') {
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(50, now + 0.4);
         gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
         osc.start(now); osc.stop(now + 0.4);
+    } else if (type === 'easter') {
+        osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now+0.1); osc.frequency.setValueAtTime(1760, now+0.2);
+        gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now+1);
+        osc.start(now); osc.stop(now+1);
     }
 }
 
-// --- Boot Sequence & Init ---
+// --- Init & Boot ---
 window.onload = () => {
+    loadLocalData();
     renderCarousel();
     initBackground();
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    }, 1000);
+    setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), 1000);
 
     const logs = [
-        "ORION OS v0.2 Kernel load...", "Mounting Gamepad API drivers... [OK]", 
-        "Init Web Audio Synthesizer... [OK]", "Injecting Canvas Engines... [OK]",
-        "Bypassing proxies... [SUCCESS]", "Launching GUI..."
+        "ORION OS KERNEL v0.3", "Mounting file systems... [OK]", "Initializing Web Audio Synthesizer... [OK]", 
+        "Loading Gamepad Drivers... [OK]", "Bypassing network proxies... [OK]", "Loading User Config (phxntom)... [OK]", 
+        "Allocating memory for M-Series architecture... [OK]", "Executing GUI..."
     ];
     let l = document.getElementById('bios'), i = 0;
     let t = setInterval(() => {
@@ -392,411 +414,294 @@ window.onload = () => {
             setTimeout(() => {
                 document.getElementById('boot-screen').style.opacity = 0;
                 document.getElementById('os-core').style.opacity = 1;
-                setTimeout(() => { document.getElementById('boot-screen').style.display = 'none'; showToast("System Ready", "Welcome back, phxntom."); }, 1000);
+                setTimeout(() => { document.getElementById('boot-screen').style.display = 'none'; showToast("System Ready", "Welcome back, phxntom. Alpha 0.3 deployed."); }, 1000);
             }, 2000);
         }
-    }, 200);
-    
-    // Poll Gamepads
+    }, 150);
     setInterval(pollGamepad, 100);
 };
 
-// --- DOM Rendering ---
+// --- Storage ---
+function loadLocalData() {
+    let saved = localStorage.getItem('orion_save');
+    if(saved) {
+        let data = JSON.parse(saved);
+        OS.user = data.user;
+        OS.themeIdx = data.themeIdx || 0;
+        applyTheme();
+    }
+    updateUI();
+}
+function saveLocalData() {
+    localStorage.setItem('orion_save', JSON.stringify({user: OS.user, themeIdx: OS.themeIdx}));
+}
+
+// --- UI Rendering ---
 function renderCarousel() {
     const track = document.getElementById('track');
     track.innerHTML = '';
-    AppState.games.forEach((g, i) => {
-        let isLocked = g.id.startsWith('locked');
+    OS.games.forEach((g, i) => {
         track.innerHTML += `
             <div class="game-card ${i===0 ? 'active' : ''}" id="card-${i}" onclick="forceSelect(${i})">
                 <div class="game-bg" style="background-image: url('${g.bg}')"></div>
                 <div class="game-info">
-                    <div class="g-sub">${g.sub} <i class="fas ${g.icon}"></i></div>
+                    <div class="g-sub">${g.sub}</div>
                     <div class="g-title">${g.title}</div>
-                    <div class="xp-container" style="width:100%; height:5px; margin-top:8px;"><div class="xp-fill" style="width:${g.prog}%;"></div></div>
-                    <div class="g-stats"><span><i class="far fa-clock"></i> ${g.time}</span></div>
+                    <div class="g-stats"><span><i class="fas fa-star"></i> Featured</span> <span><i class="fas fa-gamepad"></i> Optimized</span></div>
                     <div class="g-actions">
-                        ${isLocked ? 
-                            `<button class="btn-primary" style="background:#333; color:#888; cursor:not-allowed;"><i class="fas fa-lock"></i> ENCRYPTED</button>` :
-                            `<button class="btn-primary"><i class="fas fa-play"></i> LAUNCH</button>`
-                        }
-                        <button class="btn-icon"><i class="far fa-heart"></i></button>
+                        <button class="btn-primary" onclick="launchGame(event, ${i})"><i class="fas fa-play"></i> LAUNCH</button>
+                        <button class="btn-icon" onclick="uiAction('fav', event)"><i class="far fa-heart"></i></button>
                     </div>
                 </div>
             </div>`;
     });
 }
-
-function updateUI() {
-    document.getElementById('ui-xp').style.width = ((AppState.user.xp % 1000) / 10) + '%';
-    document.getElementById('ui-level').innerText = `Level ${AppState.user.level} | ${AppState.user.xp.toLocaleString()} XP`;
-}
-
-// --- Navigation Logic ---
 function updateCarousel() {
     document.querySelectorAll('.game-card').forEach((c, i) => {
         c.classList.remove('active');
-        if(i === AppState.currentIndex) c.classList.add('active');
+        if(i === OS.currIdx) c.classList.add('active');
     });
-    const cardWidth = 390; // 340 width + 50 gap
-    document.getElementById('track').style.transform = `translateX(-${AppState.currentIndex * cardWidth}px)`;
+    const cardWidth = 400; // 360 + 40 gap
+    document.getElementById('track').style.transform = `translateX(-${OS.currIdx * cardWidth}px)`;
+}
+function updateUI() {
+    document.getElementById('ui-xp').style.width = ((OS.user.xp % 1000) / 10) + '%';
+    document.getElementById('ui-level').innerText = `Level ${OS.user.level} | ${OS.user.xp.toLocaleString()} XP`;
 }
 
+// --- Input & Navigation ---
 function moveNav(dir) {
     if (isModalOpen()) return;
-    if (dir === 1 && AppState.currentIndex < AppState.games.length - 1) {
-        AppState.currentIndex++; sfx('nav'); updateCarousel();
-    } else if (dir === -1 && AppState.currentIndex > 0) {
-        AppState.currentIndex--; sfx('nav'); updateCarousel();
-    }
+    if (dir === 1 && OS.currIdx < OS.games.length - 1) { OS.currIdx++; sfx('nav'); updateCarousel(); } 
+    else if (dir === -1 && OS.currIdx > 0) { OS.currIdx--; sfx('nav'); updateCarousel(); }
 }
-
 function forceSelect(idx) {
     if (isModalOpen()) return;
-    if (AppState.currentIndex !== idx) {
-        AppState.currentIndex = idx;
-        sfx('nav'); updateCarousel();
-    } else {
-        launchSelectedGame();
-    }
+    if (OS.currIdx !== idx) { OS.currIdx = idx; sfx('nav'); updateCarousel(); }
 }
-
-// Keyboard Input
 window.addEventListener('keydown', (e) => {
+    // Konami Code logic
+    OS.konami.push(e.key);
+    if(OS.konami.length > 10) OS.konami.shift();
+    if(OS.konami.join(',') === OS.konamiCode.join(',')) triggerEasterEgg();
+
     if (e.key === 'Escape') {
-        if (AppState.activeEngine) { stopEngine(); return; }
-        if (isModalOpen() && !document.getElementById('control-center').classList.contains('open')) { closeModals(); return; }
+        if (OS.activeApp) { closeApp(); return; }
+        if (isModalOpen() && !document.getElementById('control-center').classList.contains('open')) { closeAll(); return; }
         toggleCC(); sfx('select'); return;
     }
-    
-    if (isModalOpen() || AppState.activeEngine) return;
+    if (isModalOpen() || OS.activeApp) return;
 
     if (e.key === 'ArrowRight') moveNav(1);
     else if (e.key === 'ArrowLeft') moveNav(-1);
-    else if (e.key === 'Enter') launchSelectedGame();
+    else if (e.key === 'Enter') launchGame(null, OS.currIdx);
 });
 
-// Gamepad API Input
 let gpLocked = false;
 function pollGamepad() {
     const gps = navigator.getGamepads();
     if (!gps || !gps[0]) return;
     const gp = gps[0];
-    
-    if (isModalOpen() || AppState.activeEngine) {
+    if (isModalOpen() || OS.activeApp) {
         if (gp.buttons[1].pressed || gp.buttons[9].pressed) { // B or Options
-            if(!gpLocked) {
-                if (AppState.activeEngine) stopEngine();
-                else closeModals();
-                gpLocked = true; setTimeout(()=>gpLocked=false, 300);
-            }
+            if(!gpLocked) { if (OS.activeApp) closeApp(); else closeAll(); gpLocked = true; setTimeout(()=>gpLocked=false, 300); }
         }
         return;
     }
+    if (gp.axes[0] > 0.5 || gp.buttons[15].pressed) { if(!gpLocked) { moveNav(1); gpLocked = true; setTimeout(()=>gpLocked=false, 200); } }
+    else if (gp.axes[0] < -0.5 || gp.buttons[14].pressed) { if(!gpLocked) { moveNav(-1); gpLocked = true; setTimeout(()=>gpLocked=false, 200); } }
+    else if (gp.buttons[0].pressed) { if(!gpLocked) { launchGame(null, OS.currIdx); gpLocked = true; setTimeout(()=>gpLocked=false, 300); } }
+}
 
-    if (gp.axes[0] > 0.5 || gp.buttons[15].pressed) { // D-pad Right or Stick
-        if(!gpLocked) { moveNav(1); gpLocked = true; setTimeout(()=>gpLocked=false, 200); }
-    } else if (gp.axes[0] < -0.5 || gp.buttons[14].pressed) { // D-pad Left
-        if(!gpLocked) { moveNav(-1); gpLocked = true; setTimeout(()=>gpLocked=false, 200); }
-    } else if (gp.buttons[0].pressed) { // A / Cross
-        if(!gpLocked) { launchSelectedGame(); gpLocked = true; setTimeout(()=>gpLocked=false, 300); }
+// --- App / Game Launching ---
+function launchGame(e, idx) {
+    if(e) e.stopPropagation();
+    const g = OS.games[idx];
+    if(g.type === 'error') { sfx('error'); showToast("Launch Failed", g.msg); return; }
+    
+    sfx('select');
+    OS.activeApp = 'game';
+    document.getElementById('app-title').innerHTML = `<i class="fas fa-gamepad"></i> ${g.title} <span class="badge" style="margin-left:10px;">PLAYING</span>`;
+    document.getElementById('app-content-area').innerHTML = `<iframe id="game-iframe" src="${g.url}" allowfullscreen="true" scrolling="no"></iframe>`;
+    document.getElementById('app-overlay').classList.add('open');
+    addXP(50);
+}
+
+function openApp(appId) {
+    closeAll(); sfx('select'); OS.activeApp = appId;
+    const area = document.getElementById('app-content-area');
+    const overlay = document.getElementById('app-overlay');
+    
+    if(appId === 'calc') {
+        document.getElementById('app-title').innerHTML = `<i class="fas fa-calculator"></i> SuperCalc`;
+        area.innerHTML = `
+            <div id="calc-app">
+                <div id="calc-display">0</div>
+                <button class="calc-btn" onclick="calcPush('7')">7</button><button class="calc-btn" onclick="calcPush('8')">8</button><button class="calc-btn" onclick="calcPush('9')">9</button><button class="calc-btn op" onclick="calcPush('/')">/</button>
+                <button class="calc-btn" onclick="calcPush('4')">4</button><button class="calc-btn" onclick="calcPush('5')">5</button><button class="calc-btn" onclick="calcPush('6')">6</button><button class="calc-btn op" onclick="calcPush('*')">*</button>
+                <button class="calc-btn" onclick="calcPush('1')">1</button><button class="calc-btn" onclick="calcPush('2')">2</button><button class="calc-btn" onclick="calcPush('3')">3</button><button class="calc-btn op" onclick="calcPush('-')">-</button>
+                <button class="calc-btn" onclick="calcPush('C')">C</button><button class="calc-btn" onclick="calcPush('0')">0</button><button class="calc-btn op" onclick="calcPush('+')">+</button><button class="calc-btn eq" onclick="calcPush('=')">=</button>
+            </div>`;
+    } else if (appId === 'notes') {
+        let savedNote = localStorage.getItem('orion_notes') || "Start typing here...";
+        document.getElementById('app-title').innerHTML = `<i class="fas fa-edit"></i> Notes`;
+        area.innerHTML = `
+            <div id="notes-app">
+                <textarea id="notes-area" spellcheck="false">${savedNote}</textarea>
+                <div class="notes-toolbar"><button class="btn-primary" style="width:auto; padding:10px 20px; font-size:1rem;" onclick="saveNotes()"><i class="fas fa-save"></i> Save</button></div>
+            </div>`;
     }
+    overlay.classList.add('open');
+}
+function closeApp() {
+    sfx('select');
+    document.getElementById('app-overlay').classList.remove('open');
+    setTimeout(() => document.getElementById('app-content-area').innerHTML = '', 400);
+    OS.activeApp = null;
 }
 
-// --- Modals & Utilities ---
-function isModalOpen() {
-    return document.getElementById('control-center').classList.contains('open') || 
-           document.getElementById('chat-mesh').classList.contains('open') || 
-           document.getElementById('ai-core').classList.contains('open') ||
-           document.getElementById('dashboard').classList.contains('open');
+// Apps Logic
+let calcExp = "";
+function calcPush(val) {
+    sfx('nav');
+    const d = document.getElementById('calc-display');
+    if(val === 'C') { calcExp = ""; d.innerText = "0"; }
+    else if(val === '=') { try { calcExp = eval(calcExp).toString(); d.innerText = calcExp; addXP(10); } catch { d.innerText = "ERR"; calcExp = ""; sfx('error'); } }
+    else { calcExp += val; d.innerText = calcExp; }
 }
-function closeModals() {
-    ['control-center', 'chat-mesh', 'ai-core', 'dashboard'].forEach(id => {
-        document.getElementById(id).classList.remove('open');
-    });
+function saveNotes() {
+    sfx('toast');
+    let val = document.getElementById('notes-area').value;
+    localStorage.setItem('orion_notes', val);
+    showToast("Notes Saved", "Document stored in local storage.");
+    addXP(15);
 }
-function toggleCC() { const cc = document.getElementById('control-center'); if(cc.classList.contains('open')) cc.classList.remove('open'); else { closeModals(); cc.classList.add('open'); } }
-function toggleDashboard() { const d = document.getElementById('dashboard'); if(d.classList.contains('open')) d.classList.remove('open'); else { closeModals(); d.classList.add('open'); sfx('nav'); } }
-function togglePanel(id) { closeModals(); document.getElementById(id).classList.add('open'); sfx('select'); }
 
-function toggleTheme() {
-    AppState.themeIdx = (AppState.themeIdx + 1) % AppState.themes.length;
-    let t = AppState.themes[AppState.themeIdx];
+// --- General UI Actions ---
+function isModalOpen() { return document.getElementById('control-center').classList.contains('open') || document.getElementById('chat-mesh').classList.contains('open') || document.getElementById('ai-core').classList.contains('open'); }
+function closeAll() { ['control-center', 'chat-mesh', 'ai-core'].forEach(id => document.getElementById(id).classList.remove('open')); }
+function toggleCC() { const cc = document.getElementById('control-center'); if(cc.classList.contains('open')) cc.classList.remove('open'); else { closeAll(); cc.classList.add('open'); } }
+function togglePanel(id) { closeAll(); document.getElementById(id).classList.add('open'); sfx('select'); }
+
+function cycleTheme() {
+    OS.themeIdx = (OS.themeIdx + 1) % OS.themes.length;
+    applyTheme(); sfx('select'); saveLocalData();
+    showToast("System Setting", `Applied Theme: ${OS.themes[OS.themeIdx].toUpperCase()}`);
+}
+function applyTheme() {
+    let t = OS.themes[OS.themeIdx];
     if(t === 'default') document.documentElement.removeAttribute('data-theme');
     else document.documentElement.setAttribute('data-theme', t);
-    sfx('select'); showToast("System Preference", `Applied Theme: ${t.toUpperCase()}`);
+    document.getElementById('theme-lbl').innerText = t;
 }
 
-function showToast(title, msg) {
-    sfx('toast');
-    const hub = document.getElementById('notif-hub');
-    const t = document.createElement('div'); t.className = 'toast';
-    t.innerHTML = `<div class="toast-icon"><i class="fas fa-bell"></i></div><div class="toast-body"><h4>${title}</h4><p>${msg}</p></div>`;
-    hub.appendChild(t);
-    setTimeout(() => t.classList.add('show'), 10);
-    setTimeout(() => { t.classList.remove('show'); setTimeout(()=>t.remove(), 400); }, 4000);
+function uiAction(action, e) {
+    if(e) e.stopPropagation();
+    sfx('select');
+    if(action === 'fav') showToast("Added to Favorites", "Game pinned to profile.");
+    if(action === 'sync') showToast("Cloud Sync", "Profile and saves backed up to ORION servers.");
+    if(action === 'vol') showToast("Audio", "Volume adjusted via API.");
+    if(action === 'settings') showToast("Settings", "Deep settings menu locked in Alpha.");
+    if(action === 'profile') showToast("Profile", "phxntom's stats loaded.");
+    if(action === 'power') { document.body.style.opacity=0; setTimeout(()=>location.reload(), 1000); }
+}
+
+function toggleFullscreen() {
+    sfx('select');
+    if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); showToast("Display", "Fullscreen Enabled"); }
+    else if (document.exitFullscreen) { document.exitFullscreen(); showToast("Display", "Fullscreen Disabled"); }
 }
 
 function addXP(amount) {
-    AppState.user.xp += amount;
-    if (AppState.user.xp >= (AppState.user.level * 1000)) {
-        AppState.user.level++;
-        showToast("LEVEL UP!", `You are now Level ${AppState.user.level}.`);
-        sfx('boot'); // Big sound for level up
-    } else {
-        showToast("XP Gained", `+${amount} XP added to profile.`);
+    OS.user.xp += amount;
+    if (OS.user.xp >= (OS.user.level * 1000)) {
+        OS.user.level++;
+        showToast("LEVEL UP!", `You hit Level ${OS.user.level}. Legend.`);
+        sfx('boot'); 
     }
-    updateUI();
+    updateUI(); saveLocalData();
 }
 
-function launchApp(name) { sfx('select'); showToast("App Launched", `Opened ${name} module.`); }
-function forceSave() { sfx('select'); showToast("Cloud Sync", "Profile data backed up to ORION servers."); }
-function powerOff() { document.body.style.opacity = 0; setTimeout(()=> location.reload(), 1000); }
-function toggleFullscreen() {
-    if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); showToast("Display", "Fullscreen Enabled"); }
-    else if (document.exitFullscreen) { document.exitFullscreen(); showToast("Display", "Fullscreen Disabled"); }
-    sfx('select');
-}
+// --- Chat & AI Modules ---
+function handleSearch(e) { if(e.key === 'Enter') { sfx('select'); showToast("Search", "Global search indexing complete."); e.target.value = ''; e.target.blur(); } }
 
-// --- Chat & AI Logic ---
-function handleChat(e) { if(e.key === 'Enter') sendChat(); }
 function sendChat() {
-    const input = document.getElementById('chat-input'); const val = input.value.trim();
-    if(!val) return;
+    const input = document.getElementById('chat-input'); const val = input.value.trim(); if(!val) return;
     const box = document.getElementById('chat-box');
     box.innerHTML += `<div class="msg me"><div class="sender">phxntom</div><div class="bubble">${val}</div></div>`;
-    input.value = ''; box.scrollTop = box.scrollHeight;
-    setTimeout(() => {
-        box.innerHTML += `<div class="msg bot"><div class="sender">AdminBot</div><div class="bubble">Noted. Chat relay active.</div></div>`;
-        box.scrollTop = box.scrollHeight; sfx('nav');
-    }, 1000);
+    input.value = ''; box.scrollTop = box.scrollHeight; addXP(5);
+    setTimeout(() => { box.innerHTML += `<div class="msg bot"><div class="sender">Admin</div><div class="bubble">Acknowledged. Adding to dev log.</div></div>`; box.scrollTop = box.scrollHeight; sfx('nav'); }, 1000);
 }
 
-function handleAI(e) { if(e.key === 'Enter') sendAI(); }
 function sendAI() {
-    const input = document.getElementById('ai-input'); const val = input.value.trim().toLowerCase();
-    if(!val) return;
+    const input = document.getElementById('ai-input'); const val = input.value.trim().toLowerCase(); if(!val) return;
     const box = document.getElementById('ai-box');
     box.innerHTML += `<div class="msg me"><div class="sender">phxntom</div><div class="bubble">${val}</div></div>`;
     input.value = ''; box.scrollTop = box.scrollHeight;
     
     setTimeout(() => {
-        let res = "I process logic, but I didn't catch that command.";
-        if (val.includes('/play snake')) { res = "Booting Python Protocol now."; setTimeout(()=> { closeModals(); AppState.currentIndex=0; updateCarousel(); launchSelectedGame(); }, 1000); }
-        else if (val.includes('/theme')) { res = "Cycling theme matrix."; toggleTheme(); }
-        else if (val.includes('weather')) { res = "Sensors indicate 72°F and clear skies locally."; }
-        else if (val.includes('hello')) { res = "Hello phxntom. Ready for operations."; }
+        let res = "Command unverified. Try /calc, /notes, or /theme.";
+        if (val.includes('/theme')) { cycleTheme(); res = "Cycling visual matrix."; }
+        else if (val.includes('/calc')) { openApp('calc'); res = "Booting SuperCalc."; }
+        else if (val.includes('/notes')) { openApp('notes'); res = "Booting Text Editor."; }
         
-        box.innerHTML += `<div class="msg bot"><div class="sender">ORION OS</div><div class="bubble">${res}</div></div>`;
+        box.innerHTML += `<div class="msg bot"><div class="sender">ORION AI</div><div class="bubble">${res}</div></div>`;
         box.scrollTop = box.scrollHeight; sfx('toast');
-    }, 800);
+    }, 600);
 }
 
-// --- CANVAS BACKGROUND ---
+function showToast(title, msg) {
+    sfx('toast'); const hub = document.getElementById('notif-hub');
+    const t = document.createElement('div'); t.className = 'toast';
+    t.innerHTML = `<div class="toast-icon"><i class="fas fa-check-circle"></i></div><div class="toast-body"><h4>${title}</h4><p>${msg}</p></div>`;
+    hub.appendChild(t); setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => { t.classList.remove('show'); setTimeout(()=>t.remove(), 500); }, 4000);
+}
+
+function triggerEasterEgg() {
+    sfx('easter'); OS.konami = [];
+    showToast("SECRET UNLOCKED", "Konami Code accepted. Dev mode activated.");
+    document.documentElement.setAttribute('data-theme', 'cyberpunk');
+    document.getElementById('ambient-canvas').style.filter = 'hue-rotate(180deg) blur(5px)';
+    addXP(1000);
+}
+
+// --- Background Graphics ---
 function initBackground() {
-    const canvas = document.getElementById('ambient-canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById('ambient-canvas'); const ctx = canvas.getContext('2d');
     let w = canvas.width = window.innerWidth; let h = canvas.height = window.innerHeight;
     let particles = [];
     window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
 
-    for(let i=0; i<100; i++) {
-        particles.push({
-            x: Math.random() * w, y: Math.random() * h,
-            s: Math.random() * 2 + 0.5, v: Math.random() * 0.5 + 0.1
-        });
-    }
+    for(let i=0; i<120; i++) particles.push({ x: Math.random() * w, y: Math.random() * h, s: Math.random() * 2 + 0.5, v: Math.random() * 0.5 + 0.1 });
 
     function draw() {
         ctx.clearRect(0,0,w,h);
-        
-        // Dynamic glow based on theme
-        let themeColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-accent').trim() || '#00f2fe';
+        let themeColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-accent').trim() || '#0043ff';
         let grad = ctx.createRadialGradient(w/2, h, 0, w/2, h, h);
         
-        // Hex to RGBA hack for gradient
-        let rgb = "0, 242, 254";
-        if(themeColor === '#ff00ff') rgb = "255, 0, 255";
-        if(themeColor === '#ffb000') rgb = "255, 176, 0";
+        // CSS var to RGBA parse
+        let rgb = "0, 67, 255";
+        if(themeColor === '#ff007c') rgb = "255, 0, 124";
         if(themeColor === '#ff66b2') rgb = "255, 102, 178";
         if(themeColor === '#ffffff') rgb = "255, 255, 255";
+        if(themeColor === '#ffb000') rgb = "255, 176, 0";
+        if(themeColor === '#00ff66') rgb = "0, 255, 102";
+        if(themeColor === '#9d00ff') rgb = "157, 0, 255";
 
-        grad.addColorStop(0, `rgba(${rgb}, 0.15)`); grad.addColorStop(1, 'transparent');
+        grad.addColorStop(0, `rgba(${rgb}, 0.2)`); grad.addColorStop(1, 'transparent');
         ctx.fillStyle = grad; ctx.fillRect(0,0,w,h);
 
         ctx.fillStyle = '#fff';
         particles.forEach(p => {
             p.y -= p.v; p.x += Math.sin(p.y*0.01)*0.2;
             if(p.y < -10) { p.y = h+10; p.x = Math.random()*w; }
-            ctx.globalAlpha = Math.random()*0.5 + 0.2;
+            ctx.globalAlpha = Math.random()*0.5 + 0.1;
             ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
         });
         requestAnimationFrame(draw);
     }
     draw();
-}
-
-// ==========================================
-// EMBEDDED GAME ENGINES
-// ==========================================
-const cvs = document.getElementById('game-canvas');
-const ctx = cvs.getContext('2d');
-let gameLoopId, gameTicks = 0, score = 0;
-
-function launchSelectedGame() {
-    const g = AppState.games[AppState.currentIndex];
-    if (g.id.startsWith('locked')) {
-        sfx('game_crash'); showToast("Access Denied", "Module is encrypted and currently offline.");
-        return;
-    }
-    sfx('select'); showToast("Engine Boot", `Loading ${g.title}...`);
-    setTimeout(() => {
-        document.getElementById('os-core').style.display = 'none';
-        document.getElementById('game-overlay').style.display = 'flex';
-        document.getElementById('gh-title').innerText = g.title.toUpperCase();
-        document.getElementById('gh-score').innerText = "SCORE: 0";
-        
-        if (g.id === 'snake') startSnake();
-        if (g.id === 'pong') startPong();
-    }, 800);
-}
-
-function stopEngine() {
-    sfx('select');
-    cancelAnimationFrame(gameLoopId);
-    AppState.activeEngine = null;
-    document.getElementById('game-overlay').style.display = 'none';
-    document.getElementById('os-core').style.display = 'flex';
-    
-    // Add XP based on score
-    if(score > 0) addXP(score * 10);
-}
-
-// -- ENGINE 1: SNAKE --
-let snake, apple, dir, nextDir;
-function startSnake() {
-    AppState.activeEngine = 'snake';
-    snake = [{x: 400, y: 250}, {x: 380, y: 250}, {x: 360, y: 250}];
-    dir = {x: 20, y: 0}; nextDir = {x: 20, y: 0};
-    apple = spawnApple();
-    score = 0; gameTicks = 0;
-    
-    window.onkeydown = (e) => {
-        if(e.key === 'ArrowUp' && dir.y === 0) nextDir = {x: 0, y: -20};
-        if(e.key === 'ArrowDown' && dir.y === 0) nextDir = {x: 0, y: 20};
-        if(e.key === 'ArrowLeft' && dir.x === 0) nextDir = {x: -20, y: 0};
-        if(e.key === 'ArrowRight' && dir.x === 0) nextDir = {x: 20, y: 0};
-    };
-    snakeLoop();
-}
-function spawnApple() {
-    return { x: Math.floor(Math.random() * (cvs.width/20)) * 20, y: Math.floor(Math.random() * (cvs.height/20)) * 20 };
-}
-function snakeLoop() {
-    if(AppState.activeEngine !== 'snake') return;
-    gameTicks++;
-    if(gameTicks % 5 === 0) { // Speed controller
-        dir = nextDir;
-        let head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
-        
-        // Wall Collision
-        if(head.x < 0 || head.x >= cvs.width || head.y < 0 || head.y >= cvs.height) {
-            sfx('game_crash'); stopEngine(); return;
-        }
-        // Self Collision
-        for(let i=0; i<snake.length; i++) {
-            if(head.x === snake[i].x && head.y === snake[i].y) { sfx('game_crash'); stopEngine(); return; }
-        }
-
-        snake.unshift(head);
-        
-        // Apple logic
-        if(head.x === apple.x && head.y === apple.y) {
-            sfx('game_beep'); score += 10;
-            document.getElementById('gh-score').innerText = `SCORE: ${score}`;
-            apple = spawnApple();
-        } else {
-            snake.pop();
-        }
-    }
-
-    // Render
-    ctx.fillStyle = '#0b111e'; ctx.fillRect(0, 0, cvs.width, cvs.height); // BG
-    
-    // Grid
-    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-    for(let i=0; i<cvs.width; i+=20) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,cvs.height); ctx.stroke(); }
-    for(let i=0; i<cvs.height; i+=20) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(cvs.width,i); ctx.stroke(); }
-
-    ctx.fillStyle = '#ff3366'; ctx.fillRect(apple.x, apple.y, 20, 20); // Apple
-    
-    snake.forEach((s, i) => {
-        ctx.fillStyle = i === 0 ? '#00f2fe' : 'rgba(0, 242, 254, 0.7)';
-        ctx.fillRect(s.x+1, s.y+1, 18, 18);
-    });
-
-    gameLoopId = requestAnimationFrame(snakeLoop);
-}
-
-// -- ENGINE 2: VELOCITY PONG --
-let p1, ball;
-function startPong() {
-    AppState.activeEngine = 'pong';
-    p1 = { y: 200, w: 15, h: 100, dy: 0 };
-    ball = { x: 400, y: 250, r: 10, dx: 5, dy: 5 };
-    score = 0;
-    
-    window.onkeydown = (e) => {
-        if(e.key === 'ArrowUp') p1.dy = -8;
-        if(e.key === 'ArrowDown') p1.dy = 8;
-    };
-    window.onkeyup = (e) => {
-        if(e.key === 'ArrowUp' || e.key === 'ArrowDown') p1.dy = 0;
-    };
-    pongLoop();
-}
-function pongLoop() {
-    if(AppState.activeEngine !== 'pong') return;
-    
-    // Physics
-    p1.y += p1.dy;
-    if(p1.y < 0) p1.y = 0;
-    if(p1.y + p1.h > cvs.height) p1.y = cvs.height - p1.h;
-
-    ball.x += ball.dx; ball.y += ball.dy;
-
-    // Wall bounce top/bottom
-    if(ball.y - ball.r < 0 || ball.y + ball.r > cvs.height) { ball.dy *= -1; sfx('game_beep'); }
-    // Wall bounce right (AI side - unbeatable wall for score mode)
-    if(ball.x + ball.r > cvs.width) { ball.dx *= -1; sfx('game_beep'); }
-
-    // Paddle Hit
-    if(ball.x - ball.r < 30 + p1.w && ball.y > p1.y && ball.y < p1.y + p1.h) {
-        ball.dx *= -1;
-        ball.dx += (ball.dx > 0 ? 0.5 : -0.5); // Speed up
-        score += 5; document.getElementById('gh-score').innerText = `SCORE: ${score}`;
-        sfx('select');
-    }
-
-    // Missed
-    if(ball.x < 0) { sfx('game_crash'); stopEngine(); return; }
-
-    // Render
-    ctx.fillStyle = '#0b111e'; ctx.fillRect(0, 0, cvs.width, cvs.height);
-    
-    // Center line
-    ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.setLineDash([15, 15]);
-    ctx.beginPath(); ctx.moveTo(cvs.width/2, 0); ctx.lineTo(cvs.width/2, cvs.height); ctx.stroke(); ctx.setLineDash([]);
-
-    // Paddle & Ball (Neon)
-    ctx.shadowBlur = 15; ctx.shadowColor = '#00f2fe';
-    ctx.fillStyle = '#00f2fe'; ctx.fillRect(30, p1.y, p1.w, p1.h);
-    
-    ctx.shadowColor = '#ff3366'; ctx.fillStyle = '#ff3366';
-    ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2); ctx.fill();
-    ctx.shadowBlur = 0; // reset
-
-    gameLoopId = requestAnimationFrame(pongLoop);
 }
 </script>
 </body>
