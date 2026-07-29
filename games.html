@@ -1,341 +1,585 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS5 Pro Core - Admin: phxntom</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-        
-        body {
-            background: radial-gradient(circle at 50% 0%, #151b2b 0%, #05070a 100%);
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORION OS | Alpha 0.1</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
-        /* Ambient animated background grid */
-        .grid-bg {
-            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: 1; pointer-events: none;
-            animation: gridMove 20s linear infinite;
-        }
-        @keyframes gridMove { from { transform: translateY(0); } to { transform: translateY(50px); } }
+:root {
+    --theme-bg: #0b0e14;
+    --theme-accent: #00f2fe;
+    --theme-accent-glow: rgba(0, 242, 254, 0.4);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-hover: rgba(255, 255, 255, 0.08);
+    --text-main: #ffffff;
+    --text-muted: #8a99ad;
+    --panel-bg: rgba(11, 14, 20, 0.85);
+}
 
-        /* Navigation / HUD */
-        .top-nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 24px 48px; background: rgba(5, 7, 10, 0.6);
-            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 10;
-        }
+[data-theme="midnight"] { --theme-bg: #000000; --theme-accent: #ffffff; --theme-accent-glow: rgba(255,255,255,0.2); }
+[data-theme="cyberpunk"] { --theme-bg: #0d0221; --theme-accent: #ff00ff; --theme-accent-glow: rgba(255, 0, 255, 0.4); }
+[data-theme="retro"] { --theme-bg: #2b2b2b; --theme-accent: #ffb000; --theme-accent-glow: rgba(255, 176, 0, 0.4); }
 
-        .user-pill {
-            display: flex; align-items: center; gap: 12px;
-            background: rgba(0, 242, 254, 0.1); padding: 8px 20px;
-            border-radius: 30px; border: 1px solid rgba(0, 242, 254, 0.3);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
-        }
-        .avatar-dot { width: 12px; height: 12px; background: #00f2fe; border-radius: 50%; box-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe; }
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; font-family: 'Outfit', sans-serif; }
+::-webkit-scrollbar { display: none; }
 
-        /* Game Carousel */
-        .hub-content {
-            display: flex; flex-grow: 1; z-index: 10; padding: 40px 48px; gap: 40px;
-        }
+body { background: var(--theme-bg); color: var(--text-main); height: 100vh; overflow: hidden; transition: background 1s ease; }
 
-        .carousel { display: flex; gap: 32px; flex-grow: 1; overflow-x: auto; padding-bottom: 20px; align-items: center; }
-        .carousel::-webkit-scrollbar { display: none; }
+/* Effects & Particles */
+#ambient-canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+.vignette { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; box-shadow: inset 0 0 150px rgba(0,0,0,0.9); z-index: 1; pointer-events: none; }
+.glass-panel { background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-        .game-tile {
-            min-width: 320px; height: 460px;
-            background: linear-gradient(145deg, #161e31 0%, #0a0d14 100%);
-            border-radius: 20px; border: 1px solid rgba(255,255,255,0.08);
-            position: relative; cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            display: flex; flex-direction: column; justify-content: flex-end; padding: 36px; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+/* Boot Sequence */
+#boot-screen { position: fixed; inset: 0; background: #000; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1.5s ease-out, visibility 1.5s; }
+.bios-text { position: absolute; top: 20px; left: 20px; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; opacity: 0.7; text-align: left; }
+.orion-logo { font-size: 4rem; font-weight: 900; letter-spacing: 15px; background: linear-gradient(90deg, #fff, var(--theme-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse 2s infinite; opacity: 0; transition: opacity 1s; }
+.boot-particles { position: absolute; inset: 0; background: radial-gradient(circle, var(--theme-accent-glow) 0%, transparent 50%); opacity: 0; transition: opacity 2s; }
 
-        .game-tile::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, rgba(0,242,254,0.2), transparent); opacity: 0; transition: 0.4s;
-        }
+/* Main UI */
+#os-core { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; opacity: 0; transition: opacity 2s ease-in; }
 
-        .game-tile:hover {
-            transform: translateY(-12px) scale(1.03); border-color: #00f2fe;
-            box-shadow: 0 25px 50px rgba(0, 242, 254, 0.25);
-        }
-        .game-tile:hover::after { opacity: 1; }
+/* Top Bar */
+header { display: flex; justify-content: space-between; align-items: center; padding: 40px 60px; }
+.profile-section { display: flex; align-items: center; gap: 20px; cursor: pointer; padding: 10px 20px; border-radius: 20px; transition: 0.3s; }
+.profile-section:hover { background: var(--glass-hover); }
+.avatar { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--theme-accent); box-shadow: 0 0 15px var(--theme-accent-glow); background: url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=150&q=80') center/cover; position: relative; }
+.status-dot { position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; background: #00ff88; border-radius: 50%; border: 2px solid var(--theme-bg); }
+.user-info h2 { font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.badge { background: linear-gradient(45deg, #ffd700, #ff8c00); padding: 2px 8px; border-radius: 8px; font-size: 0.7rem; color: #000; font-weight: 900; }
+.xp-bar-container { width: 150px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 5px; overflow: hidden; }
+.xp-fill { height: 100%; width: 75%; background: var(--theme-accent); box-shadow: 0 0 10px var(--theme-accent); }
+.top-icons { display: flex; gap: 25px; align-items: center; font-size: 1.2rem; color: var(--text-muted); }
+.icon-btn { cursor: pointer; transition: 0.3s; position: relative; }
+.icon-btn:hover { color: var(--text-main); transform: scale(1.1); text-shadow: 0 0 10px var(--theme-accent-glow); }
+.icon-badge { position: absolute; top: -5px; right: -8px; background: #ff3366; color: #fff; font-size: 0.6rem; font-weight: 700; padding: 2px 5px; border-radius: 10px; }
+.search-bar { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 10px 20px; display: flex; align-items: center; gap: 10px; width: 250px; color: var(--text-muted); }
+.search-bar input { background: transparent; border: none; outline: none; color: white; width: 100%; font-family: 'Outfit'; }
 
-        .game-title { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; z-index: 2; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .game-sub { font-size: 0.9rem; color: #00f2fe; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; z-index: 2; }
+/* Carousel */
+.carousel-wrapper { flex-grow: 1; display: flex; align-items: center; padding: 0 60px; overflow-x: visible; position: relative; }
+.carousel { display: flex; gap: 40px; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.game-card { min-width: 320px; height: 480px; border-radius: 24px; position: relative; overflow: hidden; cursor: pointer; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transform-origin: center bottom; }
+.game-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%); z-index: 1; }
+.game-card.active { transform: scale(1.15) translateY(-20px); border-color: var(--theme-accent); box-shadow: 0 25px 60px var(--theme-accent-glow); z-index: 5; }
+.game-card:not(.active) { opacity: 0.6; filter: grayscale(40%); }
+.game-bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; transition: transform 0.5s; }
+.game-card.active .game-bg { transform: scale(1.1); animation: pan 15s infinite alternate linear; }
+.game-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px; z-index: 2; display: flex; flex-direction: column; gap: 8px; }
+.game-logo { font-size: 2rem; font-weight: 900; line-height: 1; text-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+.game-meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--theme-accent); font-weight: 700; letter-spacing: 1px; }
+.game-stats { display: flex; gap: 15px; font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; }
+.action-row { display: flex; gap: 10px; margin-top: 15px; opacity: 0; transition: opacity 0.3s; }
+.game-card.active .action-row { opacity: 1; }
+.play-btn { flex-grow: 1; background: var(--text-main); color: #000; font-weight: 800; border: none; padding: 12px; border-radius: 12px; cursor: pointer; font-size: 1rem; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+.play-btn:hover { background: var(--theme-accent); transform: scale(1.05); }
+.fav-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: #fff; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+.fav-btn:hover { background: rgba(255,51,102,0.2); border-color: #ff3366; color: #ff3366; }
 
-        /* Local Chat & Log */
-        .side-panel {
-            width: 380px; background: rgba(16, 22, 35, 0.8); border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column;
-            backdrop-filter: blur(10px); overflow: hidden;
-        }
-        .panel-header { padding: 16px 24px; background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 600; font-size: 0.9rem; color: #8a99ad; letter-spacing: 1px; }
-        .chat-box { padding: 20px; flex-grow: 1; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #d1d5db; display: flex; flex-direction: column; gap: 10px; }
-        .chat-input-wrapper { padding: 16px; background: rgba(0,0,0,0.6); border-top: 1px solid rgba(255,255,255,0.05); display: flex; }
-        .chat-input { width: 100%; background: transparent; border: none; outline: none; color: white; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
-        
-        .sys-msg { color: #00f2fe; }
-        .user-msg { color: #fff; }
+@keyframes pan { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
-        /* Game Arena */
-        #arena {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(5, 7, 10, 0.95); backdrop-filter: blur(15px); z-index: 100;
-            flex-direction: column; align-items: center; justify-content: center;
-        }
+/* Footer Prompts */
+footer { display: flex; justify-content: space-between; padding: 30px 60px; font-size: 0.9rem; font-weight: 500; color: var(--text-muted); }
+.controls { display: flex; gap: 20px; }
+.key-prompt { display: flex; align-items: center; gap: 8px; }
+.key { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 6px; color: #fff; font-weight: 700; font-family: 'JetBrains Mono'; box-shadow: 0 4px 0 rgba(0,0,0,0.5); }
+.network-status { display: flex; align-items: center; gap: 10px; }
 
-        canvas {
-            border: 2px solid rgba(0, 242, 254, 0.4); border-radius: 16px;
-            box-shadow: 0 0 80px rgba(0, 242, 254, 0.15), inset 0 0 40px rgba(0,242,254,0.05);
-            background: #0b111e;
-        }
+/* Control Center Modal (ESC) */
+#control-center { position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); width: 90vw; max-width: 1200px; padding: 30px; border-radius: 30px 30px 0 0; border-bottom: none; z-index: 100; transition: bottom 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; align-items: center; }
+#control-center.open { bottom: 0; }
+.cc-item { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 20px 10px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; transition: 0.2s; color: var(--text-muted); }
+.cc-item:hover, .cc-item.active { background: rgba(255,255,255,0.1); border-color: var(--theme-accent); color: var(--text-main); transform: translateY(-5px); box-shadow: 0 10px 20px var(--theme-accent-glow); }
+.cc-item i { font-size: 1.5rem; }
+.cc-item span { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
 
-        .hud-overlay { position: absolute; top: 40px; font-size: 1.5rem; font-weight: 800; letter-spacing: 3px; color: #fff; text-shadow: 0 0 15px #00f2fe; text-align: center; }
-        .hud-sub { font-size: 1rem; color: #8a99ad; margin-top: 8px; font-weight: 600; }
+/* Sidebar Panels (Chat Mesh & AI Core) */
+.side-panel { position: fixed; top: 0; width: 400px; height: 100vh; background: var(--panel-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); z-index: 50; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; }
+#chat-mesh { right: -420px; border-left: 1px solid var(--glass-border); }
+#chat-mesh.open { right: 0; box-shadow: -20px 0 50px rgba(0,0,0,0.5); }
+#ai-core { left: -420px; border-right: 1px solid var(--glass-border); }
+#ai-core.open { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.5); }
+.panel-header { padding: 25px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.2rem; }
+.panel-content { flex-grow: 1; padding: 20px; overflow-y: auto; }
+.panel-input { padding: 20px; border-top: 1px solid var(--glass-border); display: flex; gap: 10px; }
+.panel-input input { flex-grow: 1; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); padding: 12px 20px; border-radius: 20px; color: #fff; outline: none; }
+.panel-input button { background: var(--theme-accent); border: none; width: 45px; height: 45px; border-radius: 50%; color: #000; cursor: pointer; }
 
-        .close-btn {
-            margin-top: 30px; padding: 14px 40px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 8px;
-            font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.3s;
-        }
-        .close-btn:hover { background: #ff3366; border-color: #ff3366; box-shadow: 0 0 20px rgba(255, 51, 102, 0.4); transform: scale(1.05); }
+/* Chat Bubbles */
+.chat-msg { margin-bottom: 15px; display: flex; flex-direction: column; }
+.chat-msg.sys { align-items: center; color: var(--theme-accent); font-size: 0.8rem; font-weight: 700; }
+.chat-msg.other { align-items: flex-start; }
+.chat-msg.self { align-items: flex-end; }
+.bubble { padding: 12px 18px; border-radius: 18px; max-width: 80%; font-size: 0.95rem; }
+.other .bubble { background: rgba(255,255,255,0.1); border-bottom-left-radius: 4px; }
+.self .bubble { background: var(--theme-accent); color: #000; font-weight: 500; border-bottom-right-radius: 4px; }
+.sender { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; padding: 0 10px; }
 
-    </style>
+/* Dashboard Modal */
+#dashboard-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 200; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.4s; }
+#dashboard-overlay.open { opacity: 1; pointer-events: all; }
+.dash-grid { width: 90vw; height: 85vh; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); gap: 20px; padding: 20px; }
+.dash-card { border-radius: 24px; padding: 25px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.dash-card h3 { color: var(--theme-accent); font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+.span-2 { grid-column: span 2; }
+.span-row-2 { grid-row: span 2; }
+
+/* Notification Toast */
+#notif-container { position: fixed; top: 40px; right: 40px; z-index: 1000; display: flex; flex-direction: column; gap: 15px; }
+.toast { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 15px 20px; border-radius: 16px; display: flex; align-items: center; gap: 15px; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.toast.show { transform: translateX(0); }
+.toast-icon { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--theme-accent); font-size: 1.2rem; }
+.toast-text h4 { font-size: 0.9rem; }
+.toast-text p { font-size: 0.8rem; color: var(--text-muted); }
+
+/* Loader */
+.spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--theme-accent); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </head>
 <body>
-    <div class="grid-bg"></div>
 
-    <div class="top-nav">
-        <div class="user-pill">
-            <div class="avatar-dot"></div>
-            <span style="font-weight: 800; font-size: 1rem; letter-spacing: 1px;">phxntom</span>
-            <span style="color: #00f2fe; margin-left: 8px; font-size: 0.8rem;">[ADMIN]</span>
-        </div>
-        <div style="display: flex; gap: 30px; align-items: center;">
-            <div style="font-size: 0.85rem; color: #ff3366; font-weight: 600; letter-spacing: 1px;">ESC: PANIC MODE ACTIVE</div>
-            <div id="system-clock" style="font-weight: 600; color: #8a99ad; font-family: 'JetBrains Mono', monospace;">00:00:00</div>
-        </div>
-    </div>
+<!-- Boot Sequence -->
+<div id="boot-screen">
+    <div class="bios-text" id="bios-log"></div>
+    <div class="boot-particles" id="boot-glow"></div>
+    <div class="orion-logo" id="boot-logo">ORION OS</div>
+</div>
 
-    <div class="hub-content">
-        <div class="carousel">
-            <div class="game-tile" onclick="bootGame()">
-                <div class="game-sub">High-Speed Engine v2.0</div>
-                <div class="game-title">Project Velocity</div>
-                <div style="color: #8a99ad; font-size: 0.9rem; margin-top: 10px;">[AUDIO ACTIVE]</div>
-            </div>
-            <div class="game-tile" style="opacity: 0.5; cursor: not-allowed;">
-                <div class="game-sub" style="color: #ff3366;">Offline / Encrypted</div>
-                <div class="game-title">Domain Matrix</div>
-            </div>
-            <div class="game-tile" style="opacity: 0.5; cursor: not-allowed;">
-                <div class="game-sub" style="color: #ff3366;">Offline / Encrypted</div>
-                <div class="game-title">Neural Link</div>
+<canvas id="ambient-canvas"></canvas>
+<div class="vignette"></div>
+
+<!-- Core OS Interface -->
+<div id="os-core">
+    <!-- Top Header -->
+    <header>
+        <div class="profile-section" onclick="toggleModal('dashboard-overlay')">
+            <div class="avatar"><div class="status-dot"></div></div>
+            <div class="user-info">
+                <h2>phxntom <span class="badge">PRO</span></h2>
+                <div class="xp-bar-container"><div class="xp-fill"></div></div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Level 42 | 12,450 XP</div>
             </div>
         </div>
-
-        <div class="side-panel">
-            <div class="panel-header">SECURE LOCAL COMMS (ZERO LEAK)</div>
-            <div class="chat-box" id="chat-box">
-                <div class="sys-msg">[SYSTEM] Strict Node Filter Active.</div>
-                <div class="sys-msg">[SYSTEM] Welcome, phxntom. No data leaves this device.</div>
-            </div>
-            <div class="chat-input-wrapper">
-                <input type="text" class="chat-input" id="chat-input" placeholder="Test the chat censor..." autocomplete="off">
-            </div>
-        </div>
-    </div>
-
-    <!-- Gameplay Overlay Arena -->
-    <div id="arena">
-        <div class="hud-overlay">
-            <div id="score-display">SCORE: 0</div>
-            <div class="hud-sub" id="high-score-display">HIGH SCORE: 0</div>
-        </div>
-        <canvas id="c" width="900" height="450"></canvas>
-        <button class="close-btn" onclick="shutdownGame()">ABORT & RETURN</button>
-    </div>
-
-    <script>
-        // --- 1. ESC PANIC KEY (Rock Solid) ---
-        window.addEventListener('keydown', e => {
-            if (e.key === 'Escape') {
-                window.location.href = 'index.html'; // BOOM. Gone.
-            }
-        });
-
-        // --- 2. CLOCK & HIGH SCORE INIT ---
-        setInterval(() => { document.getElementById('system-clock').innerText = new Date().toLocaleTimeString(); }, 1000);
-        let highScore = localStorage.getItem('phxntom_highscore') || 0;
         
-        // --- 3. STRICT CHAT SANITIZATION (The Filter) ---
-        const chatInput = document.getElementById('chat-input');
-        const chatBox = document.getElementById('chat-box');
-        const blockedSlurs = ["dick", "cock", "fuck", "shit", "cum", "nigga", "nyicuh", "nigger", "niggerete"];
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search games, homework, AI...">
+        </div>
+
+        <div class="top-icons">
+            <div class="icon-btn" onclick="togglePanel('chat-mesh')"><i class="fas fa-comment-dots"></i><div class="icon-badge">3</div></div>
+            <div class="icon-btn" onclick="togglePanel('ai-core')"><i class="fas fa-brain"></i></div>
+            <div class="icon-btn" onclick="showToast('Cloud Save', 'All data synced to ORION servers.')"><i class="fas fa-cloud"></i></div>
+            <div class="icon-btn" id="clock-display" style="font-weight: 700; font-family: 'JetBrains Mono'; font-size: 1rem;">12:00 AM</div>
+        </div>
+    </header>
+
+    <!-- Main Carousel -->
+    <div class="carousel-wrapper">
+        <div class="carousel" id="game-carousel">
+            <!-- Populated via JS -->
+        </div>
+    </div>
+
+    <!-- Footer Controls -->
+    <footer>
+        <div class="network-status">
+            <i class="fas fa-wifi" style="color: #00ff88;"></i> ORION_SECURE_NET | <i class="fas fa-battery-three-quarters"></i> 84%
+        </div>
+        <div class="controls">
+            <div class="key-prompt"><span class="key">ESC</span> Control Center</div>
+            <div class="key-prompt"><span class="key">ENTER</span> Launch</div>
+            <div class="key-prompt"><span class="key">←</span> <span class="key">→</span> Navigate</div>
+        </div>
+    </footer>
+</div>
+
+<!-- Control Center Modal -->
+<div id="control-center" class="glass-panel">
+    <div class="cc-item active"><i class="fas fa-gamepad"></i><span>Games</span></div>
+    <div class="cc-item"><i class="fas fa-music"></i><span>Media</span></div>
+    <div class="cc-item"><i class="fas fa-user-friends"></i><span>Social</span></div>
+    <div class="cc-item"><i class="fas fa-download"></i><span>Downloads</span></div>
+    <div class="cc-item"><i class="fas fa-trophy"></i><span>Trophies</span></div>
+    <div class="cc-item" onclick="cycleTheme()"><i class="fas fa-paint-brush"></i><span>Theme</span></div>
+    <div class="cc-item"><i class="fas fa-tachometer-alt"></i><span>Boost</span></div>
+    <div class="cc-item"><i class="fas fa-cog"></i><span>Settings</span></div>
+    <div class="cc-item" onclick="toggleCC()"><i class="fas fa-power-off" style="color:#ff3366;"></i><span>Sleep</span></div>
+</div>
+
+<!-- Chat Mesh Panel -->
+<div id="chat-mesh" class="side-panel">
+    <div class="panel-header">
+        <span><i class="fas fa-hashtag"></i> general-chat</span>
+        <i class="fas fa-times" style="cursor:pointer;" onclick="togglePanel('chat-mesh')"></i>
+    </div>
+    <div class="panel-content" id="chat-content">
+        <div class="chat-msg sys"><div class="bubble">Connection encrypted. School-safe mode active.</div></div>
+        <div class="chat-msg other">
+            <div class="sender">AdminBot [Lvl 99]</div>
+            <div class="bubble">Welcome back, phxntom.</div>
+        </div>
+    </div>
+    <div class="panel-input">
+        <input type="text" placeholder="Message #general...">
+        <button><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<!-- AI Core Panel -->
+<div id="ai-core" class="side-panel">
+    <div class="panel-header" style="color: var(--theme-accent);">
+        <span><i class="fas fa-brain"></i> ORION Intelligence</span>
+        <i class="fas fa-times" style="cursor:pointer;" onclick="togglePanel('ai-core')"></i>
+    </div>
+    <div class="panel-content" id="ai-content">
+        <div class="chat-msg sys"><div class="bubble">System resources optimal. How can I assist with your workflow today?</div></div>
+    </div>
+    <div class="panel-input">
+        <input type="text" placeholder="Ask AI to launch games, solve math...">
+        <button><i class="fas fa-microphone"></i></button>
+    </div>
+</div>
+
+<!-- Dashboard Modal -->
+<div id="dashboard-overlay">
+    <div class="dash-grid">
+        <div class="dash-card glass-panel span-2 span-row-2">
+            <h3><i class="fas fa-chart-line"></i> Performance Dashboard</h3>
+            <div style="display:flex; justify-content:space-around; align-items:center; height:100%;">
+                <div style="text-align:center;"><div style="font-size:3rem; font-weight:900;">120</div><div style="color:var(--text-muted);">FPS Target</div></div>
+                <div style="text-align:center;"><div style="font-size:3rem; font-weight:900;">24<span style="font-size:1rem;">°C</span></div><div style="color:var(--text-muted);">System Temp</div></div>
+                <div style="text-align:center;"><div style="font-size:3rem; font-weight:900;">4.2<span style="font-size:1rem;">GB</span></div><div style="color:var(--text-muted);">RAM Usage</div></div>
+            </div>
+        </div>
+        <div class="dash-card glass-panel">
+            <h3><i class="fas fa-cloud-sun"></i> Weather Core</h3>
+            <div style="font-size: 2.5rem; font-weight: 700;">72°F <i class="fas fa-sun" style="color:#ffd700;"></i></div>
+            <p style="color:var(--text-muted); margin-top:10px;">Clear skies. Perfect for gaming.</p>
+        </div>
+        <div class="dash-card glass-panel">
+            <h3><i class="fas fa-book"></i> Homework Sync</h3>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:0.9rem;">
+                <li><i class="far fa-circle"></i> Math: Algebra Pg 42</li>
+                <li><i class="far fa-check-circle" style="color:#00ff88;"></i> History Essay</li>
+                <li><i class="far fa-circle"></i> Science Lab Report</li>
+            </ul>
+        </div>
+        <div class="dash-card glass-panel span-2">
+            <h3><i class="fas fa-trophy"></i> Recent Achievements</h3>
+            <div style="display:flex; gap:15px; margin-top:10px;">
+                <div style="background:rgba(255,215,0,0.1); border:1px solid #ffd700; padding:10px; border-radius:12px; display:flex; gap:10px; align-items:center;">
+                    <i class="fas fa-medal" style="color:#ffd700; font-size:1.5rem;"></i>
+                    <div><div style="font-weight:700; font-size:0.9rem;">First Blood</div><div style="font-size:0.7rem; color:var(--text-muted);">FPS Demo</div></div>
+                </div>
+                <div style="background:rgba(0,242,254,0.1); border:1px solid #00f2fe; padding:10px; border-radius:12px; display:flex; gap:10px; align-items:center;">
+                    <i class="fas fa-brain" style="color:#00f2fe; font-size:1.5rem;"></i>
+                    <div><div style="font-weight:700; font-size:0.9rem;">Big Brain</div><div style="font-size:0.7rem; color:var(--text-muted);">Chess Master</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="position:absolute; bottom:40px; text-align:center; width:100%; color:var(--text-muted);">
+        <span class="key">ESC</span> to Close Dashboard
+    </div>
+</div>
+
+<!-- Notification Container -->
+<div id="notif-container"></div>
+
+<script>
+// --- Core Data ---
+const games = [
+    { title: "Project Velocity", sub: "High-Speed Engine", bg: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80", prog: 78, time: "24h 12m", ach: "12/50", icon: "fa-rocket" },
+    { title: "Emulator Hub", sub: "Local Access Mode", bg: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80", prog: 100, time: "102h", ach: "Max", icon: "fa-gamepad" },
+    { title: "Voxel Builder", sub: "3D Environment", bg: "https://images.unsplash.com/photo-1614285457768-646f65ca8548?w=800&q=80", prog: 45, time: "5h 30m", ach: "4/20", icon: "fa-cube" },
+    { title: "Neural Matrix", sub: "Puzzle Adventure", bg: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80", prog: 12, time: "1h 10m", ach: "1/15", icon: "fa-network-wired" },
+    { title: "Apex Drift", sub: "Driving Simulator", bg: "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=800&q=80", prog: 90, time: "88h", ach: "40/42", icon: "fa-car" },
+    { title: "Retro Arch", sub: "Classic Games", bg: "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?w=800&q=80", prog: 100, time: "200h+", ach: "N/A", icon: "fa-ghost" }
+];
+
+const themes = ["default", "midnight", "cyberpunk", "retro"];
+let currentTheme = 0;
+
+// --- Audio Engine (Web Audio API) ---
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+
+function playSound(type) {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    
+    const now = audioCtx.currentTime;
+    if (type === 'nav') {
+        osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.exponentialRampToValueAtTime(600, now + 0.1);
+        gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
+    } else if (type === 'select') {
+        osc.type = 'square'; osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(800, now + 0.15);
+        gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.start(now); osc.stop(now + 0.15);
+    } else if (type === 'boot') {
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(400, now + 2);
+        gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(0.2, now + 1); gain.gain.exponentialRampToValueAtTime(0.01, now + 3);
+        osc.start(now); osc.stop(now + 3);
+    } else if (type === 'notif') {
+        osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.setValueAtTime(1200, now + 0.1);
+        gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now); osc.stop(now + 0.3);
+    }
+}
+
+// --- Initialization & Boot Sequence ---
+window.onload = () => {
+    buildCarousel();
+    initCanvasParticles();
+    
+    const biosLogs = [
+        "ORION Kernel v0.1-alpha loading...", "Mounting secure volumes [OK]",
+        "Initializing WebGL context [OK]", "Loading neural net drivers [OK]",
+        "Bypassing school firewall proxies [SUCCESS]", "Connecting to Chat Mesh... [OK]",
+        "Mounting Emulator Hub [OK]", "Starting GUI environment..."
+    ];
+    
+    let logEl = document.getElementById('bios-log');
+    let logIdx = 0;
+    
+    let logInterval = setInterval(() => {
+        if(logIdx < biosLogs.length) {
+            logEl.innerHTML += biosLogs[logIdx] + "<br>";
+            logIdx++;
+        } else {
+            clearInterval(logInterval);
+            document.getElementById('boot-glow').style.opacity = 1;
+            document.getElementById('boot-logo').style.opacity = 1;
+            playSound('boot');
+            
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.opacity = 0;
+                document.getElementById('os-core').style.opacity = 1;
+                setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 1500);
+                showToast("System Online", "Welcome back to ORION OS, phxntom.");
+            }, 2500);
+        }
+    }, 150);
+
+    setInterval(updateClock, 1000);
+};
+
+// --- Build UI Components ---
+function buildCarousel() {
+    const cont = document.getElementById('game-carousel');
+    games.forEach((g, i) => {
+        const card = document.createElement('div');
+        card.className = `game-card ${i===0 ? 'active' : ''}`;
+        card.innerHTML = `
+            <div class="game-bg" style="background-image: url('${g.bg}')"></div>
+            <div class="game-info">
+                <div class="game-meta"><span>${g.sub}</span> <i class="fas ${g.icon}"></i></div>
+                <div class="game-logo">${g.title}</div>
+                <div class="xp-bar-container" style="width:100%; height:4px; margin: 5px 0;"><div class="xp-fill" style="width:${g.prog}%;"></div></div>
+                <div class="game-stats"><span><i class="far fa-clock"></i> ${g.time}</span> <span><i class="fas fa-trophy"></i> ${g.ach}</span></div>
+                <div class="action-row">
+                    <button class="play-btn"><i class="fas fa-play"></i> LAUNCH</button>
+                    <button class="fav-btn"><i class="far fa-heart"></i></button>
+                </div>
+            </div>
+        `;
+        cont.appendChild(card);
+    });
+}
+
+// --- Interaction & Navigation ---
+let currentIndex = 0;
+window.addEventListener('keydown', (e) => {
+    const cards = document.querySelectorAll('.game-card');
+    const wrapper = document.querySelector('.carousel');
+    const isModalOpen = document.getElementById('control-center').classList.contains('open') || 
+                        document.getElementById('chat-mesh').classList.contains('open') || 
+                        document.getElementById('ai-core').classList.contains('open') ||
+                        document.getElementById('dashboard-overlay').classList.contains('open');
+
+    if (e.key === 'Escape') {
+        closeAllModals();
+        if(!isModalOpen) toggleCC();
+        playSound('select');
+        return;
+    }
+
+    if (isModalOpen) return; // Disable main nav if modal open
+
+    if (e.key === 'ArrowRight' && currentIndex < cards.length - 1) {
+        cards[currentIndex].classList.remove('active');
+        currentIndex++;
+        cards[currentIndex].classList.add('active');
+        playSound('nav');
+        updateCarouselTransform(wrapper);
+    } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        cards[currentIndex].classList.remove('active');
+        currentIndex--;
+        cards[currentIndex].classList.add('active');
+        playSound('nav');
+        updateCarouselTransform(wrapper);
+    } else if (e.key === 'Enter') {
+        playSound('select');
+        showToast("Launching Engine", `Booting ${games[currentIndex].title}...`);
+    }
+});
+
+window.addEventListener("wheel", (e) => {
+    const cards = document.querySelectorAll('.game-card');
+    const wrapper = document.querySelector('.carousel');
+    if (document.getElementById('control-center').classList.contains('open')) return;
+
+    if (e.deltaY > 0 && currentIndex < cards.length - 1) {
+        cards[currentIndex].classList.remove('active');
+        currentIndex++;
+        cards[currentIndex].classList.add('active');
+        playSound('nav');
+        updateCarouselTransform(wrapper);
+    } else if (e.deltaY < 0 && currentIndex > 0) {
+        cards[currentIndex].classList.remove('active');
+        currentIndex--;
+        cards[currentIndex].classList.add('active');
+        playSound('nav');
+        updateCarouselTransform(wrapper);
+    }
+});
+
+function updateCarouselTransform(wrapper) {
+    const cardWidth = 360; // 320 + 40 gap
+    wrapper.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+}
+
+// --- Modals & Panels ---
+function toggleCC() { document.getElementById('control-center').classList.toggle('open'); }
+function togglePanel(id) { 
+    closeAllModals(); 
+    document.getElementById(id).classList.toggle('open'); 
+    playSound('select');
+}
+function toggleModal(id) {
+    const el = document.getElementById(id);
+    if(el.classList.contains('open')) el.classList.remove('open');
+    else { closeAllModals(); el.classList.add('open'); }
+    playSound('select');
+}
+function closeAllModals() {
+    document.getElementById('control-center').classList.remove('open');
+    document.getElementById('chat-mesh').classList.remove('open');
+    document.getElementById('ai-core').classList.remove('open');
+    document.getElementById('dashboard-overlay').classList.remove('open');
+}
+
+// --- Utilities ---
+function updateClock() {
+    document.getElementById('clock-display').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+}
+
+function cycleTheme() {
+    currentTheme = (currentTheme + 1) % themes.length;
+    if(themes[currentTheme] === "default") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", themes[currentTheme]);
+    playSound('select');
+    showToast("Theme Applied", `Switched to ${themes[currentTheme].toUpperCase()} profile.`);
+}
+
+function showToast(title, msg) {
+    playSound('notif');
+    const cont = document.getElementById('notif-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `
+        <div class="toast-icon"><i class="fas fa-bell"></i></div>
+        <div class="toast-text"><h4>${title}</h4><p>${msg}</p></div>
+    `;
+    cont.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(()=>toast.remove(), 400); }, 4000);
+}
+
+// --- Background Canvas Engine ---
+function initCanvasParticles() {
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width; this.y = Math.random() * height;
+            this.z = Math.random() * 2 + 0.1; // depth/speed
+            this.size = (Math.random() * 2 + 1) / this.z;
+            this.speed = (Math.random() * 0.5 + 0.2) / this.z;
+            this.alpha = Math.random() * 0.5 + 0.1;
+        }
+        update() {
+            this.y -= this.speed;
+            this.x += Math.sin(this.y * 0.01) * 0.2;
+            if(this.y < -10) { this.y = height + 10; this.x = Math.random() * width; }
+        }
+        draw() {
+            ctx.globalAlpha = this.alpha;
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+
+    for(let i=0; i<150; i++) particles.push(new Particle());
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
         
-        function sanitizeInput(text) {
-            let clean = text;
-            blockedSlurs.forEach(word => {
-                const regex = new RegExp(word, 'gi');
-                clean = clean.replace(regex, '****');
-            });
-            return clean;
+        // Draw ambient glow based on theme accent
+        const rootStyles = getComputedStyle(document.documentElement);
+        let accent = rootStyles.getPropertyValue('--theme-accent').trim();
+        if(!accent) accent = '#00f2fe';
+        
+        let grd = ctx.createRadialGradient(width/2, height, 0, width/2, height, height);
+        grd.addColorStop(0, hexToRgba(accent, 0.15));
+        grd.addColorStop(1, 'transparent');
+        ctx.fillStyle = grd; ctx.fillRect(0,0,width,height);
+
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+    }
+    animate();
+}
+
+function hexToRgba(hex, alpha) {
+    let c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        if(c.length== 3){ c= [c[0], c[0], c[1], c[1], c[2], c[2]]; }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+    }
+    if(hex.startsWith('rgba')) return hex;
+    return `rgba(0, 242, 254, ${alpha})`;
+}
+
+// Konami Code Easter Egg
+let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+let konamiIndex = 0;
+window.addEventListener('keydown', (e) => {
+    if (e.key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+            showToast("GOD MODE", "Developer tools unlocked. Unlimited XP granted.");
+            konamiIndex = 0;
         }
-
-        chatInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && this.value.trim() !== '') {
-                const rawText = this.value;
-                const safeText = sanitizeInput(rawText);
-                
-                const msgDiv = document.createElement('div');
-                msgDiv.className = 'user-msg';
-                msgDiv.innerHTML = `<span style="color: #fff; opacity: 0.5;">[LOCAL] phxntom:</span> ${safeText}`;
-                
-                chatBox.appendChild(msgDiv);
-                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
-                this.value = '';
-            }
-        });
-
-        // --- 4. AUDIO ENGINE (Retro 8-bit Synths) ---
-        let audioCtx = null;
-        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-        function playSound(type) {
-            initAudio(); if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            
-            if (type === 'jump') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.15);
-                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.15);
-            } else if (type === 'crash') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 0.4);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-            }
-        }
-
-        // --- 5. GAME ENGINE (Perfected Physics & Visuals) ---
-        const arena = document.getElementById('arena');
-        const canvas = document.getElementById('c');
-        const ctx = canvas.getContext('2d');
-        let active = false, loopId;
-
-        const p = { x: 100, y: 350, w: 32, h: 32, dy: 0, gravity: 0.8, jump: -15, grounded: false };
-        let obstacles = [], particles = [], score = 0, ticks = 0, speed = 7.5;
-
-        window.addEventListener('keydown', e => {
-            if ((e.code === 'Space' || e.code === 'ArrowUp') && p.grounded && active) {
-                p.dy = p.jump; p.grounded = false; playSound('jump');
-            }
-        });
-
-        function bootGame() {
-            document.getElementById('high-score-display').innerText = `HIGH SCORE: ${highScore}`;
-            arena.style.display = 'flex'; active = true; resetState();
-            loopId = requestAnimationFrame(frame);
-        }
-
-        function shutdownGame() {
-            arena.style.display = 'none'; active = false; cancelAnimationFrame(loopId);
-        }
-
-        function resetState() {
-            if (score > highScore) { highScore = score; localStorage.setItem('phxntom_highscore', highScore); }
-            p.y = 350; p.dy = 0; obstacles = []; particles = []; score = 0; ticks = 0; speed = 7.5;
-            document.getElementById('high-score-display').innerText = `HIGH SCORE: ${highScore}`;
-        }
-
-        function spawnParticles(x, y) {
-            for(let i = 0; i < 15; i++) {
-                particles.push({
-                    x: x, y: y,
-                    vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10,
-                    life: 1, color: '#00f2fe'
-                });
-            }
-        }
-
-        function frame() {
-            if (!active) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Floor Render
-            ctx.fillStyle = '#1e293b'; ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
-            ctx.fillStyle = '#00f2fe'; ctx.fillRect(0, canvas.height - 22, canvas.width, 2);
-
-            // Physics processing
-            p.dy += p.gravity; p.y += p.dy;
-            if (p.y + p.h >= canvas.height - 22) { p.y = canvas.height - 22 - p.h; p.dy = 0; p.grounded = true; }
-
-            // Player Render (Neon Cube)
-            ctx.shadowBlur = 20; ctx.shadowColor = '#00f2fe';
-            ctx.fillStyle = '#00f2fe'; ctx.fillRect(p.x, p.y, p.w, p.h);
-            ctx.shadowBlur = 0; // reset
-
-            // Particles logic
-            if(!p.grounded && ticks % 3 === 0) particles.push({x: p.x + p.w/2, y: p.y + p.h, vx: -2, vy: 0, life: 1, color: '#00f2fe'});
-            
-            for(let i=0; i<particles.length; i++) {
-                let pt = particles[i];
-                pt.x += pt.vx; pt.y += pt.vy; pt.life -= 0.05;
-                if(pt.life <= 0) { particles.splice(i, 1); i--; continue; }
-                ctx.globalAlpha = pt.life; ctx.fillStyle = pt.color;
-                ctx.fillRect(pt.x, pt.y, 4, 4); ctx.globalAlpha = 1.0;
-            }
-
-            // Obstacle logic
-            if (ticks % Math.max(50, 90 - Math.floor(speed * 2)) === 0) {
-                obstacles.push({ x: canvas.width, w: 30, h: Math.random() * 50 + 30 });
-            }
-
-            for (let i = 0; i < obstacles.length; i++) {
-                let obs = obstacles[i]; obs.x -= speed;
-                
-                // Obstacle Render (Neon Red)
-                ctx.shadowBlur = 15; ctx.shadowColor = '#ff3366';
-                ctx.fillStyle = '#ff3366'; ctx.fillRect(obs.x, canvas.height - 22 - obs.h, obs.w, obs.h);
-                ctx.shadowBlur = 0;
-
-                // Collision detection
-                if (p.x < obs.x + obs.w && p.x + p.w > obs.x && p.y + p.h > canvas.height - 22 - obs.h) {
-                    playSound('crash'); spawnParticles(p.x + p.w/2, p.y + p.h/2);
-                    resetState();
-                }
-
-                if (obs.x + obs.w < 0) {
-                    obstacles.splice(i, 1); i--;
-                    score += 25;
-                    if (score % 250 === 0) speed += 0.8; // Game gets faster!
-                }
-            }
-
-            document.getElementById('score-display').innerText = `SCORE: ${score}`;
-            ticks++;
-            loopId = requestAnimationFrame(frame);
-        }
-    </script>
+    } else { konamiIndex = 0; }
+});
+</script>
 </body>
 </html>
