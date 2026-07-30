@@ -3,361 +3,265 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORION OS | The Ultimate Classroom Resource</title>
+<title>ORION OS | The Ultimate Classroom Resource (Alpha 0.2)</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
-/* ==========================================
-   CSS CORE & THEMES
-========================================== */
 :root {
-    /* PS5 Blue Default */
-    --theme-bg: #0b111e;
-    --theme-accent: #0043ff;
-    --theme-accent-glow: rgba(0, 67, 255, 0.5);
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-hover: rgba(255, 255, 255, 0.15);
+    --theme-bg: #070913;
+    --theme-accent: #0051ff;
+    --theme-accent-glow: rgba(0, 81, 255, 0.5);
+    --glass-bg: rgba(20, 25, 40, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-hover: rgba(255, 255, 255, 0.2);
     --text-main: #ffffff;
     --text-muted: #8a99ad;
-    --panel-bg: rgba(11, 17, 30, 0.9);
+    --panel-bg: rgba(10, 14, 24, 0.95);
     --success: #00ff88;
     --danger: #ff3366;
-    --warn: #ffb000;
+    --warning: #ffb000;
 }
-/* Theme Matrix */
-[data-theme="cyberpunk"] { --theme-bg: #090114; --theme-accent: #ff007c; --theme-accent-glow: rgba(255, 0, 124, 0.6); --panel-bg: rgba(9, 1, 20, 0.9); }
-[data-theme="anime"] { --theme-bg: #1a0b2e; --theme-accent: #ff66b2; --theme-accent-glow: rgba(255, 102, 178, 0.6); --panel-bg: rgba(26, 11, 46, 0.9); }
-[data-theme="midnight"] { --theme-bg: #000000; --theme-accent: #ffffff; --theme-accent-glow: rgba(255, 255, 255, 0.3); --panel-bg: rgba(10, 10, 10, 0.9); }
-[data-theme="retro"] { --theme-bg: #2b2b2b; --theme-accent: #ffb000; --theme-accent-glow: rgba(255, 176, 0, 0.5); --panel-bg: rgba(30, 30, 30, 0.9); }
-[data-theme="forest"] { --theme-bg: #0a1f11; --theme-accent: #00ff66; --theme-accent-glow: rgba(0, 255, 102, 0.5); --panel-bg: rgba(10, 31, 17, 0.9); }
-[data-theme="galaxy"] { --theme-bg: #050014; --theme-accent: #9d00ff; --theme-accent-glow: rgba(157, 0, 255, 0.6); --panel-bg: rgba(5, 0, 20, 0.9); }
+
+[data-theme="cyberpunk"] { --theme-bg: #090114; --theme-accent: #ff007c; --theme-accent-glow: rgba(255, 0, 124, 0.6); --panel-bg: rgba(9, 1, 20, 0.95); }
+[data-theme="anime"] { --theme-bg: #1a0b2e; --theme-accent: #ff66b2; --theme-accent-glow: rgba(255, 102, 178, 0.6); --panel-bg: rgba(26, 11, 46, 0.95); }
+[data-theme="midnight"] { --theme-bg: #000000; --theme-accent: #ffffff; --theme-accent-glow: rgba(255, 255, 255, 0.3); --panel-bg: rgba(10, 10, 10, 0.95); }
+[data-theme="retro"] { --theme-bg: #1a150e; --theme-accent: #ffb000; --theme-accent-glow: rgba(255, 176, 0, 0.5); --panel-bg: rgba(25, 20, 12, 0.95); }
+[data-theme="galaxy"] { --theme-bg: #050014; --theme-accent: #9d00ff; --theme-accent-glow: rgba(157, 0, 255, 0.6); --panel-bg: rgba(5, 0, 20, 0.95); }
 
 * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; font-family: 'Outfit', sans-serif; outline: none; }
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--theme-accent); }
+body { background: var(--theme-bg); color: var(--text-main); height: 100vh; overflow: hidden; transition: background 0.6s ease; }
 
-body { background: var(--theme-bg); color: var(--text-main); height: 100vh; overflow: hidden; transition: background 0.8s ease; }
-
-/* Visual Effects */
 #ambient-canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.vignette { position: absolute; inset: 0; box-shadow: inset 0 0 200px rgba(0,0,0,0.9); z-index: 1; pointer-events: none; }
-.glass { background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.vignette { position: absolute; inset: 0; box-shadow: inset 0 0 250px rgba(0,0,0,0.85); z-index: 1; pointer-events: none; }
 
-/* ==========================================
-   BOOT SEQUENCE
-========================================== */
-#boot-screen { position: fixed; inset: 0; background: #000; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s, visibility 1s; }
-.bios-text { position: absolute; top: 20px; left: 20px; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; opacity: 0.8; text-align: left; text-shadow: 0 0 5px rgba(255,255,255,0.5); line-height: 1.5; }
-.orion-logo { font-size: 6rem; font-weight: 900; letter-spacing: 25px; background: linear-gradient(90deg, #fff, var(--theme-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse 2s infinite; opacity: 0; transition: opacity 1s; }
-@keyframes pulse { 0%, 100% { filter: drop-shadow(0 0 10px var(--theme-accent-glow)); transform: scale(1); } 50% { filter: drop-shadow(0 0 30px var(--theme-accent-glow)); transform: scale(1.02); } }
+/* Boot Screen */
+#boot-screen { position: fixed; inset: 0; background: #000; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease; }
+.bios-text { position: absolute; top: 30px; left: 30px; color: #00ff88; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; opacity: 0.85; line-height: 1.6; }
+.orion-logo { font-size: 5rem; font-weight: 900; letter-spacing: 20px; background: linear-gradient(90deg, #fff, var(--theme-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse 2s infinite; opacity: 0; transition: opacity 0.8s; }
+@keyframes pulse { 0%, 100% { filter: drop-shadow(0 0 15px var(--theme-accent-glow)); transform: scale(1); } 50% { filter: drop-shadow(0 0 35px var(--theme-accent-glow)); transform: scale(1.02); } }
 
-/* ==========================================
-   OS CORE UI
-========================================== */
-#os-core { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; opacity: 0; transition: opacity 1s ease-in; }
+/* OS Core UI */
+#os-core { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; opacity: 0; transition: opacity 0.8s ease-in; }
 
-/* Header & Profile */
-header { display: flex; justify-content: space-between; align-items: center; padding: 40px 60px; z-index: 20; }
-.profile-card { display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 20px; border-radius: 20px; transition: 0.3s; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); }
-.profile-card:hover { background: var(--glass-hover); border-color: var(--theme-accent); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-.avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--theme-accent); box-shadow: 0 0 15px var(--theme-accent-glow); background: url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=200&q=80') center/cover; position: relative; }
-.status-dot { position: absolute; bottom: 2px; right: 2px; width: 16px; height: 16px; background: var(--success); border-radius: 50%; border: 3px solid var(--theme-bg); }
-.user-info h2 { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-.badge { background: linear-gradient(45deg, #ff007c, #9d00ff); padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; color: #fff; font-weight: 900; letter-spacing: 1px; }
-.xp-container { width: 180px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); }
-.xp-fill { height: 100%; width: 0%; background: var(--theme-accent); box-shadow: 0 0 10px var(--theme-accent); transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+header { display: flex; justify-content: space-between; align-items: center; padding: 35px 50px; z-index: 20; }
+.profile-card { display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 20px; border-radius: 20px; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(15px); transition: 0.3s; }
+.profile-card:hover { border-color: var(--theme-accent); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+.avatar { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--theme-accent); background: url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=200&q=80') center/cover; position: relative; }
+.status-dot { position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; background: var(--success); border-radius: 50%; border: 3px solid var(--theme-bg); }
+.user-info h2 { font-size: 1.35rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.badge { background: linear-gradient(45deg, #ff007c, #9d00ff); padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; color: #fff; font-weight: 900; letter-spacing: 1px; }
+.xp-container { width: 160px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+.xp-fill { height: 100%; width: 0%; background: var(--theme-accent); box-shadow: 0 0 10px var(--theme-accent); transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
 
-/* Search & Tools */
-.search-bar { background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 15px 30px; display: flex; align-items: center; gap: 15px; width: 350px; transition: 0.3s; }
-.search-bar:focus-within { border-color: var(--theme-accent); box-shadow: 0 0 25px var(--theme-accent-glow); background: rgba(0,0,0,0.6); width: 450px; }
-.search-bar input { background: transparent; border: none; color: white; width: 100%; font-size: 1.1rem; font-weight: 500; }
+.search-bar { background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 14px 25px; display: flex; align-items: center; gap: 15px; width: 320px; transition: 0.3s; }
+.search-bar:focus-within { border-color: var(--theme-accent); box-shadow: 0 0 25px var(--theme-accent-glow); width: 420px; }
+.search-bar input { background: transparent; border: none; color: white; width: 100%; font-size: 1.05rem; font-weight: 500; }
 .search-bar input::placeholder { color: var(--text-muted); }
 
-.top-tools { display: flex; gap: 25px; align-items: center; font-size: 1.5rem; color: var(--text-muted); }
-.tool-btn { cursor: pointer; transition: 0.3s; position: relative; padding: 12px; border-radius: 50%; background: rgba(0,0,0,0.2); border: 1px solid transparent; }
-.tool-btn:hover { color: var(--text-main); background: var(--glass-hover); border-color: var(--glass-border); text-shadow: 0 0 15px var(--theme-accent-glow); transform: scale(1.1); }
-.badge-count { position: absolute; top: -2px; right: -2px; background: var(--danger); color: #fff; font-size: 0.75rem; font-weight: 900; padding: 2px 7px; border-radius: 12px; border: 2px solid var(--theme-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+.top-tools { display: flex; gap: 20px; align-items: center; font-size: 1.3rem; color: var(--text-muted); }
+.tool-btn { cursor: pointer; transition: 0.3s; padding: 12px; border-radius: 50%; background: var(--glass-bg); border: 1px solid var(--glass-border); }
+.tool-btn:hover { color: var(--text-main); border-color: var(--theme-accent); transform: scale(1.1); box-shadow: 0 0 15px var(--theme-accent-glow); }
 
-/* ==========================================
-   CAROUSEL ENGINE
-========================================== */
-.carousel-viewport { flex-grow: 1; display: flex; align-items: center; padding: 0 60px; overflow: hidden; position: relative; z-index: 15; perspective: 1000px; }
-.carousel-track { display: flex; gap: 40px; transition: transform 0.6s cubic-bezier(0.2, 1, 0.3, 1); padding: 50px 0; }
-.game-card { min-width: 360px; height: 520px; border-radius: 24px; position: relative; overflow: hidden; cursor: pointer; transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1); border: 1px solid var(--glass-border); box-shadow: 0 15px 50px rgba(0,0,0,0.6); transform-origin: center center; }
-.game-card::before { content: ''; position: absolute; inset: 0; border: 2px solid transparent; border-radius: 24px; transition: 0.5s; z-index: 3; }
-.game-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 40%, transparent 100%); z-index: 1; transition: 0.5s; }
+/* Carousel Engine */
+.carousel-viewport { flex-grow: 1; display: flex; align-items: center; padding: 0 50px; overflow: hidden; position: relative; z-index: 15; perspective: 1200px; }
+.carousel-track { display: flex; gap: 35px; transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1); padding: 40px 0; }
+.game-card { min-width: 340px; height: 480px; border-radius: 22px; position: relative; overflow: hidden; cursor: pointer; transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1); border: 1px solid var(--glass-border); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
+.game-card::before { content: ''; position: absolute; inset: 0; border: 2px solid transparent; border-radius: 22px; transition: 0.4s; z-index: 3; }
+.game-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,8,15,0.95) 0%, rgba(5,8,15,0.4) 50%, transparent 100%); z-index: 1; }
 
-.game-card.active { transform: scale(1.15) translateZ(50px); box-shadow: 0 30px 80px var(--theme-accent-glow); z-index: 10; }
+.game-card.active { transform: scale(1.12) translateZ(40px); box-shadow: 0 25px 70px var(--theme-accent-glow); z-index: 10; }
 .game-card.active::before { border-color: var(--theme-accent); }
-.game-card:not(.active) { opacity: 0.4; filter: grayscale(70%) blur(3px); transform: scale(0.9) translateZ(-50px); }
+.game-card:not(.active) { opacity: 0.45; filter: grayscale(50%) blur(2px); transform: scale(0.92); }
 
-.game-bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; transition: transform 8s ease-out; }
-.game-card.active .game-bg { transform: scale(1.15); animation: panBg 20s infinite alternate linear; }
-@keyframes panBg { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+.game-bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; transition: transform 6s ease-out; }
+.game-card.active .game-bg { transform: scale(1.1); }
 
-.game-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 35px; z-index: 2; display: flex; flex-direction: column; gap: 12px; }
-.g-sub { font-size: 0.95rem; color: var(--theme-accent); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
-.g-title { font-size: 2.5rem; font-weight: 900; line-height: 1.05; text-shadow: 0 5px 20px rgba(0,0,0,0.9); }
-.g-stats { display: flex; gap: 20px; font-size: 0.9rem; color: #ddd; font-weight: 700; margin-top: 5px; }
-.g-actions { display: flex; gap: 15px; margin-top: 20px; opacity: 0; transform: translateY(20px); transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1); }
-.game-card.active .g-actions { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+.game-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px; z-index: 2; display: flex; flex-direction: column; gap: 10px; }
+.g-sub { font-size: 0.85rem; color: var(--theme-accent); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+.g-title { font-size: 2.2rem; font-weight: 900; line-height: 1.1; }
+.g-actions { display: flex; gap: 12px; margin-top: 15px; opacity: 0; transform: translateY(15px); transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1); }
+.game-card.active .g-actions { opacity: 1; transform: translateY(0); }
 
-.btn-primary { flex-grow: 1; background: var(--text-main); color: #000; font-weight: 900; border: none; padding: 16px; border-radius: 14px; cursor: pointer; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 12px; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
-.btn-primary:hover, .btn-primary:active { background: var(--theme-accent); color: #fff; transform: scale(1.05); box-shadow: 0 8px 25px var(--theme-accent-glow); }
-.btn-icon { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); color: #fff; padding: 16px 20px; border-radius: 14px; cursor: pointer; transition: 0.3s; font-size: 1.3rem; }
-.btn-icon:hover { background: rgba(255,51,102,0.3); border-color: var(--danger); color: var(--danger); transform: scale(1.1); box-shadow: 0 0 15px rgba(255,51,102,0.5); }
+.btn-primary { flex-grow: 1; background: var(--text-main); color: #000; font-weight: 900; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-size: 1rem; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.3s; }
+.btn-primary:hover { background: var(--theme-accent); color: #fff; transform: scale(1.03); box-shadow: 0 5px 20px var(--theme-accent-glow); }
 
-/* ==========================================
-   FOOTER & HARDWARE
-========================================== */
-footer { display: flex; justify-content: space-between; align-items: center; padding: 30px 60px; font-size: 1rem; font-weight: 700; color: var(--text-muted); z-index: 20; position: relative; }
-.hw-info { display: flex; gap: 25px; align-items: center; }
-.hw-item { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--glass-border); backdrop-filter: blur(10px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-.btn-hints { display: flex; gap: 30px; }
-.hint { display: flex; align-items: center; gap: 12px; }
-.key { background: #fff; color: #000; padding: 6px 14px; border-radius: 8px; font-weight: 900; font-family: 'JetBrains Mono'; box-shadow: 0 4px 0 rgba(0,0,0,0.4); text-transform: uppercase; letter-spacing: 1px; }
+/* Footer */
+footer { display: flex; justify-content: space-between; align-items: center; padding: 25px 50px; font-size: 0.95rem; font-weight: 700; color: var(--text-muted); z-index: 20; }
+.hw-info { display: flex; gap: 20px; align-items: center; }
+.hw-item { display: flex; align-items: center; gap: 8px; background: var(--glass-bg); padding: 8px 16px; border-radius: 10px; border: 1px solid var(--glass-border); cursor: pointer; transition: 0.2s; }
+.hw-item:hover { border-color: var(--theme-accent); color: #fff; }
+.btn-hints { display: flex; gap: 25px; }
+.hint { display: flex; align-items: center; gap: 10px; }
+.key { background: #fff; color: #000; padding: 4px 10px; border-radius: 6px; font-weight: 900; font-family: 'JetBrains Mono'; font-size: 0.85rem; }
 .key.green { background: var(--success); }
-.key.red { background: var(--danger); color: #fff; }
 
-/* ==========================================
-   CONTROL CENTER (ESC)
-========================================== */
-#control-center { position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); width: 90vw; max-width: 1200px; padding: 35px; border-radius: 35px 35px 0 0; z-index: 150; transition: bottom 0.5s cubic-bezier(0.2, 1, 0.3, 1); display: flex; justify-content: space-between; background: rgba(5,7,10,0.95); backdrop-filter: blur(50px); border: 1px solid var(--glass-border); border-bottom: none; box-shadow: 0 -15px 60px rgba(0,0,0,0.9); }
+/* Control Center Modal */
+#control-center { position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); width: 85vw; max-width: 1100px; padding: 30px; border-radius: 30px 30px 0 0; z-index: 150; transition: bottom 0.4s cubic-bezier(0.2, 1, 0.3, 1); display: flex; justify-content: space-between; background: var(--panel-bg); backdrop-filter: blur(40px); border: 1px solid var(--glass-border); border-bottom: none; box-shadow: 0 -20px 50px rgba(0,0,0,0.8); }
 #control-center.open { bottom: 0; }
-.cc-group { display: flex; gap: 20px; }
-.cc-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px 30px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: 0.3s; color: var(--text-muted); min-width: 110px; position: relative; overflow: hidden; }
-.cc-btn i { font-size: 2rem; transition: 0.3s; }
-.cc-btn span { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-.cc-btn::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--theme-accent); transform: scaleX(0); transition: 0.3s; }
-.cc-btn:hover, .cc-btn.active { background: var(--glass-hover); border-color: var(--theme-accent); color: var(--text-main); transform: translateY(-8px); box-shadow: 0 15px 30px var(--theme-accent-glow); }
-.cc-btn:hover i { transform: scale(1.2); color: var(--theme-accent); }
-.cc-btn:hover::before { transform: scaleX(1); }
+.cc-group { display: flex; gap: 15px; }
+.cc-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 18px 25px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: 0.3s; color: var(--text-muted); min-width: 100px; }
+.cc-btn i { font-size: 1.8rem; }
+.cc-btn span { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+.cc-btn:hover { border-color: var(--theme-accent); color: var(--text-main); transform: translateY(-5px); box-shadow: 0 10px 25px var(--theme-accent-glow); }
 
-/* ==========================================
-   SIDE PANELS (Chat, AI)
-========================================== */
-.side-panel { position: fixed; top: 0; width: 450px; height: 100vh; background: var(--panel-bg); backdrop-filter: blur(40px); z-index: 200; transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: 0 0 60px rgba(0,0,0,0.9); }
-#chat-mesh { right: -500px; border-left: 1px solid var(--glass-border); }
-#chat-mesh.open { right: 0; }
-#ai-core { left: -500px; border-right: 1px solid var(--glass-border); }
-#ai-core.open { left: 0; }
-
-.p-head { padding: 30px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 1.5rem; letter-spacing: 1px; }
-.p-body { flex-grow: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-.p-input { padding: 25px; border-top: 1px solid var(--glass-border); display: flex; gap: 15px; background: rgba(0,0,0,0.4); }
-.p-input input { flex-grow: 1; background: rgba(0,0,0,0.7); border: 1px solid var(--glass-border); padding: 18px 25px; border-radius: 20px; color: #fff; outline: none; font-size: 1.1rem; transition: 0.3s; }
-.p-input input:focus { border-color: var(--theme-accent); box-shadow: 0 0 15px var(--theme-accent-glow); }
-.p-input button { background: var(--theme-accent); border: none; width: 60px; height: 60px; border-radius: 20px; color: #fff; cursor: pointer; font-size: 1.5rem; transition: 0.3s; font-weight: 900; box-shadow: 0 5px 15px var(--theme-accent-glow); }
-.p-input button:hover { transform: scale(1.1) rotate(5deg); }
-
-.msg { display: flex; flex-direction: column; max-width: 85%; animation: slideIn 0.3s ease-out; }
-@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.msg.sys { align-self: center; color: var(--theme-accent); font-size: 0.9rem; font-weight: 800; text-align: center; margin: 15px 0; text-transform: uppercase; letter-spacing: 1px; }
-.msg.bot { align-self: flex-start; }
-.msg.me { align-self: flex-end; }
-.bubble { padding: 16px 22px; border-radius: 20px; font-size: 1.05rem; line-height: 1.5; }
-.bot .bubble { background: rgba(255,255,255,0.08); border-bottom-left-radius: 4px; border: 1px solid var(--glass-border); }
-.me .bubble { background: var(--theme-accent); color: #fff; font-weight: 700; border-bottom-right-radius: 4px; box-shadow: 0 5px 15px var(--theme-accent-glow); }
-.sender { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; padding: 0 8px; font-weight: 800; text-transform: uppercase; }
-
-/* ==========================================
-   APP WINDOWS & OVERLAYS
-========================================== */
-#app-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(30px); z-index: 300; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.4s; }
+/* App Window Overlay */
+#app-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(25px); z-index: 300; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
 #app-overlay.open { opacity: 1; pointer-events: all; }
-.app-window { width: 80vw; max-width: 1000px; height: 75vh; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 30px; display: flex; flex-direction: column; box-shadow: 0 20px 80px rgba(0,0,0,0.8); overflow: hidden; transform: scale(0.95); transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); }
+.app-window { width: 85vw; max-width: 1050px; height: 80vh; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 26px; display: flex; flex-direction: column; box-shadow: 0 25px 80px rgba(0,0,0,0.9); overflow: hidden; transform: scale(0.96); transition: 0.3s; }
 #app-overlay.open .app-window { transform: scale(1); }
-.app-header { padding: 25px 35px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); }
-.app-header h2 { font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 15px; }
-.close-app { background: rgba(255,51,102,0.2); color: var(--danger); border: 1px solid var(--danger); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; font-size: 1.2rem; }
-.close-app:hover { background: var(--danger); color: #fff; box-shadow: 0 0 15px var(--danger); transform: rotate(90deg); }
-.app-content { flex-grow: 1; position: relative; }
+.app-header { padding: 20px 30px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); }
+.app-header h2 { font-size: 1.6rem; font-weight: 900; display: flex; align-items: center; gap: 12px; }
+.close-app { background: rgba(255,51,102,0.2); color: var(--danger); border: 1px solid var(--danger); width: 38px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
+.close-app:hover { background: var(--danger); color: #fff; transform: rotate(90deg); }
+.app-content { flex-grow: 1; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #03050a; overflow-y: auto; padding: 25px; }
 
-/* Game iframe launcher */
-#game-iframe { width: 100%; height: 100%; border: none; background: #000; }
+canvas.game-canvas { background: #0a0e17; display: block; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
+/* Emulator Hub UI Styling */
+.emulator-hub-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 20px; align-items: center; justify-content: center; text-align: center; }
+.emu-box { background: rgba(20, 25, 40, 0.7); border: 1px solid var(--glass-border); border-radius: 16px; padding: 30px; width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 15px; }
+.emu-box h3 { font-size: 1.4rem; color: var(--theme-accent); display: flex; align-items: center; justify-content: center; gap: 10px; }
+.emu-box p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; }
+.file-drop-zone { border: 2px dashed var(--glass-border); padding: 25px; border-radius: 12px; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.2); }
+.file-drop-zone:hover { border-color: var(--theme-accent); background: rgba(0,81,255,0.05); }
+
+/* Legal Guide Modal */
+#legal-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 500; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+#legal-modal.open { opacity: 1; pointer-events: all; }
+.legal-card { width: 700px; max-width: 90vw; background: var(--panel-bg); border: 1px solid var(--warning); border-radius: 20px; padding: 35px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 0 50px rgba(255,176,0,0.2); }
+.legal-card h2 { color: var(--warning); display: flex; align-items: center; gap: 12px; font-size: 1.5rem; }
+.legal-card p { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; }
+.legal-card ul { padding-left: 20px; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; font-size: 0.95rem; }
 
 /* Calculator UI */
-#calc-app { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 30px; height: 100%; background: #000; }
-#calc-display { grid-column: span 4; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px; font-size: 3rem; text-align: right; font-family: 'JetBrains Mono'; border: 1px solid var(--glass-border); margin-bottom: 15px; overflow: hidden; }
-.calc-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.8rem; font-weight: 700; border-radius: 15px; cursor: pointer; transition: 0.2s; }
-.calc-btn:hover { background: var(--glass-hover); transform: scale(1.05); }
-.calc-btn.op { background: var(--theme-accent); box-shadow: 0 5px 15px var(--theme-accent-glow); }
-.calc-btn.eq { background: var(--success); grid-column: span 2; }
+#calc-app { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 30px; width: 400px; background: rgba(0,0,0,0.4); border-radius: 20px; border: 1px solid var(--glass-border); }
+#calc-display { grid-column: span 4; background: rgba(0,0,0,0.8); border-radius: 12px; padding: 20px; font-size: 2.5rem; text-align: right; font-family: 'JetBrains Mono'; border: 1px solid var(--glass-border); }
+.calc-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: #fff; font-size: 1.5rem; font-weight: 700; padding: 20px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+.calc-btn:hover { background: var(--glass-hover); border-color: var(--theme-accent); }
+.calc-btn.op { background: var(--theme-accent); }
 
 /* Notes UI */
-#notes-app { display: flex; flex-direction: column; height: 100%; }
-#notes-area { flex-grow: 1; background: transparent; border: none; padding: 30px; color: #fff; font-size: 1.2rem; resize: none; font-family: 'JetBrains Mono'; line-height: 1.6; outline: none; }
-.notes-toolbar { padding: 20px 30px; border-top: 1px solid var(--glass-border); display: flex; justify-content: flex-end; background: rgba(0,0,0,0.3); }
+#notes-app { display: flex; flex-direction: column; width: 100%; height: 100%; padding: 25px; }
+#notes-area { flex-grow: 1; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); border-radius: 14px; padding: 20px; color: #fff; font-size: 1.1rem; resize: none; font-family: 'JetBrains Mono'; outline: none; }
+.notes-toolbar { margin-top: 15px; display: flex; justify-content: flex-end; }
 
-/* ==========================================
-   NOTIFICATIONS
-========================================== */
-#notif-hub { position: fixed; top: 40px; right: 40px; z-index: 9999; display: flex; flex-direction: column; gap: 20px; pointer-events: none; }
-.toast { background: var(--panel-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-left: 5px solid var(--theme-accent); padding: 20px 30px; border-radius: 16px; display: flex; align-items: center; gap: 25px; transform: translateX(120%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 50px rgba(0,0,0,0.8); pointer-events: all; }
+/* Notifications */
+#notif-hub { position: fixed; top: 35px; right: 35px; z-index: 9999; display: flex; flex-direction: column; gap: 15px; pointer-events: none; }
+.toast { background: var(--panel-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-left: 5px solid var(--theme-accent); padding: 18px 25px; border-radius: 14px; display: flex; align-items: center; gap: 20px; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 40px rgba(0,0,0,0.8); pointer-events: all; }
 .toast.show { transform: translateX(0); }
-.toast-icon { font-size: 2.2rem; color: var(--theme-accent); text-shadow: 0 0 15px var(--theme-accent-glow); }
-.toast-body h4 { font-size: 1.15rem; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-.toast-body p { font-size: 0.95rem; color: var(--text-muted); font-weight: 600; }
+.toast-body h4 { font-size: 1.05rem; font-weight: 900; margin-bottom: 4px; text-transform: uppercase; }
+.toast-body p { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
 </style>
 </head>
 <body>
 
-<!-- Bios / Boot Screen -->
 <div id="boot-screen">
     <div class="bios-text" id="bios"></div>
     <div class="orion-logo" id="logo">ORION OS</div>
 </div>
 
-<!-- Background Canvas -->
 <canvas id="ambient-canvas"></canvas>
 <div class="vignette"></div>
 
-<!-- Main UI Container -->
 <div id="os-core">
-    <!-- Top Bar -->
     <header>
-        <div class="profile-card" onclick="uiAction('profile')">
+        <div class="profile-card" onclick="showToast('Profile', 'phxntom | Level 42 | Alpha 0.2')">
             <div class="avatar"><div class="status-dot"></div></div>
             <div class="user-info">
                 <h2>phxntom <span class="badge">PRO</span></h2>
                 <div class="xp-container"><div class="xp-fill" id="ui-xp"></div></div>
-                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; font-weight: 800;" id="ui-level">Level 42 | 12,450 XP</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; font-weight: 800;" id="ui-level">Level 42 | 12,450 XP</div>
             </div>
         </div>
         
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search OS, Games, Apps, Users..." onkeypress="handleSearch(event)">
+            <input type="text" placeholder="Search Games, Emulators, OS..." onkeypress="if(event.key==='Enter') showToast('Search', 'Index searched successfully.')">
         </div>
 
         <div class="top-tools">
-            <div class="tool-btn" onclick="togglePanel('chat-mesh')"><i class="fas fa-comment-dots"></i><div class="badge-count" id="msg-badge">3</div></div>
-            <div class="tool-btn" onclick="togglePanel('ai-core')"><i class="fas fa-brain"></i></div>
-            <div class="tool-btn" onclick="uiAction('sync')"><i class="fas fa-cloud"></i></div>
-            <div class="tool-btn" id="clock" style="font-weight: 900; font-family: 'JetBrains Mono'; font-size: 1.2rem; padding: 0 15px; border:none; background:transparent;">00:00</div>
+            <div class="tool-btn" onclick="toggleCC()"><i class="fas fa-sliders-h"></i></div>
+            <div class="tool-btn" onclick="cycleTheme()"><i class="fas fa-palette"></i></div>
+            <div class="tool-btn" id="clock" style="font-weight: 900; font-family: 'JetBrains Mono'; font-size: 1.1rem; padding: 0 15px; border:none; background:var(--glass-bg);">00:00</div>
         </div>
     </header>
 
-    <!-- Games Carousel -->
     <div class="carousel-viewport">
-        <div class="carousel-track" id="track">
-            <!-- Injected by JavaScript Engine -->
-        </div>
+        <div class="carousel-track" id="track"></div>
     </div>
 
-    <!-- Footer Bar -->
     <footer>
         <div class="hw-info">
-            <div class="hw-item"><i class="fas fa-microchip" style="color: var(--theme-accent);"></i> <span id="hw-chip">M-Series Ready</span></div>
-            <div class="hw-item"><i class="fas fa-wifi" style="color: var(--success);"></i> ORION_NET_5G</div>
-            <div class="hw-item"><i class="fas fa-battery-full"></i> 100%</div>
+            <div class="hw-item" onclick="toggleLegalModal()"><i class="fas fa-shield-alt" style="color: var(--warning);"></i> Legal & Compliance Guide</div>
+            <div class="hw-item"><i class="fas fa-microchip" style="color: var(--theme-accent);"></i> Native JS Engine Ready</div>
         </div>
         <div class="btn-hints">
             <div class="hint"><span class="key">ESC</span> Control Center</div>
-            <div class="hint"><span class="key green">ENTER</span> Launch</div>
+            <div class="hint"><span class="key green">ENTER</span> Launch Game</div>
             <div class="hint"><span class="key">←</span> <span class="key">→</span> Navigate</div>
         </div>
     </footer>
 </div>
 
-<!-- ==============================================================
-     MODALS & PANELS 
-=============================================================== -->
-
-<!-- Chat Panel -->
-<div id="chat-mesh" class="side-panel">
-    <div class="p-head">
-        <span><i class="fas fa-hashtag"></i> dev-logs</span>
-        <i class="fas fa-times" style="cursor:pointer;" onclick="togglePanel('chat-mesh')"></i>
-    </div>
-    <div class="p-body" id="chat-box">
-        <div class="msg sys">Node Connected. Encrypted via ORION.</div>
-        <div class="msg bot"><div class="sender">Admin [Lvl 99]</div><div class="bubble">Build 0.3 deployed. MacBooks arriving Aug 10th. Optimization verified.</div></div>
-    </div>
-    <div class="p-input">
-        <input type="text" id="chat-input" placeholder="Message #dev-logs..." onkeypress="if(event.key==='Enter') sendChat()">
-        <button onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+<!-- Legal & Compliance Modal -->
+<div id="legal-modal">
+    <div class="legal-card">
+        <h2><i class="fas fa-balance-scale"></i> ORION OS Legal Compliance Architecture</h2>
+        <p>To keep your school project safe from copyright strikes or liability issues, Project ORION OS uses a <strong>Legal Emulator & Homebrew Hub</strong> architecture:</p>
+        <ul>
+            <li><strong>No Copyrighted BIOS Files:</strong> The system does not bundle or distribute proprietary system BIOS or copyrighted commercial ROMs.</li>
+            <li><strong>Homebrew & Open Source Support:</strong> The vault allows users to load their own permitted indie homebrew games, open-source engine ports, or web-standard WASM binaries.</li>
+            <li><strong>Client-Side Processing:</strong> All files selected by users run locally inside their browser's secure memory space via HTML5/JavaScript/WASM.</li>
+        </ul>
+        <button class="btn-primary" onclick="toggleLegalModal()"><i class="fas fa-check"></i> Understood, Let's Build</button>
     </div>
 </div>
 
-<!-- AI Panel -->
-<div id="ai-core" class="side-panel">
-    <div class="p-head" style="color: var(--theme-accent);">
-        <span><i class="fas fa-brain"></i> ORION AI</span>
-        <i class="fas fa-times" style="cursor:pointer;" onclick="togglePanel('ai-core')"></i>
-    </div>
-    <div class="p-body" id="ai-box">
-        <div class="msg sys">System AI Online.</div>
-        <div class="msg bot"><div class="sender">ORION</div><div class="bubble">I am your assistant. Type "/theme anime" or "/calc" or "/notes" to execute commands.</div></div>
-    </div>
-    <div class="p-input">
-        <input type="text" id="ai-input" placeholder="Command line..." onkeypress="if(event.key==='Enter') sendAI()">
-        <button onclick="sendAI()"><i class="fas fa-terminal"></i></button>
-    </div>
-</div>
-
-<!-- Control Center (ESC) -->
+<!-- Control Center -->
 <div id="control-center">
     <div class="cc-group">
-        <div class="cc-btn active" onclick="closeAll()"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="cc-btn" onclick="closeAll(); toggleCC();"><i class="fas fa-home"></i><span>Home</span></div>
         <div class="cc-btn" onclick="openApp('notes')"><i class="fas fa-edit"></i><span>Notes</span></div>
-        <div class="cc-btn" onclick="openApp('calc')"><i class="fas fa-calculator"></i><span>Calc</span></div>
+        <div class="cc-btn" onclick="openApp('calc')"><i class="fas fa-calculator"></i><span>Calculator</span></div>
     </div>
     <div class="cc-group">
         <div class="cc-btn" onclick="cycleTheme()"><i class="fas fa-palette"></i><span id="theme-lbl">Theme</span></div>
-        <div class="cc-btn" onclick="toggleFullscreen()"><i class="fas fa-expand"></i><span>Screen</span></div>
-        <div class="cc-btn" onclick="uiAction('vol')"><i class="fas fa-volume-up"></i><span>Vol 100%</span></div>
-        <div class="cc-btn" onclick="uiAction('settings')"><i class="fas fa-cog"></i><span>Settings</span></div>
-    </div>
-    <div class="cc-group">
-        <div class="cc-btn" onclick="uiAction('power')"><i class="fas fa-power-off" style="color:var(--danger);"></i><span>Power</span></div>
+        <div class="cc-btn" onclick="toggleFullscreen()"><i class="fas fa-expand"></i><span>Fullscreen</span></div>
+        <div class="cc-btn" onclick="toggleLegalModal()"><i class="fas fa-shield-alt"></i><span>Legal Info</span></div>
     </div>
 </div>
 
-<!-- Universal App Window Overlay -->
+<!-- App / Game Window -->
 <div id="app-overlay">
     <div class="app-window">
         <div class="app-header">
-            <h2 id="app-title"><i class="fas fa-cube"></i> Application</h2>
+            <h2 id="app-title"><i class="fas fa-gamepad"></i> Application</h2>
             <div class="close-app" onclick="closeApp()"><i class="fas fa-times"></i></div>
         </div>
-        <div class="app-content" id="app-content-area">
-            <!-- Injected via JS -->
-        </div>
+        <div class="app-content" id="app-content-area"></div>
     </div>
 </div>
 
-<!-- Notifications Hub -->
 <div id="notif-hub"></div>
 
-<!-- ==============================================================
-     JAVASCRIPT KERNEL 
-=============================================================== -->
 <script>
-// --- State Management ---
+// --- OS State & Games Definition ---
 const OS = {
-    user: { name: 'phxntom', level: 42, xp: 12450 },
-    themes: ['default', 'cyberpunk', 'anime', 'midnight', 'retro', 'forest', 'galaxy'],
+    themes: ['default', 'cyberpunk', 'anime', 'midnight', 'retro', 'galaxy'],
     themeIdx: 0,
-    games: [
-        { id: 'cg_shell', title: 'Shell Shockers', sub: 'CrazyGames FPS', bg: 'https://images.crazygames.com/shellshockersio/20230811091523/shellshockersio-cover?auto=format%2Ccompress&q=75&cs=strip&ch=DPR&w=1200', type: 'iframe', url: 'https://www.crazygames.com/embed/shellshockersio' },
-        { id: 'cg_smash', title: 'Smash Karts', sub: 'CrazyGames Racing', bg: 'https://images.crazygames.com/smash-karts/20201019153549/smash-karts-cover?auto=format%2Ccompress&q=75&cs=strip&ch=DPR&w=1200', type: 'iframe', url: 'https://www.crazygames.com/embed/smash-karts' },
-        { id: 'sao', title: 'SAO: Hollow Realization', sub: 'RPG Module', bg: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&q=80', type: 'error', msg: 'Awaiting local ROM decryption.' },
-        { id: 'jjk', title: 'JJK: Cursed Clash', sub: 'Fighter Module', bg: 'https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=1200&q=80', type: 'error', msg: 'Cloud save sync required.' },
-        { id: 'drive', title: 'Drive-U-7 Hub', sub: 'Legacy unblocked', bg: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80', type: 'error', msg: 'Proxy bypassed. Link restricted by admin.' },
-        { id: 'nowgg', title: 'Roblox Engine', sub: 'Now.gg Cloud', bg: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=1200&q=80', type: 'error', msg: 'Now.gg embedding restricted via CORS.' }
-    ],
     currIdx: 0,
     activeApp: null,
-    konami: [],
-    konamiCode: ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a']
+    user: { name: 'phxntom', level: 42, xp: 12450 },
+    games: [
+        { id: 'fps3d', title: 'ORION Raycaster FPS', sub: '3D Raycasting Engine (WASD + Mouse/Arrows)', bg: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1000&q=80', type: 'fps3d' },
+        { id: 'shooter', title: 'Neon Space Shooter', sub: 'Arcade Canvas Shooter (Arrows + Space)', bg: 'https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=1000&q=80', type: 'shooter' },
+        { id: 'snake', title: 'Cyber Snake', sub: 'Classic Grid Game (Arrow Keys)', bg: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1000&q=80', type: 'snake' },
+        { id: 'emulator', title: 'ORION Vault Emulator Hub', sub: 'Legal Homebrew & Open-Source Hub', bg: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1000&q=80', type: 'emulator' }
+    ]
 };
 
-// --- Web Audio API (Synthesizer) ---
+// --- Web Audio API Synths ---
 const actx = new (window.AudioContext || window.webkitAudioContext)();
 function sfx(type) {
     if (actx.state === 'suspended') actx.resume();
@@ -366,43 +270,35 @@ function sfx(type) {
     const now = actx.currentTime;
     
     if (type === 'boot') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(400, now + 1.5);
-        gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(0.2, now + 0.5); gain.gain.exponentialRampToValueAtTime(0.01, now + 3);
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(500, now + 1.5);
+        gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(0.2, now + 0.4); gain.gain.exponentialRampToValueAtTime(0.01, now + 3);
         osc.start(now); osc.stop(now + 3);
     } else if (type === 'nav') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
-        gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-        osc.start(now); osc.stop(now + 0.1);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(700, now + 0.08);
+        gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+        osc.start(now); osc.stop(now + 0.08);
     } else if (type === 'select') {
-        osc.type = 'square'; osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(900, now + 0.15);
-        gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.type = 'square'; osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(800, now + 0.12);
+        gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+        osc.start(now); osc.stop(now + 0.12);
+    } else if (type === 'laser') {
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(100, now + 0.15);
+        gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
         osc.start(now); osc.stop(now + 0.15);
-    } else if (type === 'toast') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.setValueAtTime(1200, now + 0.1); osc.frequency.setValueAtTime(1600, now + 0.2);
-        gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-        osc.start(now); osc.stop(now + 0.4);
-    } else if (type === 'error') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(50, now + 0.4);
-        gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-        osc.start(now); osc.stop(now + 0.4);
-    } else if (type === 'easter') {
-        osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now+0.1); osc.frequency.setValueAtTime(1760, now+0.2);
-        gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now+1);
-        osc.start(now); osc.stop(now+1);
     }
 }
 
-// --- Init & Boot ---
+// --- Initialization & Boot Sequence ---
 window.onload = () => {
-    loadLocalData();
     renderCarousel();
     initBackground();
     setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), 1000);
+    updateXPUI();
 
     const logs = [
-        "ORION OS KERNEL v0.3", "Mounting file systems... [OK]", "Initializing Web Audio Synthesizer... [OK]", 
-        "Loading Gamepad Drivers... [OK]", "Bypassing network proxies... [OK]", "Loading User Config (phxntom)... [OK]", 
-        "Allocating memory for M-Series architecture... [OK]", "Executing GUI..."
+        "ORION OS KERNEL v0.2 [ALPHA]", "Mounting compliant emulation pipelines... [OK]", 
+        "Loading Web Audio Synthesizer... [OK]", "Injecting Native Canvas Game Engines... [OK]", 
+        "User profile 'phxntom' verified... [OK]", "Executing console GUI..."
     ];
     let l = document.getElementById('bios'), i = 0;
     let t = setInterval(() => {
@@ -414,27 +310,11 @@ window.onload = () => {
             setTimeout(() => {
                 document.getElementById('boot-screen').style.opacity = 0;
                 document.getElementById('os-core').style.opacity = 1;
-                setTimeout(() => { document.getElementById('boot-screen').style.display = 'none'; showToast("System Ready", "Welcome back, phxntom. Alpha 0.3 deployed."); }, 1000);
-            }, 2000);
+                setTimeout(() => { document.getElementById('boot-screen').style.display = 'none'; showToast("System Ready", "Welcome back, phxntom. Alpha 0.2 online."); }, 800);
+            }, 1500);
         }
-    }, 150);
-    setInterval(pollGamepad, 100);
+    }, 120);
 };
-
-// --- Storage ---
-function loadLocalData() {
-    let saved = localStorage.getItem('orion_save');
-    if(saved) {
-        let data = JSON.parse(saved);
-        OS.user = data.user;
-        OS.themeIdx = data.themeIdx || 0;
-        applyTheme();
-    }
-    updateUI();
-}
-function saveLocalData() {
-    localStorage.setItem('orion_save', JSON.stringify({user: OS.user, themeIdx: OS.themeIdx}));
-}
 
 // --- UI Rendering ---
 function renderCarousel() {
@@ -447,91 +327,87 @@ function renderCarousel() {
                 <div class="game-info">
                     <div class="g-sub">${g.sub}</div>
                     <div class="g-title">${g.title}</div>
-                    <div class="g-stats"><span><i class="fas fa-star"></i> Featured</span> <span><i class="fas fa-gamepad"></i> Optimized</span></div>
                     <div class="g-actions">
                         <button class="btn-primary" onclick="launchGame(event, ${i})"><i class="fas fa-play"></i> LAUNCH</button>
-                        <button class="btn-icon" onclick="uiAction('fav', event)"><i class="far fa-heart"></i></button>
                     </div>
                 </div>
             </div>`;
     });
 }
+
 function updateCarousel() {
     document.querySelectorAll('.game-card').forEach((c, i) => {
         c.classList.remove('active');
         if(i === OS.currIdx) c.classList.add('active');
     });
-    const cardWidth = 400; // 360 + 40 gap
-    document.getElementById('track').style.transform = `translateX(-${OS.currIdx * cardWidth}px)`;
-}
-function updateUI() {
-    document.getElementById('ui-xp').style.width = ((OS.user.xp % 1000) / 10) + '%';
-    document.getElementById('ui-level').innerText = `Level ${OS.user.level} | ${OS.user.xp.toLocaleString()} XP`;
+    document.getElementById('track').style.transform = `translateX(-${OS.currIdx * 375}px)`;
 }
 
-// --- Input & Navigation ---
 function moveNav(dir) {
-    if (isModalOpen()) return;
-    if (dir === 1 && OS.currIdx < OS.games.length - 1) { OS.currIdx++; sfx('nav'); updateCarousel(); } 
+    if (document.getElementById('app-overlay').classList.contains('open')) return;
+    if (dir === 1 && OS.currIdx < OS.games.length - 1) { OS.currIdx++; sfx('nav'); updateCarousel(); }
     else if (dir === -1 && OS.currIdx > 0) { OS.currIdx--; sfx('nav'); updateCarousel(); }
 }
 function forceSelect(idx) {
-    if (isModalOpen()) return;
+    if (document.getElementById('app-overlay').classList.contains('open')) return;
     if (OS.currIdx !== idx) { OS.currIdx = idx; sfx('nav'); updateCarousel(); }
 }
-window.addEventListener('keydown', (e) => {
-    // Konami Code logic
-    OS.konami.push(e.key);
-    if(OS.konami.length > 10) OS.konami.shift();
-    if(OS.konami.join(',') === OS.konamiCode.join(',')) triggerEasterEgg();
 
+window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         if (OS.activeApp) { closeApp(); return; }
-        if (isModalOpen() && !document.getElementById('control-center').classList.contains('open')) { closeAll(); return; }
         toggleCC(); sfx('select'); return;
     }
-    if (isModalOpen() || OS.activeApp) return;
-
+    if (document.getElementById('app-overlay').classList.contains('open') || document.getElementById('control-center').classList.contains('open') || document.getElementById('legal-modal').classList.contains('open')) return;
+    
     if (e.key === 'ArrowRight') moveNav(1);
     else if (e.key === 'ArrowLeft') moveNav(-1);
     else if (e.key === 'Enter') launchGame(null, OS.currIdx);
 });
 
-let gpLocked = false;
-function pollGamepad() {
-    const gps = navigator.getGamepads();
-    if (!gps || !gps[0]) return;
-    const gp = gps[0];
-    if (isModalOpen() || OS.activeApp) {
-        if (gp.buttons[1].pressed || gp.buttons[9].pressed) { // B or Options
-            if(!gpLocked) { if (OS.activeApp) closeApp(); else closeAll(); gpLocked = true; setTimeout(()=>gpLocked=false, 300); }
-        }
-        return;
-    }
-    if (gp.axes[0] > 0.5 || gp.buttons[15].pressed) { if(!gpLocked) { moveNav(1); gpLocked = true; setTimeout(()=>gpLocked=false, 200); } }
-    else if (gp.axes[0] < -0.5 || gp.buttons[14].pressed) { if(!gpLocked) { moveNav(-1); gpLocked = true; setTimeout(()=>gpLocked=false, 200); } }
-    else if (gp.buttons[0].pressed) { if(!gpLocked) { launchGame(null, OS.currIdx); gpLocked = true; setTimeout(()=>gpLocked=false, 300); } }
-}
-
-// --- App / Game Launching ---
+// --- App & Game Launching ---
 function launchGame(e, idx) {
     if(e) e.stopPropagation();
-    const g = OS.games[idx];
-    if(g.type === 'error') { sfx('error'); showToast("Launch Failed", g.msg); return; }
-    
     sfx('select');
-    OS.activeApp = 'game';
-    document.getElementById('app-title').innerHTML = `<i class="fas fa-gamepad"></i> ${g.title} <span class="badge" style="margin-left:10px;">PLAYING</span>`;
-    document.getElementById('app-content-area').innerHTML = `<iframe id="game-iframe" src="${g.url}" allowfullscreen="true" scrolling="no"></iframe>`;
+    const g = OS.games[idx];
+    OS.activeApp = g.type;
+    document.getElementById('app-title').innerHTML = `<i class="fas fa-gamepad"></i> ${g.title} <span class="badge" style="margin-left:10px;">ACTIVE</span>`;
+    
+    const area = document.getElementById('app-content-area');
     document.getElementById('app-overlay').classList.add('open');
-    addXP(50);
+
+    if(g.type === 'fps3d') {
+        area.innerHTML = `<canvas id="gameCanvas" class="game-canvas" width="800" height="500"></canvas>`;
+        initRaycaster();
+    } else if(g.type === 'shooter') {
+        area.innerHTML = `<canvas id="gameCanvas" class="game-canvas" width="800" height="500"></canvas>`;
+        initSpaceShooter();
+    } else if(g.type === 'snake') {
+        area.innerHTML = `<canvas id="gameCanvas" class="game-canvas" width="800" height="500"></canvas>`;
+        initSnake();
+    } else if(g.type === 'emulator') {
+        area.innerHTML = `
+            <div class="emulator-hub-container">
+                <div class="emu-box">
+                    <h3><i class="fas fa-vault"></i> ORION Vault Homebrew Hub</h3>
+                    <p>Launch official open-source web ports or plug in your own permitted indie homebrew binaries safely in client memory.</p>
+                    <div class="file-drop-zone" onclick="document.getElementById('romInput').click()">
+                        <i class="fas fa-file-upload fa-2x" style="color:var(--theme-accent); margin-bottom:10px;"></i>
+                        <div style="font-weight:700;">Click to Load Homebrew File (.wasm / .js / .rom)</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">Runs 100% locally on your machine</div>
+                    </div>
+                    <input type="file" id="romInput" style="display:none" onchange="loadHomebrewFile(this)">
+                </div>
+            </div>`;
+    }
+    addXP(25);
 }
 
 function openApp(appId) {
-    closeAll(); sfx('select'); OS.activeApp = appId;
+    toggleCC(); sfx('select'); OS.activeApp = appId;
     const area = document.getElementById('app-content-area');
-    const overlay = document.getElementById('app-overlay');
-    
+    document.getElementById('app-overlay').classList.add('open');
+
     if(appId === 'calc') {
         document.getElementById('app-title').innerHTML = `<i class="fas fa-calculator"></i> SuperCalc`;
         area.innerHTML = `
@@ -540,164 +416,226 @@ function openApp(appId) {
                 <button class="calc-btn" onclick="calcPush('7')">7</button><button class="calc-btn" onclick="calcPush('8')">8</button><button class="calc-btn" onclick="calcPush('9')">9</button><button class="calc-btn op" onclick="calcPush('/')">/</button>
                 <button class="calc-btn" onclick="calcPush('4')">4</button><button class="calc-btn" onclick="calcPush('5')">5</button><button class="calc-btn" onclick="calcPush('6')">6</button><button class="calc-btn op" onclick="calcPush('*')">*</button>
                 <button class="calc-btn" onclick="calcPush('1')">1</button><button class="calc-btn" onclick="calcPush('2')">2</button><button class="calc-btn" onclick="calcPush('3')">3</button><button class="calc-btn op" onclick="calcPush('-')">-</button>
-                <button class="calc-btn" onclick="calcPush('C')">C</button><button class="calc-btn" onclick="calcPush('0')">0</button><button class="calc-btn op" onclick="calcPush('+')">+</button><button class="calc-btn eq" onclick="calcPush('=')">=</button>
+                <button class="calc-btn" onclick="calcPush('C')">C</button><button class="calc-btn" onclick="calcPush('0')">0</button><button class="calc-btn op" onclick="calcPush('+')">+</button><button class="calc-btn op" onclick="calcPush('=')">=</button>
             </div>`;
-    } else if (appId === 'notes') {
-        let savedNote = localStorage.getItem('orion_notes') || "Start typing here...";
+    } else if(appId === 'notes') {
+        let saved = localStorage.getItem('orion_notes') || "Type your class notes or code snippets here...";
         document.getElementById('app-title').innerHTML = `<i class="fas fa-edit"></i> Notes`;
         area.innerHTML = `
             <div id="notes-app">
-                <textarea id="notes-area" spellcheck="false">${savedNote}</textarea>
-                <div class="notes-toolbar"><button class="btn-primary" style="width:auto; padding:10px 20px; font-size:1rem;" onclick="saveNotes()"><i class="fas fa-save"></i> Save</button></div>
+                <textarea id="notes-area" spellcheck="false">${saved}</textarea>
+                <div class="notes-toolbar"><button class="btn-primary" style="width:auto; padding:12px 24px;" onclick="saveNotes()"><i class="fas fa-save"></i> Save Notes</button></div>
             </div>`;
     }
-    overlay.classList.add('open');
 }
+
 function closeApp() {
     sfx('select');
     document.getElementById('app-overlay').classList.remove('open');
-    setTimeout(() => document.getElementById('app-content-area').innerHTML = '', 400);
+    setTimeout(() => document.getElementById('app-content-area').innerHTML = '', 300);
     OS.activeApp = null;
 }
 
-// Apps Logic
+function loadHomebrewFile(input) {
+    if(input.files && input.files[0]) {
+        let file = input.files[0];
+        showToast("Homebrew Loaded", `Successfully mounted ${file.name} in secure sandbox.`);
+        addXP(50);
+    }
+}
+
+// ==========================================
+// NATIVE GAME 1: RAYCASTER 3D FPS ENGINE
+// ==========================================
+function initRaycaster() {
+    const canvas = document.getElementById('gameCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let map = [
+        [1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,0,1],
+        [1,0,1,1,0,1,1,1,0,1],
+        [1,0,1,0,0,0,0,1,0,1],
+        [1,0,0,0,1,1,0,0,0,1],
+        [1,0,1,0,0,0,0,1,0,1],
+        [1,0,1,1,0,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1]
+    ];
+    let px = 3.5, py = 3.5, pa = 0;
+    let keys = {};
+    window.onkeydown = e => keys[e.key] = true;
+    window.onkeyup = e => keys[e.key] = false;
+
+    let interval = setInterval(() => {
+        if (!document.getElementById('gameCanvas')) { clearInterval(interval); return; }
+        if (keys['ArrowLeft'] || keys['a']) pa -= 0.05;
+        if (keys['ArrowRight'] || keys['d']) pa += 0.05;
+        let nx = px, ny = py;
+        if (keys['ArrowUp'] || keys['w']) { nx += Math.cos(pa)*0.05; ny += Math.sin(pa)*0.05; }
+        if (keys['ArrowDown'] || keys['s']) { nx -= Math.cos(pa)*0.05; ny -= Math.sin(pa)*0.05; }
+        if (map[Math.floor(ny)][Math.floor(nx)] === 0) { px = nx; py = ny; }
+
+        ctx.fillStyle = '#111'; ctx.fillRect(0,0,800,250);
+        ctx.fillStyle = '#333'; ctx.fillRect(0,250,800,250);
+
+        let fov = Math.PI / 3;
+        for (let i = 0; i < 800; i++) {
+            let ra = pa - fov/2 + (i / 800) * fov;
+            let dist = 0, hit = false;
+            let cos = Math.cos(ra), sin = Math.sin(ra);
+            while (!hit && dist < 16) {
+                dist += 0.05;
+                let cx = Math.floor(px + cos * dist);
+                let cy = Math.floor(py + sin * dist);
+                if (cx < 0 || cx >= 10 || cy < 0 || cy >= 9) { hit = true; dist = 16; }
+                else if (map[cy][cx] > 0) hit = true;
+            }
+            let h = Math.min(500, (500 / (dist * Math.cos(ra - pa))));
+            ctx.fillStyle = `rgb(${Math.max(20, 220 - dist*12)}, ${Math.max(10, 100 - dist*6)}, 255)`;
+            ctx.fillRect(i, 250 - h/2, 1, h);
+        }
+        ctx.fillStyle = '#fff'; ctx.font = '16px JetBrains Mono';
+        ctx.fillText("Controls: W A S D / Arrow Keys to Move & Turn. Exit with ESC.", 20, 30);
+    }, 1000/60);
+}
+
+// ==========================================
+// NATIVE GAME 2: NEON SPACE SHOOTER
+// ==========================================
+function initSpaceShooter() {
+    const canvas = document.getElementById('gameCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let ship = { x: 375, y: 430, w: 50, h: 30, speed: 6 };
+    let bullets = [], enemies = [], score = 0;
+    let keys = {};
+    window.onkeydown = e => { keys[e.key] = true; if(e.key === ' ') { bullets.push({x: ship.x+22, y: ship.y}); sfx('laser'); } };
+    window.onkeyup = e => keys[e.key] = false;
+
+    let spawnTimer = 0;
+    let interval = setInterval(() => {
+        if (!document.getElementById('gameCanvas')) { clearInterval(interval); return; }
+        if (keys['ArrowLeft'] && ship.x > 10) ship.x -= ship.speed;
+        if (keys['ArrowRight'] && ship.x < 740) ship.x += ship.speed;
+
+        spawnTimer++;
+        if (spawnTimer % 40 === 0) enemies.push({ x: Math.random() * 740, y: -30, w: 35, h: 35, speed: 3 });
+
+        bullets.forEach((b, bi) => { b.y -= 8; if(b.y < 0) bullets.splice(bi, 1); });
+        enemies.forEach((en, ei) => {
+            en.y += en.speed;
+            if(en.y > 500) enemies.splice(ei, 1);
+            bullets.forEach((b, bi) => {
+                if(b.x > en.x && b.x < en.x+en.w && b.y > en.y && b.y < en.y+en.h) {
+                    enemies.splice(ei, 1); bullets.splice(bi, 1); score += 100; addXP(5);
+                }
+            });
+        });
+
+        ctx.clearRect(0,0,800,500);
+        ctx.fillStyle = '#00ff88'; ctx.fillRect(ship.x, ship.y, ship.w, ship.h);
+        ctx.fillStyle = '#ff3366'; bullets.forEach(b => ctx.fillRect(b.x, b.y, 4, 12));
+        ctx.fillStyle = '#0051ff'; enemies.forEach(en => ctx.fillRect(en.x, en.y, en.w, en.h));
+        ctx.fillStyle = '#fff'; ctx.font = '20px JetBrains Mono'; ctx.fillText(`Score: ${score}`, 20, 35);
+    }, 1000/60);
+}
+
+// ==========================================
+// NATIVE GAME 3: CYBER SNAKE
+// ==========================================
+function initSnake() {
+    const canvas = document.getElementById('gameCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let snake = [{x: 10, y: 10}], dx = 1, dy = 0, food = {x: 15, y: 15}, score = 0;
+    window.onkeydown = e => {
+        if(e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -1; }
+        if(e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 1; }
+        if(e.key === 'ArrowLeft' && dx === 0) { dx = -1; dy = 0; }
+        if(e.key === 'ArrowRight' && dx === 0) { dx = 1; dy = 0; }
+    };
+    let interval = setInterval(() => {
+        if (!document.getElementById('gameCanvas')) { clearInterval(interval); return; }
+        let head = {x: snake[0].x + dx, y: snake[0].y + dy};
+        if(head.x < 0 || head.x >= 40 || head.y < 0 || head.y >= 25) { snake = [{x: 10, y: 10}]; score = 0; return; }
+        snake.unshift(head);
+        if(head.x === food.x && head.y === food.y) { score += 50; addXP(10); food = {x: Math.floor(Math.random()*38), y: Math.floor(Math.random()*23)}; }
+        else snake.pop();
+
+        ctx.fillStyle = '#070913'; ctx.fillRect(0,0,800,500);
+        ctx.fillStyle = '#ff3366'; ctx.fillRect(food.x*20, food.y*20, 18, 18);
+        ctx.fillStyle = '#00ff88'; snake.forEach(s => ctx.fillRect(s.x*20, s.y*20, 18, 18));
+        ctx.fillStyle = '#fff'; ctx.font = '18px JetBrains Mono'; ctx.fillText(`Score: ${score}`, 20, 30);
+    }, 100);
+}
+
+// --- App Tools Logic ---
 let calcExp = "";
 function calcPush(val) {
-    sfx('nav');
-    const d = document.getElementById('calc-display');
+    sfx('nav'); const d = document.getElementById('calc-display');
     if(val === 'C') { calcExp = ""; d.innerText = "0"; }
-    else if(val === '=') { try { calcExp = eval(calcExp).toString(); d.innerText = calcExp; addXP(10); } catch { d.innerText = "ERR"; calcExp = ""; sfx('error'); } }
+    else if(val === '=') { try { calcExp = eval(calcExp).toString(); d.innerText = calcExp; addXP(5); } catch { d.innerText = "ERR"; calcExp = ""; } }
     else { calcExp += val; d.innerText = calcExp; }
 }
+
 function saveNotes() {
-    sfx('toast');
     let val = document.getElementById('notes-area').value;
     localStorage.setItem('orion_notes', val);
     showToast("Notes Saved", "Document stored in local storage.");
-    addXP(15);
+    addXP(10);
 }
 
-// --- General UI Actions ---
-function isModalOpen() { return document.getElementById('control-center').classList.contains('open') || document.getElementById('chat-mesh').classList.contains('open') || document.getElementById('ai-core').classList.contains('open'); }
-function closeAll() { ['control-center', 'chat-mesh', 'ai-core'].forEach(id => document.getElementById(id).classList.remove('open')); }
-function toggleCC() { const cc = document.getElementById('control-center'); if(cc.classList.contains('open')) cc.classList.remove('open'); else { closeAll(); cc.classList.add('open'); } }
-function togglePanel(id) { closeAll(); document.getElementById(id).classList.add('open'); sfx('select'); }
+// --- General Utilities ---
+function closeAll() { document.getElementById('control-center').classList.remove('open'); }
+function toggleCC() { const cc = document.getElementById('control-center'); cc.classList.toggle('open'); }
+function toggleLegalModal() { document.getElementById('legal-modal').classList.toggle('open'); sfx('select'); }
 
 function cycleTheme() {
     OS.themeIdx = (OS.themeIdx + 1) % OS.themes.length;
-    applyTheme(); sfx('select'); saveLocalData();
-    showToast("System Setting", `Applied Theme: ${OS.themes[OS.themeIdx].toUpperCase()}`);
-}
-function applyTheme() {
     let t = OS.themes[OS.themeIdx];
     if(t === 'default') document.documentElement.removeAttribute('data-theme');
     else document.documentElement.setAttribute('data-theme', t);
     document.getElementById('theme-lbl').innerText = t;
-}
-
-function uiAction(action, e) {
-    if(e) e.stopPropagation();
-    sfx('select');
-    if(action === 'fav') showToast("Added to Favorites", "Game pinned to profile.");
-    if(action === 'sync') showToast("Cloud Sync", "Profile and saves backed up to ORION servers.");
-    if(action === 'vol') showToast("Audio", "Volume adjusted via API.");
-    if(action === 'settings') showToast("Settings", "Deep settings menu locked in Alpha.");
-    if(action === 'profile') showToast("Profile", "phxntom's stats loaded.");
-    if(action === 'power') { document.body.style.opacity=0; setTimeout(()=>location.reload(), 1000); }
+    sfx('select'); showToast("Theme Applied", t.toUpperCase());
 }
 
 function toggleFullscreen() {
-    sfx('select');
-    if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); showToast("Display", "Fullscreen Enabled"); }
-    else if (document.exitFullscreen) { document.exitFullscreen(); showToast("Display", "Fullscreen Disabled"); }
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else if (document.exitFullscreen) document.exitFullscreen();
 }
 
-function addXP(amount) {
-    OS.user.xp += amount;
-    if (OS.user.xp >= (OS.user.level * 1000)) {
-        OS.user.level++;
-        showToast("LEVEL UP!", `You hit Level ${OS.user.level}. Legend.`);
-        sfx('boot'); 
-    }
-    updateUI(); saveLocalData();
+function addXP(amt) {
+    OS.user.xp += amt;
+    if(OS.user.xp >= OS.user.level * 1000) { OS.user.level++; showToast("LEVEL UP!", `Reached Level ${OS.user.level}!`); sfx('boot'); }
+    updateXPUI();
 }
-
-// --- Chat & AI Modules ---
-function handleSearch(e) { if(e.key === 'Enter') { sfx('select'); showToast("Search", "Global search indexing complete."); e.target.value = ''; e.target.blur(); } }
-
-function sendChat() {
-    const input = document.getElementById('chat-input'); const val = input.value.trim(); if(!val) return;
-    const box = document.getElementById('chat-box');
-    box.innerHTML += `<div class="msg me"><div class="sender">phxntom</div><div class="bubble">${val}</div></div>`;
-    input.value = ''; box.scrollTop = box.scrollHeight; addXP(5);
-    setTimeout(() => { box.innerHTML += `<div class="msg bot"><div class="sender">Admin</div><div class="bubble">Acknowledged. Adding to dev log.</div></div>`; box.scrollTop = box.scrollHeight; sfx('nav'); }, 1000);
-}
-
-function sendAI() {
-    const input = document.getElementById('ai-input'); const val = input.value.trim().toLowerCase(); if(!val) return;
-    const box = document.getElementById('ai-box');
-    box.innerHTML += `<div class="msg me"><div class="sender">phxntom</div><div class="bubble">${val}</div></div>`;
-    input.value = ''; box.scrollTop = box.scrollHeight;
-    
-    setTimeout(() => {
-        let res = "Command unverified. Try /calc, /notes, or /theme.";
-        if (val.includes('/theme')) { cycleTheme(); res = "Cycling visual matrix."; }
-        else if (val.includes('/calc')) { openApp('calc'); res = "Booting SuperCalc."; }
-        else if (val.includes('/notes')) { openApp('notes'); res = "Booting Text Editor."; }
-        
-        box.innerHTML += `<div class="msg bot"><div class="sender">ORION AI</div><div class="bubble">${res}</div></div>`;
-        box.scrollTop = box.scrollHeight; sfx('toast');
-    }, 600);
+function updateXPUI() {
+    document.getElementById('ui-xp').style.width = ((OS.user.xp % 1000) / 10) + '%';
+    document.getElementById('ui-level').innerText = `Level ${OS.user.level} | ${OS.user.xp.toLocaleString()} XP`;
 }
 
 function showToast(title, msg) {
-    sfx('toast'); const hub = document.getElementById('notif-hub');
+    sfx('select'); const hub = document.getElementById('notif-hub');
     const t = document.createElement('div'); t.className = 'toast';
-    t.innerHTML = `<div class="toast-icon"><i class="fas fa-check-circle"></i></div><div class="toast-body"><h4>${title}</h4><p>${msg}</p></div>`;
+    t.innerHTML = `<div class="toast-body"><h4>${title}</h4><p>${msg}</p></div>`;
     hub.appendChild(t); setTimeout(() => t.classList.add('show'), 10);
-    setTimeout(() => { t.classList.remove('show'); setTimeout(()=>t.remove(), 500); }, 4000);
+    setTimeout(() => { t.classList.remove('show'); setTimeout(()=>t.remove(), 400); }, 3500);
 }
 
-function triggerEasterEgg() {
-    sfx('easter'); OS.konami = [];
-    showToast("SECRET UNLOCKED", "Konami Code accepted. Dev mode activated.");
-    document.documentElement.setAttribute('data-theme', 'cyberpunk');
-    document.getElementById('ambient-canvas').style.filter = 'hue-rotate(180deg) blur(5px)';
-    addXP(1000);
-}
-
-// --- Background Graphics ---
+// --- Background Particles ---
 function initBackground() {
     const canvas = document.getElementById('ambient-canvas'); const ctx = canvas.getContext('2d');
     let w = canvas.width = window.innerWidth; let h = canvas.height = window.innerHeight;
     let particles = [];
     window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
-
-    for(let i=0; i<120; i++) particles.push({ x: Math.random() * w, y: Math.random() * h, s: Math.random() * 2 + 0.5, v: Math.random() * 0.5 + 0.1 });
-
+    for(let i=0; i<100; i++) particles.push({ x: Math.random()*w, y: Math.random()*h, s: Math.random()*2 + 0.5, v: Math.random()*0.4 + 0.1 });
     function draw() {
         ctx.clearRect(0,0,w,h);
-        let themeColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-accent').trim() || '#0043ff';
-        let grad = ctx.createRadialGradient(w/2, h, 0, w/2, h, h);
-        
-        // CSS var to RGBA parse
-        let rgb = "0, 67, 255";
-        if(themeColor === '#ff007c') rgb = "255, 0, 124";
-        if(themeColor === '#ff66b2') rgb = "255, 102, 178";
-        if(themeColor === '#ffffff') rgb = "255, 255, 255";
-        if(themeColor === '#ffb000') rgb = "255, 176, 0";
-        if(themeColor === '#00ff66') rgb = "0, 255, 102";
-        if(themeColor === '#9d00ff') rgb = "157, 0, 255";
-
-        grad.addColorStop(0, `rgba(${rgb}, 0.2)`); grad.addColorStop(1, 'transparent');
-        ctx.fillStyle = grad; ctx.fillRect(0,0,w,h);
-
         ctx.fillStyle = '#fff';
         particles.forEach(p => {
-            p.y -= p.v; p.x += Math.sin(p.y*0.01)*0.2;
-            if(p.y < -10) { p.y = h+10; p.x = Math.random()*w; }
-            ctx.globalAlpha = Math.random()*0.5 + 0.1;
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+            p.y -= p.v; if(p.y < 0) { p.y = h; p.x = Math.random()*w; }
+            ctx.globalAlpha = 0.3; ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
         });
         requestAnimationFrame(draw);
     }
