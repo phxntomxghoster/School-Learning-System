@@ -3,487 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Orion OS | Alpha version 1.0.0</title>
+    <title>Orion OS - Series X / macOS 27 Edition</title>
     <style>
-        /* =========================================
-           PS5 AUTHENTIC STYLESHEET
-           ========================================= */
+        /* =========================================================
+           1. CORE ENGINE & MAC OS X XBOX THEME
+           ========================================================= */
         :root {
-            --bg-base: #000000;
-            --text-main: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.6);
-            --ps-focus: rgba(255, 255, 255, 0.2);
-            --transition-smooth: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', -apple-system, sans-serif; user-select: none; }
-        body { width: 100vw; height: 100vh; background-color: var(--bg-base); color: var(--text-main); overflow: hidden; }
-
-        /* Dynamic Game Backgrounds */
-        #dynamic-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center;
-            transition: background-image 0.5s ease-in-out; z-index: 1;
-            /* Gradient overlay to make text pop like PS5 */
-            box-shadow: inset 0 -300px 300px -100px rgba(0,0,0,0.9), inset 0 300px 200px -200px rgba(0,0,0,0.8);
+            /* macOS Glass Variables */
+            --glass-bg: rgba(30, 30, 40, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            
+            /* Xbox Series X Accent Variables */
+            --xbox-green: #107C10;
+            --xbox-glow: rgba(16, 124, 16, 0.6);
+            --xbox-dark: #0e0e14;
+            
+            --text-main: #f8f8f8;
+            --text-muted: #a0a0a0;
         }
 
-        /* PS5 UI Layer */
-        #ps5-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; flex-direction: column; }
-
-        /* Top Header */
-        header { display: flex; justify-content: space-between; align-items: flex-start; padding: 40px 60px; }
-        .nav-tabs { display: flex; gap: 30px; font-size: 1.2rem; font-weight: 500; }
-        .nav-tabs span { color: var(--text-muted); transition: var(--transition-smooth); cursor: pointer; position: relative; padding-bottom: 5px; }
-        .nav-tabs span.active { color: #fff; font-weight: 700; }
-        .nav-tabs span.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: #fff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
         
-        .sys-right { display: flex; gap: 20px; align-items: center; }
-        .sys-icon { font-size: 1.2rem; cursor: pointer; color: var(--text-main); }
-        .clock { font-weight: 500; font-size: 1.1rem; }
-        .profile-img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
-        .profile-img:hover { border-color: #fff; }
-
-        /* Game Content Area */
-        .game-content { margin-top: auto; padding: 0 80px; display: flex; flex-direction: column; gap: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        .game-logo-text { font-size: 3rem; font-weight: 800; letter-spacing: 1px; }
-        
-        .play-btn {
-            background: rgba(255,255,255,0.1); border: 2px solid #fff; color: #fff;
-            padding: 15px 40px; border-radius: 30px; font-size: 1.2rem; font-weight: 600;
-            width: fit-content; cursor: pointer; backdrop-filter: blur(5px);
-            transition: var(--transition-smooth); display: flex; align-items: center; gap: 10px;
+        body, html { 
+            width: 100%; height: 100%; overflow: hidden; color: var(--text-main);
+            /* macOS 27 Dynamic Flowing Background crossed with Xbox Dark Mode */
+            background: linear-gradient(135deg, #050508 0%, #1a1b26 50%, #0d1117 100%);
         }
-        .play-btn:hover { background: #fff; color: #000; transform: scale(1.05); }
 
-        /* PS5 Bottom Icon Row */
-        .icon-row { display: flex; gap: 15px; padding: 30px 80px 60px 80px; overflow-x: auto; scroll-behavior: smooth; }
-        .icon-row::-webkit-scrollbar { display: none; }
-        
-        .game-tile {
-            width: 80px; height: 80px; border-radius: 15px; background: #333;
-            display: flex; justify-content: center; align-items: center; font-size: 2rem;
-            cursor: pointer; transition: var(--transition-smooth); border: 2px solid transparent;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5); flex-shrink: 0;
+        /* Ambient Background Orbs */
+        .ambient-orb {
+            position: absolute; border-radius: 50%; filter: blur(100px); z-index: 0; opacity: 0.4;
+            animation: float 20s infinite alternate;
         }
-        .game-tile.active { width: 90px; height: 90px; border-color: #fff; transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
-        .game-tile:hover:not(.active) { border-color: rgba(255,255,255,0.5); }
+        .orb-1 { width: 50vw; height: 50vw; background: #107C10; top: -10vw; left: -10vw; }
+        .orb-2 { width: 40vw; height: 40vw; background: #3a1c71; bottom: -10vw; right: -5vw; }
 
-        /* Fullscreen Game Engine Canvas Overlay */
-        #engine-overlay {
+        @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(5vw, 5vh); } }
+
+        /* Reusable Heavy Glass Utility */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px) saturate(150%);
+            -webkit-backdrop-filter: blur(35px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* =========================================================
+           2. macOS 27 DYNAMIC TOP PILL (STATUS BAR)
+           ========================================================= */
+        .dynamic-pill {
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            width: max-content; padding: 8px 24px; border-radius: 30px;
+            display: flex; align-items: center; gap: 24px; z-index: 100;
+            font-size: 13px; font-weight: 600; transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .dynamic-pill:hover { padding: 8px 32px; background: rgba(40, 40, 50, 0.6); }
+
+        .sys-stats { display: flex; gap: 16px; opacity: 0.8; }
+        .stealth-badge { background: var(--xbox-green); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+
+        /* =========================================================
+           3. XBOX SERIES X UI - SPATIAL GRID DASHBOARD
+           ========================================================= */
+        #dashboard {
+            position: absolute; top: 12%; left: 0; width: 100%; height: 88%;
+            padding: 40px 60px; z-index: 10; display: flex; flex-direction: column; gap: 30px;
+        }
+
+        .section-title { font-size: 18px; font-weight: 700; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; }
+
+        .xbox-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px; width: 100%;
+        }
+
+        /* The Xbox Tile combined with macOS Glass */
+        .xbox-tile {
+            position: relative; height: 180px; border-radius: 16px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px;
+            cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            border: 2px solid transparent; /* Ready for Xbox focus border */
+        }
+
+        .xbox-tile span { font-size: 48px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); }
+        .xbox-tile .label { font-size: 14px; font-weight: 600; }
+        
+        /* Xbox Quick Resume Badge Concept */
+        .quick-resume {
+            position: absolute; top: 10px; right: 10px; font-size: 10px; background: rgba(0,0,0,0.6);
+            padding: 4px 8px; border-radius: 8px; border: 1px solid var(--xbox-green); color: var(--xbox-green);
+            display: none;
+        }
+
+        /* Xbox Focus Glow State */
+        .xbox-tile:hover {
+            transform: scale(1.05) translateY(-5px);
+            border: 2px solid var(--xbox-green);
+            box-shadow: 0 15px 35px var(--xbox-glow), inset 0 0 20px rgba(16, 124, 16, 0.2);
+            background: rgba(16, 124, 16, 0.1);
+            z-index: 20;
+        }
+
+        .xbox-tile.active .quick-resume { display: block; }
+
+        /* =========================================================
+           4. XBOX GUIDE MENU (SLIDE OUT PANEL)
+           ========================================================= */
+        #guide-menu {
+            position: absolute; top: 0; left: -320px; width: 300px; height: 100vh;
+            background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(40px);
+            border-right: 1px solid var(--glass-border); z-index: 200;
+            transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex; flex-direction: column; padding: 40px 20px; box-shadow: 20px 0 50px rgba(0,0,0,0.5);
+        }
+
+        #guide-menu.open { left: 0; }
+
+        .guide-profile { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .guide-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--xbox-green); display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid #fff; }
+        .guide-name { font-weight: 700; font-size: 16px; }
+        .guide-status { font-size: 12px; color: var(--xbox-green); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .guide-status::before { content: ''; width: 8px; height: 8px; background: var(--xbox-green); border-radius: 50%; display: block; box-shadow: 0 0 8px var(--xbox-green); }
+
+        .guide-btn {
+            padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-bottom: 10px;
+        }
+        .guide-btn:hover { background: rgba(255,255,255,0.1); padding-left: 20px; }
+        .guide-btn.active { border-left: 4px solid var(--xbox-green); background: rgba(16, 124, 16, 0.15); }
+
+        /* =========================================================
+           5. APP WINDOW (XBOX / MAC HYBRID)
+           ========================================================= */
+        .window {
+            position: absolute; top: 15%; left: 20%; width: 60%; height: 60%; border-radius: 16px;
+            display: none; flex-direction: column; z-index: 150; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: windowOpen 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes windowOpen { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        
+        .window-header { height: 40px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; cursor: move; background: rgba(0,0,0,0.5); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .win-close { background: #ff5f56; width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer; transition: 0.2s; }
+        .win-close:hover { filter: brightness(1.2); box-shadow: 0 0 10px #ff5f56; }
+        .window-body { flex: 1; padding: 20px; background: rgba(10,10,15,0.6); overflow-y: auto; }
+
+        /* =========================================================
+           6. PHANTOM PROTOCOL V2 (STEALTH)
+           ========================================================= */
+        #phantom-screen {
             position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000; z-index: 100; display: none; flex-direction: column;
+            background: #ffffff; z-index: 999999; display: none; color: #202124; font-family: Arial, sans-serif;
         }
-        
-        /* Universal PS Button / Quit Overlay */
-        #ps-quit-btn {
-            position: absolute; top: 20px; left: 20px; z-index: 101;
-            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3);
-            color: #fff; padding: 10px 20px; border-radius: 20px; cursor: pointer;
-            backdrop-filter: blur(10px); transition: 0.2s; font-weight: 600;
-        }
-        #ps-quit-btn:hover { background: #fff; color: #000; }
-
-        canvas { flex-grow: 1; display: block; width: 100%; height: 100%; background: #0a0a0c; object-fit: contain; }
-
+        .docs-toolbar { background: #f1f3f4; padding: 10px 20px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 20px; font-size: 13px; align-items: center; }
+        .docs-page { background: #fff; width: 800px; height: 100vh; margin: 0 auto; padding: 60px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-left: 1px solid #ddd; border-right: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
-    <!-- PS5 UI LAYER -->
-    <div id="dynamic-bg"></div>
+    <!-- Ambient macOS Background Layers -->
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
 
-    <div id="ps5-ui">
-        <header>
-            <div class="nav-tabs">
-                <span class="active">Games</span>
-                <span>Media</span>
-            </div>
-            <div class="sys-right">
-                <span class="sys-icon">🔍</span>
-                <span class="sys-icon">⚙️</span>
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=phxntom&backgroundColor=111" class="profile-img" title="phxntom">
-                <span class="clock" id="sys-time">00:00 AM</span>
-            </div>
-        </header>
-
-        <div class="game-content">
-            <div class="game-logo-text" id="game-title">Velocity City</div>
-            <button class="play-btn" id="play-btn" onclick="launchGame()">▶ Play</button>
+    <!-- macOS 27 Dynamic Top Pill -->
+    <div class="dynamic-pill glass">
+        <span style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--xbox-green)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg> 
+            Orion OS
+        </span>
+        <div class="sys-stats">
+            <span id="clock">12:00 PM</span>
+            <span>|</span>
+            <span>Menu: Shift+Tab</span>
         </div>
+        <div class="stealth-badge">Alt+S STEALTH</div>
+    </div>
 
-        <div class="icon-row" id="icon-row">
-            <!-- Tiles populated by JS -->
+    <!-- Xbox Guide Menu (Slide out) -->
+    <div id="guide-menu">
+        <div class="guide-profile">
+            <div class="guide-avatar">👻</div>
+            <div>
+                <div class="guide-name" id="user-display">phxntom</div>
+                <div class="guide-status">Online</div>
+            </div>
+        </div>
+        <div class="guide-btn active">🏠 Home</div>
+        <div class="guide-btn">🎮 My Games & Apps</div>
+        <div class="guide-btn">💬 Chat</div>
+        <div class="guide-btn">⚙️ Settings</div>
+    </div>
+
+    <!-- Xbox Spatial Dashboard -->
+    <div id="dashboard">
+        <div class="section-title">Pinned to Home</div>
+        
+        <div class="xbox-grid">
+            <div class="xbox-tile glass" onclick="openApp('Terminal', this)">
+                <div class="quick-resume">Quick Resume</div>
+                <span>💻</span>
+                <div class="label">Terminal</div>
+            </div>
+            
+            <div class="xbox-tile glass" onclick="openApp('Notes Engine', this)">
+                <div class="quick-resume">Quick Resume</div>
+                <span>📝</span>
+                <div class="label">Notes Engine</div>
+            </div>
+
+            <div class="xbox-tile glass" onclick="openApp('Web Browser', this)">
+                <div class="quick-resume">Quick Resume</div>
+                <span>🌍</span>
+                <div class="label">Browser</div>
+            </div>
+
+            <div class="xbox-tile glass" onclick="openApp('System Config', this)">
+                <div class="quick-resume">Quick Resume</div>
+                <span>⚙️</span>
+                <div class="label">Config</div>
+            </div>
         </div>
     </div>
 
-    <!-- IN-GAME ENGINE LAYER -->
-    <div id="engine-overlay">
-        <button id="ps-quit-btn" onclick="quitGame()">Press to Exit</button>
-        <canvas id="game-canvas" width="1920" height="1080"></canvas>
+    <!-- Window System -->
+    <div id="app-window" class="window glass">
+        <div class="window-header" id="window-header">
+            <span style="font-weight: 700; font-size: 13px; letter-spacing: 0.5px;" id="window-title">App</span>
+            <button class="win-close" onclick="closeApp()"></button>
+        </div>
+        <div class="window-body" id="window-body"></div>
+    </div>
+
+    <!-- Phantom Protocol V2 -->
+    <div id="phantom-screen">
+        <div class="docs-toolbar">
+            <div style="width: 14px; height: 14px; background: #4285F4; border-radius: 2px;"></div>
+            <strong style="color: #5f6368;">US History - Industrial Revolution - Google Docs</strong>
+            <span style="color: #5f6368; margin-left: 20px;">File</span>
+            <span style="color: #5f6368;">Edit</span>
+            <span style="color: #5f6368;">View</span>
+        </div>
+        <div class="docs-page">
+            <h1 style="margin-bottom: 24px; font-family: 'Times New Roman', Times, serif;">The Impact of the Industrial Revolution</h1>
+            <p style="line-height: 2; font-family: 'Times New Roman', Times, serif; font-size: 16px; text-indent: 40px;">
+                The Industrial Revolution, which began in Britain in the late 18th century, marked a major turning point in history. Almost every aspect of daily life was influenced in some way. In particular, average income and population began to exhibit unprecedented sustained growth. Some economists say that the major impact of the Industrial Revolution was that the standard of living for the general population began to increase consistently for the first time in history.
+            </p>
+        </div>
     </div>
 
     <script>
-        /* =========================================
-           PS5 UI LOGIC
-           ========================================= */
-        const games = [
-            { id: 'velocity', title: 'Velocity City', icon: '🏎️', bg: 'linear-gradient(to bottom, #2b1055, #7597de)' },
-            { id: 'clash', title: 'Cursed Clash', icon: '⚔️', bg: 'linear-gradient(to bottom, #4a00e0, #8e2de2)' },
-            { id: 'dungeon', title: 'Dungeon Legends', icon: '🛡️', bg: 'linear-gradient(to bottom, #0f2027, #203a43)' },
-            { id: 'neon', title: 'Neon Runner', icon: '🏃‍♂️', bg: 'linear-gradient(to bottom, #ff00cc, #333399)' }
-        ];
-
-        let selectedGameId = games[0].id;
-        const row = document.getElementById('icon-row');
-        const bgLayer = document.getElementById('dynamic-bg');
-        const titleText = document.getElementById('game-title');
-
-        // Build PS5 Row
-        games.forEach((game, index) => {
-            const tile = document.createElement('div');
-            tile.className = index === 0 ? 'game-tile active' : 'game-tile';
-            tile.innerHTML = game.icon;
-            
-            tile.addEventListener('click', () => {
-                document.querySelectorAll('.game-tile').forEach(t => t.classList.remove('active'));
-                tile.classList.add('active');
-                selectedGameId = game.id;
-                titleText.innerText = game.title;
-                bgLayer.style.background = game.bg;
-            });
-            row.appendChild(tile);
-        });
-
-        // Init First Game bg
-        bgLayer.style.background = games[0].bg;
-
-        // Clock
+        // 1. Live Clock Updates
         setInterval(() => {
-            const d = new Date();
-            let h = d.getHours(); let m = d.getMinutes(); let ampm = h >= 12 ? 'PM' : 'AM';
-            h = h % 12 || 12; m = m < 10 ? '0'+m : m;
-            document.getElementById('sys-time').innerText = h + ':' + m + ' ' + ampm;
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }, 1000);
 
-        /* =========================================
-           MASTER CANVAS GAME ENGINE
-           ========================================= */
-        const canvas = document.getElementById('game-canvas');
-        const ctx = canvas.getContext('2d');
-        let gameLoopId;
-        let activeEngine = null;
+        // 2. Xbox Guide Menu Toggle (Shift + Tab)
+        let guideOpen = false;
+        document.addEventListener('keydown', (e) => {
+            if (e.shiftKey && e.key === 'Tab') {
+                e.preventDefault();
+                guideOpen = !guideOpen;
+                document.getElementById('guide-menu').classList.toggle('open', guideOpen);
+            }
+        });
 
-        function launchGame() {
-            document.getElementById('ps5-ui').style.display = 'none';
-            document.getElementById('engine-overlay').style.display = 'flex';
-            
-            // Clear existing keys
-            window.onkeydown = null; window.onkeyup = null; canvas.onmousedown = null;
+        // 3. Phantom Protocol V2 (Alt + S)
+        let stealthMode = false;
+        document.addEventListener('keydown', (e) => {
+            if(e.altKey && e.key.toLowerCase() === 's') {
+                stealthMode = !stealthMode;
+                document.getElementById('phantom-screen').style.display = stealthMode ? 'block' : 'none';
+            }
+        });
 
-            if(selectedGameId === 'velocity') initVelocityCity();
-            if(selectedGameId === 'clash') initCursedClash();
-            if(selectedGameId === 'dungeon') initDungeonLegends();
-            if(selectedGameId === 'neon') initNeonRunner();
-        }
-
-        function quitGame() {
-            cancelAnimationFrame(gameLoopId);
-            activeEngine = null;
-            document.getElementById('engine-overlay').style.display = 'none';
-            document.getElementById('ps5-ui').style.display = 'flex';
-        }
-
-        /* -----------------------------------------
-           GAME 1: VELOCITY CITY (FULLY WORKING)
-           ----------------------------------------- */
-        let vcKeys = { w: false };
-        let vcState = { speed: 0, lines: [], crashed: false, won: false };
+        // 4. Advanced Window & Quick Resume Engine
+        const windowBody = document.getElementById('window-body');
+        let currentActiveTile = null;
         
-        function initVelocityCity() {
-            activeEngine = 'velocity';
-            vcState = { speed: 0, lines: [], crashed: false, won: false };
-            for(let i=0; i<40; i++) vcState.lines.push({ y: Math.random()*canvas.height, x: Math.random()*canvas.width, z: Math.random()*2+1 });
+        function openApp(app, tileElement) {
+            document.getElementById('window-title').innerText = app;
+            document.getElementById('app-window').style.display = 'flex';
             
-            window.onkeydown = (e) => { if(e.key === 'w' || e.key === 'ArrowUp') vcKeys.w = true; }
-            window.onkeyup = (e) => { if(e.key === 'w' || e.key === 'ArrowUp') vcKeys.w = false; }
-            velocityLoop();
-        }
+            // Add Xbox Quick Resume tag to the specific tile clicked
+            if (currentActiveTile) currentActiveTile.classList.remove('active');
+            currentActiveTile = tileElement;
+            currentActiveTile.classList.add('active');
 
-        function velocityLoop() {
-            if(activeEngine !== 'velocity') return;
-            
-            if(!vcState.crashed && !vcState.won) {
-                if(vcKeys.w) vcState.speed += 0.8 + (vcState.speed * 0.005);
-                else vcState.speed *= 0.97;
-                
-                if(vcState.speed > 999) vcState.won = true;
-                if(vcState.speed > 700 && Math.random() < 0.002) vcState.crashed = true; // Blow engine logic
-            }
-
-            ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw Warp Lines
-            ctx.fillStyle = vcState.speed > 800 ? '#ff003c' : (vcState.speed > 500 ? '#00e5ff' : '#ffffff');
-            vcState.lines.forEach(line => {
-                line.y += (vcState.speed / line.z) + 2;
-                if(line.y > canvas.height) { line.y = -50; line.x = Math.random()*canvas.width; }
-                let length = 30 * (vcState.speed/100 + 1);
-                ctx.fillRect(line.x, line.y, 4, length);
-            });
-
-            // UI
-            ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
-            ctx.font = 'bold 100px Arial'; ctx.fillText(Math.floor(vcState.speed) + ' MPH', canvas.width/2, canvas.height - 150);
-            ctx.font = '30px Arial'; ctx.fillText('Hold W or UP to accelerate. Push it to 999.', canvas.width/2, canvas.height - 80);
-
-            if(vcState.crashed) { ctx.fillStyle = 'red'; ctx.font = 'bold 150px Arial'; ctx.fillText('ENGINE BLOWN', canvas.width/2, canvas.height/2); }
-            if(vcState.won) { ctx.fillStyle = 'gold'; ctx.font = 'bold 150px Arial'; ctx.fillText('999 MPH - YOU SURVIVED', canvas.width/2, canvas.height/2); }
-            
-            gameLoopId = requestAnimationFrame(velocityLoop);
-        }
-
-        /* -----------------------------------------
-           GAME 2: CURSED CLASH (FULLY WORKING)
-           ----------------------------------------- */
-        let ccKeys = {};
-        let ccState = {};
-
-        function initCursedClash() {
-            activeEngine = 'clash';
-            ccState = { 
-                p1: { x: 300, y: 700, w: 80, h: 150, color: '#00e5ff', hp: 100, attacking: false },
-                p2: { x: 1500, y: 700, w: 80, h: 150, color: '#ff0055', hp: 100, attacking: false }
-            };
-            window.onkeydown = (e) => ccKeys[e.key] = true;
-            window.onkeyup = (e) => ccKeys[e.key] = false;
-            clashLoop();
-        }
-
-        function clashLoop() {
-            if(activeEngine !== 'clash') return;
-
-            // Movement
-            if(ccKeys['a']) ccState.p1.x -= 12;
-            if(ccKeys['d']) ccState.p1.x += 12;
-            if(ccKeys['ArrowLeft']) ccState.p2.x -= 12;
-            if(ccKeys['ArrowRight']) ccState.p2.x += 12;
-
-            // Combat (P1 Space, P2 Enter)
-            if(ccKeys[' '] && !ccState.p1.attacking) {
-                ccState.p1.attacking = true;
-                if(Math.abs(ccState.p1.x - ccState.p2.x) < 220) ccState.p2.hp -= 8;
-                setTimeout(() => ccState.p1.attacking = false, 250);
-            }
-            if(ccKeys['Enter'] && !ccState.p2.attacking) {
-                ccState.p2.attacking = true;
-                if(Math.abs(ccState.p2.x - ccState.p1.x) < 220) ccState.p1.hp -= 8;
-                setTimeout(() => ccState.p2.attacking = false, 250);
-            }
-
-            // Draw Env
-            ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#222'; ctx.fillRect(0, 850, canvas.width, 300); // Floor
-
-            // Draw Players
-            ctx.fillStyle = ccState.p1.color; ctx.fillRect(ccState.p1.x, ccState.p1.y, ccState.p1.w, ccState.p1.h);
-            ctx.fillStyle = ccState.p2.color; ctx.fillRect(ccState.p2.x, ccState.p2.y, ccState.p2.w, ccState.p2.h);
-
-            // Draw Attacks
-            if(ccState.p1.attacking) { ctx.fillStyle = '#fff'; ctx.fillRect(ccState.p1.x + ccState.p1.w, ccState.p1.y + 40, 150, 40); }
-            if(ccState.p2.attacking) { ctx.fillStyle = '#fff'; ctx.fillRect(ccState.p2.x - 150, ccState.p2.y + 40, 150, 40); }
-
-            // Draw UI
-            ctx.fillStyle = '#333'; ctx.fillRect(100, 100, 600, 30); ctx.fillRect(1220, 100, 600, 30);
-            ctx.fillStyle = '#00e5ff'; ctx.fillRect(100, 100, Math.max(0, ccState.p1.hp) * 6, 30);
-            ctx.fillStyle = '#ff0055'; ctx.fillRect(1220 + (600 - Math.max(0, ccState.p2.hp)*6), 100, Math.max(0, ccState.p2.hp) * 6, 30);
-            
-            ctx.fillStyle = '#fff'; ctx.font = '24px Arial'; ctx.textAlign = 'left'; ctx.fillText('P1: WASD + SPACE', 100, 160);
-            ctx.textAlign = 'right'; ctx.fillText('P2: ARROWS + ENTER', 1820, 160);
-
-            if(ccState.p1.hp <= 0 || ccState.p2.hp <= 0) {
-                ctx.fillStyle = 'gold'; ctx.font = 'bold 100px Arial'; ctx.textAlign = 'center';
-                ctx.fillText(ccState.p1.hp <= 0 ? 'PLAYER 2 WINS' : 'PLAYER 1 WINS', canvas.width/2, canvas.height/2);
+            if(app === 'Terminal') {
+                windowBody.innerHTML = '<div style="color: var(--xbox-green); font-family: monospace; height: 100%;"><p>Orion OS [Version 3.0.Xbox]</p><p>(c) Orion Corporation. All rights reserved.</p><br><p>> Initializing local subsystems...</p><p>> Securly Bypass Module... <span style="color: #fff">[OK]</span></p><p>> C:\\Users\\User></p></div>';
+            } else if (app === 'Notes Engine') {
+                let savedNotes = localStorage.getItem('xboxNotes') || '';
+                windowBody.innerHTML = `<textarea id="notes-area" style="width:100%; height:100%; background:transparent; color:#fff; border:none; outline:none; resize:none; font-size: 16px;" placeholder="Local notes...">${savedNotes}</textarea>`;
+                document.getElementById('notes-area').addEventListener('input', (e) => localStorage.setItem('xboxNotes', e.target.value));
             } else {
-                gameLoopId = requestAnimationFrame(clashLoop);
+                windowBody.innerHTML = `<p style="opacity: 0.6;">Loading ${app} package into memory...</p>`;
             }
         }
 
-        /* -----------------------------------------
-           GAME 3: DUNGEON LEGENDS (FULLY WORKING)
-           ----------------------------------------- */
-        let dlState = {};
-        let dlKeys = {};
+        function closeApp() { 
+            document.getElementById('app-window').style.display = 'none'; 
+            // We intentionally leave currentActiveTile.classList.add('active') 
+            // so the "Quick Resume" badge stays on the tile after closing!
+        }
 
-        function initDungeonLegends() {
-            activeEngine = 'dungeon';
-            dlState = {
-                player: { x: canvas.width/2, y: canvas.height/2, size: 40, color: '#00ccff', speed: 8 },
-                bullets: [], enemies: [], frame: 0, score: 0, dead: false
+        // 5. Draggable Window Logic
+        let appWin = document.getElementById("app-window");
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        document.getElementById("window-header").onmousedown = (e) => {
+            e.preventDefault();
+            pos3 = e.clientX; pos4 = e.clientY;
+            document.onmouseup = () => { document.onmouseup = null; document.onmousemove = null; };
+            document.onmousemove = (e) => {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY;
+                pos3 = e.clientX; pos4 = e.clientY;
+                appWin.style.top = (appWin.offsetTop - pos2) + "px";
+                appWin.style.left = (appWin.offsetLeft - pos1) + "px";
             };
-            window.onkeydown = (e) => dlKeys[e.key.toLowerCase()] = true;
-            window.onkeyup = (e) => dlKeys[e.key.toLowerCase()] = false;
-            
-            canvas.onmousedown = (e) => {
-                if(dlState.dead) return;
-                const rect = canvas.getBoundingClientRect();
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-                const clickX = (e.clientX - rect.left) * scaleX;
-                const clickY = (e.clientY - rect.top) * scaleY;
-                
-                const angle = Math.atan2(clickY - dlState.player.y, clickX - dlState.player.x);
-                dlState.bullets.push({ x: dlState.player.x, y: dlState.player.y, vx: Math.cos(angle)*15, vy: Math.sin(angle)*15 });
-            };
-            dungeonLoop();
-        }
-
-        function dungeonLoop() {
-            if(activeEngine !== 'dungeon') return;
-            dlState.frame++;
-            
-            // Movement
-            if(!dlState.dead) {
-                if(dlKeys['w']) dlState.player.y -= dlState.player.speed;
-                if(dlKeys['s']) dlState.player.y += dlState.player.speed;
-                if(dlKeys['a']) dlState.player.x -= dlState.player.speed;
-                if(dlKeys['d']) dlState.player.x += dlState.player.speed;
-            }
-
-            // Spawn Enemies
-            if(dlState.frame % 60 === 0 && !dlState.dead) {
-                dlState.enemies.push({
-                    x: Math.random() < 0.5 ? 0 : canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: 30, speed: 3 + (dlState.score * 0.1)
-                });
-            }
-
-            ctx.fillStyle = '#222'; ctx.fillRect(0, 0, canvas.width, canvas.height); // BG
-
-            // Update & Draw Bullets
-            ctx.fillStyle = 'yellow';
-            for(let i = dlState.bullets.length - 1; i >= 0; i--) {
-                let b = dlState.bullets[i];
-                b.x += b.vx; b.y += b.vy;
-                ctx.beginPath(); ctx.arc(b.x, b.y, 8, 0, Math.PI*2); ctx.fill();
-            }
-
-            // Update & Draw Enemies
-            ctx.fillStyle = 'red';
-            for(let i = dlState.enemies.length - 1; i >= 0; i--) {
-                let e = dlState.enemies[i];
-                if(!dlState.dead) {
-                    const angle = Math.atan2(dlState.player.y - e.y, dlState.player.x - e.x);
-                    e.x += Math.cos(angle) * e.speed; e.y += Math.sin(angle) * e.speed;
-                    
-                    // Collision with player
-                    let dist = Math.hypot(dlState.player.x - e.x, dlState.player.y - e.y);
-                    if(dist < e.size + dlState.player.size) dlState.dead = true;
-                }
-                ctx.fillRect(e.x - e.size, e.y - e.size, e.size*2, e.size*2);
-
-                // Collision with bullets
-                for(let j = dlState.bullets.length - 1; j >= 0; j--) {
-                    let b = dlState.bullets[j];
-                    if(Math.hypot(b.x - e.x, b.y - e.y) < e.size + 8) {
-                        dlState.enemies.splice(i, 1);
-                        dlState.bullets.splice(j, 1);
-                        dlState.score++;
-                        break;
-                    }
-                }
-            }
-
-            // Draw Player
-            if(!dlState.dead) {
-                ctx.fillStyle = dlState.player.color;
-                ctx.beginPath(); ctx.arc(dlState.player.x, dlState.player.y, dlState.player.size, 0, Math.PI*2); ctx.fill();
-            }
-
-            // Draw UI
-            ctx.fillStyle = '#fff'; ctx.font = '40px Arial'; ctx.textAlign = 'left';
-            ctx.fillText('Score: ' + dlState.score, 30, 60);
-            ctx.font = '24px Arial'; ctx.fillText('WASD to Move | Click to Shoot', 30, 100);
-
-            if(dlState.dead) {
-                ctx.fillStyle = 'red'; ctx.font = 'bold 100px Arial'; ctx.textAlign = 'center';
-                ctx.fillText('YOU DIED', canvas.width/2, canvas.height/2);
-            }
-
-            gameLoopId = requestAnimationFrame(dungeonLoop);
-        }
-
-        /* -----------------------------------------
-           GAME 4: NEON RUNNER (FULLY WORKING)
-           ----------------------------------------- */
-        let nrState = {};
-        
-        function initNeonRunner() {
-            activeEngine = 'neon';
-            nrState = {
-                player: { y: 800, vy: 0, jumping: false },
-                blocks: [], score: 0, dead: false
-            };
-            window.onkeydown = (e) => {
-                if(e.code === 'Space' && !nrState.player.jumping && !nrState.dead) {
-                    nrState.player.vy = -25;
-                    nrState.player.jumping = true;
-                }
-            };
-            neonLoop();
-        }
-
-        function neonLoop() {
-            if(activeEngine !== 'neon') return;
-
-            // Physics
-            if(!nrState.dead) {
-                nrState.player.vy += 1.2; // gravity
-                nrState.player.y += nrState.player.vy;
-                if(nrState.player.y > 800) { nrState.player.y = 800; nrState.player.jumping = false; }
-                
-                // Spawn blocks
-                if(Math.random() < 0.015) {
-                    nrState.blocks.push({ x: canvas.width, w: 50, h: 100 + Math.random()*50 });
-                }
-                nrState.score++;
-            }
-
-            // Draw Env
-            ctx.fillStyle = '#0a0a2a'; ctx.fillRect(0, 0, canvas.width, canvas.height); // Sky
-            ctx.fillStyle = '#ff00cc'; ctx.fillRect(0, 880, canvas.width, 200); // Floor
-
-            // Draw Player
-            ctx.fillStyle = '#00ffff';
-            ctx.fillRect(200, nrState.player.y, 80, 80);
-
-            // Draw Blocks
-            ctx.fillStyle = '#fff';
-            for(let i = nrState.blocks.length - 1; i >= 0; i--) {
-                let b = nrState.blocks[i];
-                if(!nrState.dead) b.x -= 15 + (nrState.score * 0.002);
-                ctx.fillRect(b.x, 880 - b.h, b.w, b.h);
-
-                // Hitbox detection
-                if(200 < b.x + b.w && 280 > b.x && nrState.player.y + 80 > 880 - b.h) {
-                    nrState.dead = true;
-                }
-            }
-
-            // UI
-            ctx.fillStyle = '#fff'; ctx.font = '40px Arial'; ctx.textAlign = 'left';
-            ctx.fillText('Score: ' + Math.floor(nrState.score/10), 30, 60);
-            ctx.font = '24px Arial'; ctx.fillText('Press SPACE to Jump', 30, 100);
-
-            if(nrState.dead) {
-                ctx.fillStyle = 'red'; ctx.font = 'bold 100px Arial'; ctx.textAlign = 'center';
-                ctx.fillText('CRASHED', canvas.width/2, canvas.height/2);
-            }
-
-            gameLoopId = requestAnimationFrame(neonLoop);
-        }
-
+        };
     </script>
 </body>
 </html>
