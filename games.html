@@ -3,326 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orion OS - Series X / macOS 27 Edition</title>
+    <title>Orion Engine - Core OS</title>
     <style>
         /* =========================================================
-           1. CORE ENGINE & MAC OS X XBOX THEME
+           1. CORE VARIABLES & GLASSMORPHISM
            ========================================================= */
         :root {
-            /* macOS Glass Variables */
-            --glass-bg: rgba(30, 30, 40, 0.45);
+            --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.15);
-            
-            /* Xbox Series X Accent Variables */
-            --xbox-green: #107C10;
-            --xbox-glow: rgba(16, 124, 16, 0.6);
-            --xbox-dark: #0e0e14;
-            
-            --text-main: #f8f8f8;
-            --text-muted: #a0a0a0;
+            --glass-highlight: rgba(255, 255, 255, 0.25);
+            --xbox-accent: #107C10;
+            --xbox-glow: rgba(16, 124, 16, 0.8);
+            --text-main: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
-        
-        body, html { 
-            width: 100%; height: 100%; overflow: hidden; color: var(--text-main);
-            /* macOS 27 Dynamic Flowing Background crossed with Xbox Dark Mode */
-            background: linear-gradient(135deg, #050508 0%, #1a1b26 50%, #0d1117 100%);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; user-select: none; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #050505; color: var(--text-main); }
 
-        /* Ambient Background Orbs */
-        .ambient-orb {
-            position: absolute; border-radius: 50%; filter: blur(100px); z-index: 0; opacity: 0.4;
-            animation: float 20s infinite alternate;
-        }
-        .orb-1 { width: 50vw; height: 50vw; background: #107C10; top: -10vw; left: -10vw; }
-        .orb-2 { width: 40vw; height: 40vw; background: #3a1c71; bottom: -10vw; right: -5vw; }
-
-        @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(5vw, 5vh); } }
-
-        /* Reusable Heavy Glass Utility */
-        .glass {
+        /* Ultimate Liquid Glass Utility */
+        .liquid-glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(35px) saturate(150%);
-            -webkit-backdrop-filter: blur(35px) saturate(150%);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--glass-highlight);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         /* =========================================================
-           2. macOS 27 DYNAMIC TOP PILL (STATUS BAR)
+           2. DYNAMIC BACKGROUND ENGINE
            ========================================================= */
-        .dynamic-pill {
-            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-            width: max-content; padding: 8px 24px; border-radius: 30px;
-            display: flex; align-items: center; gap: 24px; z-index: 100;
-            font-size: 13px; font-weight: 600; transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        #bg-layer {
+            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; z-index: -1;
+            background-size: 400% 400%; transition: opacity 0.5s ease;
         }
-        .dynamic-pill:hover { padding: 8px 32px; background: rgba(40, 40, 50, 0.6); }
 
-        .sys-stats { display: flex; gap: 16px; opacity: 0.8; }
-        .stealth-badge { background: var(--xbox-green); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+        /* Theme 1: Liquid Flow (macOS vibe) */
+        .theme-liquid {
+            background: linear-gradient(45deg, #0a0a1a, #1a1a3a, #001f3f, #0a0a1a);
+            animation: bgFlow 20s ease infinite; filter: blur(80px);
+        }
+
+        /* Theme 2: Midnight Console (Xbox vibe) */
+        .theme-midnight {
+            background: radial-gradient(circle at 50% 50%, #151515, #050505 80%);
+            filter: blur(20px);
+        }
+
+        /* Theme 3: Cyber Grid */
+        .theme-cyber {
+            background: linear-gradient(135deg, #2b00ff, #ff007f, #000000);
+            animation: bgFlow 15s ease infinite; filter: blur(60px);
+        }
+
+        /* Theme 4: Cursed Energy */
+        .theme-cursed {
+            background: radial-gradient(circle at 50% 100%, #4a00e0, #8e2de2, #000000 70%);
+            animation: bgPulse 8s alternate infinite; filter: blur(90px);
+        }
+
+        @keyframes bgFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes bgPulse { 0% { opacity: 0.8; transform: scale(1); } 100% { opacity: 1; transform: scale(1.05); } }
 
         /* =========================================================
-           3. XBOX SERIES X UI - SPATIAL GRID DASHBOARD
+           3. XBOX DASHBOARD LAYOUT
            ========================================================= */
-        #dashboard {
-            position: absolute; top: 12%; left: 0; width: 100%; height: 88%;
-            padding: 40px 60px; z-index: 10; display: flex; flex-direction: column; gap: 30px;
-        }
+        #os-wrapper { display: flex; height: 100vh; width: 100vw; padding: 30px; gap: 30px; }
 
-        .section-title { font-size: 18px; font-weight: 700; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; }
-
-        .xbox-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px; width: 100%;
-        }
-
-        /* The Xbox Tile combined with macOS Glass */
-        .xbox-tile {
-            position: relative; height: 180px; border-radius: 16px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px;
-            cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
-            border: 2px solid transparent; /* Ready for Xbox focus border */
-        }
-
-        .xbox-tile span { font-size: 48px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); }
-        .xbox-tile .label { font-size: 14px; font-weight: 600; }
+        /* Side Guide */
+        .xbox-guide { width: 280px; border-radius: 24px; padding: 30px 20px; display: flex; flex-direction: column; gap: 15px; z-index: 10; }
+        .guide-header { font-size: 24px; font-weight: 800; letter-spacing: 1px; margin-bottom: 20px; text-align: center; color: #fff; text-shadow: 0 0 15px var(--glass-highlight); }
         
-        /* Xbox Quick Resume Badge Concept */
-        .quick-resume {
-            position: absolute; top: 10px; right: 10px; font-size: 10px; background: rgba(0,0,0,0.6);
-            padding: 4px 8px; border-radius: 8px; border: 1px solid var(--xbox-green); color: var(--xbox-green);
-            display: none;
+        .guide-tab { 
+            padding: 15px 20px; border-radius: 16px; font-size: 16px; font-weight: 600; 
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
+            display: flex; align-items: center; gap: 12px; 
         }
+        .guide-tab:hover { background: rgba(255,255,255,0.1); transform: translateX(5px); }
+        .guide-tab.active { background: var(--xbox-accent); border: 1px solid var(--xbox-glow); box-shadow: 0 0 20px rgba(16, 124, 16, 0.4); }
 
-        /* Xbox Focus Glow State */
-        .xbox-tile:hover {
-            transform: scale(1.05) translateY(-5px);
-            border: 2px solid var(--xbox-green);
-            box-shadow: 0 15px 35px var(--xbox-glow), inset 0 0 20px rgba(16, 124, 16, 0.2);
-            background: rgba(16, 124, 16, 0.1);
-            z-index: 20;
+        /* Main Stage Area */
+        .main-stage { flex: 1; border-radius: 24px; padding: 40px; position: relative; overflow: hidden; z-index: 10; }
+        .stage-title { font-size: 28px; font-weight: 700; margin-bottom: 30px; letter-spacing: 0.5px; }
+
+        /* Views */
+        .view-section { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.3s ease-out; }
+        .view-section.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Game Grid (Empty for now) */
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; width: 100%; overflow-y: auto; padding-right: 10px; flex: 1; }
+        .game-grid::-webkit-scrollbar { display: none; }
+
+        .game-tile {
+            height: 220px; border-radius: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;
+            cursor: pointer; position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
         }
-
-        .xbox-tile.active .quick-resume { display: block; }
-
-        /* =========================================================
-           4. XBOX GUIDE MENU (SLIDE OUT PANEL)
-           ========================================================= */
-        #guide-menu {
-            position: absolute; top: 0; left: -320px; width: 300px; height: 100vh;
-            background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(40px);
-            border-right: 1px solid var(--glass-border); z-index: 200;
-            transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            display: flex; flex-direction: column; padding: 40px 20px; box-shadow: 20px 0 50px rgba(0,0,0,0.5);
-        }
-
-        #guide-menu.open { left: 0; }
-
-        .guide-profile { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .guide-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--xbox-green); display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid #fff; }
-        .guide-name { font-weight: 700; font-size: 16px; }
-        .guide-status { font-size: 12px; color: var(--xbox-green); font-weight: 600; display: flex; align-items: center; gap: 5px; }
-        .guide-status::before { content: ''; width: 8px; height: 8px; background: var(--xbox-green); border-radius: 50%; display: block; box-shadow: 0 0 8px var(--xbox-green); }
-
-        .guide-btn {
-            padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px;
-            font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-bottom: 10px;
-        }
-        .guide-btn:hover { background: rgba(255,255,255,0.1); padding-left: 20px; }
-        .guide-btn.active { border-left: 4px solid var(--xbox-green); background: rgba(16, 124, 16, 0.15); }
-
-        /* =========================================================
-           5. APP WINDOW (XBOX / MAC HYBRID)
-           ========================================================= */
-        .window {
-            position: absolute; top: 15%; left: 20%; width: 60%; height: 60%; border-radius: 16px;
-            display: none; flex-direction: column; z-index: 150; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.2);
-            animation: windowOpen 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        @keyframes windowOpen { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        .game-tile::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 20px; border: 3px solid transparent; transition: 0.3s; pointer-events: none; }
+        .game-tile:hover { transform: scale(1.05) translateY(-8px); background: rgba(255,255,255,0.1); z-index: 10; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .game-tile:hover::after { border-color: var(--xbox-accent); box-shadow: inset 0 0 20px var(--xbox-glow); }
         
-        .window-header { height: 40px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; cursor: move; background: rgba(0,0,0,0.5); border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .win-close { background: #ff5f56; width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer; transition: 0.2s; }
-        .win-close:hover { filter: brightness(1.2); box-shadow: 0 0 10px #ff5f56; }
-        .window-body { flex: 1; padding: 20px; background: rgba(10,10,15,0.6); overflow-y: auto; }
+        .game-icon { font-size: 50px; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); transition: 0.3s; }
+        .game-tile:hover .game-icon { transform: translate(-50%, -60%) scale(1.1); }
+        .game-name { font-size: 18px; font-weight: 700; z-index: 2; }
+        .game-status { font-size: 12px; opacity: 0.7; z-index: 2; margin-top: 5px; }
+
+        /* Settings UI */
+        .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .theme-btn {
+            background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 20px; border-radius: 16px;
+            color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+        }
+        .theme-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--xbox-accent); transform: scale(1.02); }
+        .theme-preview { width: 100%; height: 60px; border-radius: 8px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.2); }
 
         /* =========================================================
-           6. PHANTOM PROTOCOL V2 (STEALTH)
+           4. GAME RUNNER OVERLAY
            ========================================================= */
-        #phantom-screen {
-            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #ffffff; z-index: 999999; display: none; color: #202124; font-family: Arial, sans-serif;
+        #game-runner {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999;
+            display: none; flex-direction: column; animation: runnerOpen 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
-        .docs-toolbar { background: #f1f3f4; padding: 10px 20px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 20px; font-size: 13px; align-items: center; }
-        .docs-page { background: #fff; width: 800px; height: 100vh; margin: 0 auto; padding: 60px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-left: 1px solid #ddd; border-right: 1px solid #ddd; }
+        @keyframes runnerOpen { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        .runner-header { height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: rgba(20,20,20,0.9); border-bottom: 1px solid var(--glass-border); }
+        .xbox-home-btn { 
+            background: var(--xbox-accent); border: none; border-radius: 50%; width: 30px; height: 30px; 
+            color: #fff; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 10px var(--xbox-glow); transition: 0.2s;
+        }
+        .xbox-home-btn:hover { transform: scale(1.1); filter: brightness(1.2); }
+        #game-container { flex: 1; width: 100%; height: 100%; position: relative; background: #111; }
     </style>
 </head>
 <body>
 
-    <!-- Ambient macOS Background Layers -->
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
+    <!-- Dynamic Background Layer -->
+    <div id="bg-layer" class="theme-liquid"></div>
 
-    <!-- macOS 27 Dynamic Top Pill -->
-    <div class="dynamic-pill glass">
-        <span style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--xbox-green)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg> 
-            Orion OS
-        </span>
-        <div class="sys-stats">
-            <span id="clock">12:00 PM</span>
-            <span>|</span>
-            <span>Menu: Shift+Tab</span>
-        </div>
-        <div class="stealth-badge">Alt+S STEALTH</div>
-    </div>
-
-    <!-- Xbox Guide Menu (Slide out) -->
-    <div id="guide-menu">
-        <div class="guide-profile">
-            <div class="guide-avatar">👻</div>
-            <div>
-                <div class="guide-name" id="user-display">phxntom</div>
-                <div class="guide-status">Online</div>
-            </div>
-        </div>
-        <div class="guide-btn active">🏠 Home</div>
-        <div class="guide-btn">🎮 My Games & Apps</div>
-        <div class="guide-btn">💬 Chat</div>
-        <div class="guide-btn">⚙️ Settings</div>
-    </div>
-
-    <!-- Xbox Spatial Dashboard -->
-    <div id="dashboard">
-        <div class="section-title">Pinned to Home</div>
-        
-        <div class="xbox-grid">
-            <div class="xbox-tile glass" onclick="openApp('Terminal', this)">
-                <div class="quick-resume">Quick Resume</div>
-                <span>💻</span>
-                <div class="label">Terminal</div>
-            </div>
+    <div id="os-wrapper">
+        <!-- XBOX GUIDE -->
+        <nav class="xbox-guide liquid-glass">
+            <div class="guide-header">🌌 ORION</div>
+            <div class="guide-tab active" onclick="switchView('games', this)">🎮 My Games</div>
+            <div class="guide-tab" onclick="switchView('settings', this)">⚙️ Settings</div>
             
-            <div class="xbox-tile glass" onclick="openApp('Notes Engine', this)">
-                <div class="quick-resume">Quick Resume</div>
-                <span>📝</span>
-                <div class="label">Notes Engine</div>
+            <div style="margin-top: auto; font-size: 12px; opacity: 0.5; text-align: center;">
+                Core OS v3.0<br>Securly Bypass Active
+            </div>
+        </nav>
+
+        <!-- MAIN STAGE -->
+        <main class="main-stage liquid-glass">
+            
+            <!-- VIEW: GAMES -->
+            <div id="view-games" class="view-section active">
+                <div class="stage-title">Ready to Play</div>
+                <div class="game-grid" id="game-grid">
+                    <!-- Engine dynamically injects tiles here -->
+                </div>
             </div>
 
-            <div class="xbox-tile glass" onclick="openApp('Web Browser', this)">
-                <div class="quick-resume">Quick Resume</div>
-                <span>🌍</span>
-                <div class="label">Browser</div>
+            <!-- VIEW: SETTINGS -->
+            <div id="view-settings" class="view-section">
+                <div class="stage-title">System Configuration</div>
+                <h3 style="margin-bottom: 15px; opacity: 0.8; font-size: 16px;">Display Theme</h3>
+                
+                <div class="settings-grid">
+                    <button class="theme-btn" onclick="setTheme('theme-liquid')">
+                        <div class="theme-preview theme-liquid"></div>
+                        Liquid Flow
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('theme-midnight')">
+                        <div class="theme-preview theme-midnight"></div>
+                        Midnight Console
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('theme-cyber')">
+                        <div class="theme-preview theme-cyber"></div>
+                        Cyber Grid
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('theme-cursed')">
+                        <div class="theme-preview theme-cursed"></div>
+                        Cursed Energy
+                    </button>
+                </div>
             </div>
 
-            <div class="xbox-tile glass" onclick="openApp('System Config', this)">
-                <div class="quick-resume">Quick Resume</div>
-                <span>⚙️</span>
-                <div class="label">Config</div>
-            </div>
-        </div>
+        </main>
     </div>
 
-    <!-- Window System -->
-    <div id="app-window" class="window glass">
-        <div class="window-header" id="window-header">
-            <span style="font-weight: 700; font-size: 13px; letter-spacing: 0.5px;" id="window-title">App</span>
-            <button class="win-close" onclick="closeApp()"></button>
+    <!-- GAME RUNNER OVERLAY -->
+    <div id="game-runner">
+        <div class="runner-header">
+            <div style="font-weight: 700; letter-spacing: 1px;" id="runner-title">Running...</div>
+            <button class="xbox-home-btn" onclick="OrionEngine.closeGame()">X</button>
         </div>
-        <div class="window-body" id="window-body"></div>
-    </div>
-
-    <!-- Phantom Protocol V2 -->
-    <div id="phantom-screen">
-        <div class="docs-toolbar">
-            <div style="width: 14px; height: 14px; background: #4285F4; border-radius: 2px;"></div>
-            <strong style="color: #5f6368;">US History - Industrial Revolution - Google Docs</strong>
-            <span style="color: #5f6368; margin-left: 20px;">File</span>
-            <span style="color: #5f6368;">Edit</span>
-            <span style="color: #5f6368;">View</span>
-        </div>
-        <div class="docs-page">
-            <h1 style="margin-bottom: 24px; font-family: 'Times New Roman', Times, serif;">The Impact of the Industrial Revolution</h1>
-            <p style="line-height: 2; font-family: 'Times New Roman', Times, serif; font-size: 16px; text-indent: 40px;">
-                The Industrial Revolution, which began in Britain in the late 18th century, marked a major turning point in history. Almost every aspect of daily life was influenced in some way. In particular, average income and population began to exhibit unprecedented sustained growth. Some economists say that the major impact of the Industrial Revolution was that the standard of living for the general population began to increase consistently for the first time in history.
-            </p>
-        </div>
+        <div id="game-container"></div>
     </div>
 
     <script>
-        // 1. Live Clock Updates
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }, 1000);
-
-        // 2. Xbox Guide Menu Toggle (Shift + Tab)
-        let guideOpen = false;
-        document.addEventListener('keydown', (e) => {
-            if (e.shiftKey && e.key === 'Tab') {
-                e.preventDefault();
-                guideOpen = !guideOpen;
-                document.getElementById('guide-menu').classList.toggle('open', guideOpen);
-            }
-        });
-
-        // 3. Phantom Protocol V2 (Alt + S)
-        let stealthMode = false;
-        document.addEventListener('keydown', (e) => {
-            if(e.altKey && e.key.toLowerCase() === 's') {
-                stealthMode = !stealthMode;
-                document.getElementById('phantom-screen').style.display = stealthMode ? 'block' : 'none';
-            }
-        });
-
-        // 4. Advanced Window & Quick Resume Engine
-        const windowBody = document.getElementById('window-body');
-        let currentActiveTile = null;
+        /* =========================================================
+           UI LOGIC & SETTINGS
+           ========================================================= */
         
-        function openApp(app, tileElement) {
-            document.getElementById('window-title').innerText = app;
-            document.getElementById('app-window').style.display = 'flex';
-            
-            // Add Xbox Quick Resume tag to the specific tile clicked
-            if (currentActiveTile) currentActiveTile.classList.remove('active');
-            currentActiveTile = tileElement;
-            currentActiveTile.classList.add('active');
+        // Tab Switching Logic
+        function switchView(viewId, tabElement) {
+            // Update Tab Styling
+            document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
+            tabElement.classList.add('active');
 
-            if(app === 'Terminal') {
-                windowBody.innerHTML = '<div style="color: var(--xbox-green); font-family: monospace; height: 100%;"><p>Orion OS [Version 3.0.Xbox]</p><p>(c) Orion Corporation. All rights reserved.</p><br><p>> Initializing local subsystems...</p><p>> Securly Bypass Module... <span style="color: #fff">[OK]</span></p><p>> C:\\Users\\User></p></div>';
-            } else if (app === 'Notes Engine') {
-                let savedNotes = localStorage.getItem('xboxNotes') || '';
-                windowBody.innerHTML = `<textarea id="notes-area" style="width:100%; height:100%; background:transparent; color:#fff; border:none; outline:none; resize:none; font-size: 16px;" placeholder="Local notes...">${savedNotes}</textarea>`;
-                document.getElementById('notes-area').addEventListener('input', (e) => localStorage.setItem('xboxNotes', e.target.value));
-            } else {
-                windowBody.innerHTML = `<p style="opacity: 0.6;">Loading ${app} package into memory...</p>`;
+            // Update View Visibility
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById(`view-${viewId}`).classList.add('active');
+        }
+
+        // Theme Engine with Local Storage Backup
+        function setTheme(themeClass) {
+            const bgLayer = document.getElementById('bg-layer');
+            bgLayer.className = ''; // Clear current
+            bgLayer.classList.add(themeClass);
+            localStorage.setItem('orion_theme', themeClass); // Save for next reload
+        }
+
+        // Load saved theme on boot
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('orion_theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
             }
-        }
-
-        function closeApp() { 
-            document.getElementById('app-window').style.display = 'none'; 
-            // We intentionally leave currentActiveTile.classList.add('active') 
-            // so the "Quick Resume" badge stays on the tile after closing!
-        }
-
-        // 5. Draggable Window Logic
-        let appWin = document.getElementById("app-window");
-        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-        document.getElementById("window-header").onmousedown = (e) => {
-            e.preventDefault();
-            pos3 = e.clientX; pos4 = e.clientY;
-            document.onmouseup = () => { document.onmouseup = null; document.onmousemove = null; };
-            document.onmousemove = (e) => {
-                e.preventDefault();
-                pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY;
-                pos3 = e.clientX; pos4 = e.clientY;
-                appWin.style.top = (appWin.offsetTop - pos2) + "px";
-                appWin.style.left = (appWin.offsetLeft - pos1) + "px";
-            };
         };
+
+        // Stealth Protocol (Alt + S)
+        document.addEventListener('keydown', (e) => {
+            if (e.altKey && e.key.toLowerCase() === 's') {
+                document.body.innerHTML = '<h1 style="color:black; background:white; height:100vh; padding:20px; font-family:sans-serif;">Biology 101 - Cell Structures</h1>';
+            }
+        });
+
+        /* =========================================================
+           ORION ENGINE (READY FOR FUTURE GAME INJECTIONS)
+           ========================================================= */
+        window.OrionEngine = {
+            library: [], // Games go here later
+
+            registerApp: function(config) {
+                this.library.push(config);
+                this.renderGrid();
+            },
+
+            renderGrid: function() {
+                const grid = document.getElementById('game-grid');
+                grid.innerHTML = ''; 
+
+                this.library.forEach((app, index) => {
+                    const tile = document.createElement('div');
+                    tile.className = 'game-tile liquid-glass';
+                    tile.innerHTML = `
+                        <div class="game-icon">${app.icon}</div>
+                        <div class="game-name">${app.name}</div>
+                        <div class="game-status">${app.type || 'Local Module'}</div>
+                    `;
+                    tile.onclick = () => this.launchGame(index);
+                    grid.appendChild(tile);
+                });
+            },
+
+            launchGame: function(index) {
+                const app = this.library[index];
+                document.getElementById('runner-title').innerText = app.name;
+                document.getElementById('game-runner').style.display = 'flex';
+                
+                const container = document.getElementById('game-container');
+                container.innerHTML = ''; 
+                if (typeof app.init === 'function') app.init(container);
+            },
+
+            closeGame: function() {
+                document.getElementById('game-runner').style.display = 'none';
+                document.getElementById('game-container').innerHTML = ''; 
+            }
+        };
+
+        // Ready for you to drop your custom game code!
+        // Just call OrionEngine.registerApp({ ... }) when you have them.
     </script>
 </body>
 </html>
