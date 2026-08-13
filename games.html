@@ -3,34 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orion OS - Liquid Engine</title>
+    <title>Orion OS - macOS Liquid Glass Edition</title>
     <style>
         /* =========================================================
-           1. CSS VARIABLES & SYSTEM TOKENS
+           1. CSS VARIABLES & SYSTEM TOKENS (macOS Sequoia Theme)
            ========================================================= */
         :root {
-            /* Glassmorphism Tokens */
-            --glass-bg: rgba(20, 20, 30, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-highlight: rgba(255, 255, 255, 0.3);
-            --glass-shadow: rgba(0, 0, 0, 0.4);
+            /* Authentic macOS Liquid Glass Tokens */
+            --glass-bg: rgba(35, 35, 45, 0.42);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-highlight: rgba(255, 255, 255, 0.25);
+            --glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             
-            /* Xbox Ecosystem Tokens */
-            --xbox-accent: #107C10;
-            --xbox-accent-hover: #149c14;
-            --xbox-glow: rgba(16, 124, 16, 0.9);
-            --xbox-bg-dark: #1a1a1a;
+            /* macOS Accent & UI Tokens */
+            --mac-accent: #0a84ff;
+            --mac-accent-hover: #0071e3;
+            --mac-glow: rgba(10, 132, 255, 0.4);
+            --mac-bg-dark: #1e1e24;
             
             /* Typography & Spacing */
-            --text-main: #f8f8f8;
-            --text-muted: rgba(255, 255, 255, 0.6);
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --transition-fast: 0.2s;
-            --transition-medium: 0.4s;
-            --transition-slow: 0.8s;
+            --text-main: #f5f5f7;
+            --text-muted: rgba(255, 255, 255, 0.55);
+            --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Roboto, sans-serif;
+            --transition-fast: 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            --transition-medium: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             --border-radius-sm: 8px;
-            --border-radius-md: 16px;
-            --border-radius-lg: 24px;
+            --border-radius-md: 14px;
+            --border-radius-lg: 20px;
         }
 
         /* =========================================================
@@ -48,15 +47,16 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #000;
+            background-color: #0b0b0e;
             color: var(--text-main);
             font-family: var(--font-family);
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Custom Scrollbar for inner elements */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
             background: transparent;
@@ -70,7 +70,7 @@
         }
 
         /* =========================================================
-           3. BACKGROUND ENGINE (ANIMATED MESH GRADIENTS)
+           3. BACKGROUND ENGINE (DYNAMIC macOS WALLPAPER MESH)
            ========================================================= */
         #bg-layer {
             position: absolute;
@@ -84,66 +84,66 @@
         }
 
         .theme-liquid {
-            background: linear-gradient(45deg, #0a0a1a, #1a1a3a, #001f3f, #0a0a1a);
-            animation: bgFlow 25s ease infinite;
-            filter: blur(70px);
+            background: linear-gradient(135deg, #1b1936, #2d1a38, #112340, #151422);
+            animation: macWallpaperFlow 30s ease infinite;
+            filter: blur(90px);
         }
 
         .theme-midnight {
-            background: radial-gradient(circle at 50% 50%, #151515, #050505 90%);
-            filter: blur(10px);
+            background: radial-gradient(circle at 50% 50%, #1e1e24, #0b0b0e 90%);
+            filter: blur(20px);
         }
 
         .theme-cyber {
-            background: linear-gradient(135deg, #110042, #7a003c, #000000, #00d2ff);
-            animation: bgFlow 15s ease infinite;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            animation: macWallpaperFlow 20s ease infinite;
             filter: blur(80px);
         }
 
         .theme-cursed {
-            background: radial-gradient(circle at 50% 100%, #2a0066, #5900b3, #000000 80%);
-            animation: bgPulse 6s alternate infinite;
-            filter: blur(90px);
+            background: radial-gradient(circle at 50% 100%, #311142, #1b0c29, #000000 85%);
+            animation: bgPulse 8s alternate infinite;
+            filter: blur(100px);
         }
 
         .theme-dive {
-            background: linear-gradient(180deg, #004e92, #000428);
-            animation: bgFlow 10s ease infinite;
-            filter: blur(40px);
+            background: linear-gradient(180deg, #00305a, #001224);
+            animation: macWallpaperFlow 15s ease infinite;
+            filter: blur(60px);
         }
 
-        @keyframes bgFlow {
+        @keyframes macWallpaperFlow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
         @keyframes bgPulse {
-            0% { opacity: 0.6; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.05); }
+            0% { opacity: 0.7; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.04); }
         }
 
         /* =========================================================
-           4. LIQUID GLASS UTILITIES
+           4. macOS LIQUID GLASS UTILITIES
            ========================================================= */
         .liquid-glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            backdrop-filter: blur(50px) saturate(210%);
+            -webkit-backdrop-filter: blur(50px) saturate(210%);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-highlight);
-            box-shadow: 0 25px 50px var(--glass-shadow);
+            box-shadow: var(--glass-shadow);
         }
 
         .liquid-panel {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: var(--border-radius-md);
             padding: 20px;
+            backdrop-filter: blur(20px);
         }
 
         /* =========================================================
-           5. BOOT SEQUENCE & LOCK SCREEN
+           5. BOOT SEQUENCE & LOCK SCREEN (macOS LOGIN STYLE)
            ========================================================= */
         #boot-screen {
             position: absolute;
@@ -154,9 +154,9 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: var(--xbox-accent);
-            font-family: "Courier New", Courier, monospace;
-            transition: opacity 1s ease;
+            color: var(--mac-accent);
+            font-family: "SF Mono", Menlo, monospace;
+            transition: opacity 0.8s ease;
         }
 
         #boot-log {
@@ -164,9 +164,9 @@
             max-width: 600px;
             height: 300px;
             overflow: hidden;
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.6;
-            text-shadow: 0 0 5px var(--xbox-glow);
+            opacity: 0.8;
         }
 
         #lock-screen {
@@ -177,119 +177,116 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(50px);
-            background: rgba(0,0,0,0.4);
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+            backdrop-filter: blur(60px);
+            background: rgba(15, 15, 20, 0.45);
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease;
         }
 
         .lock-avatar {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #107C10, #00d2ff);
-            margin-bottom: 20px;
-            border: 3px solid rgba(255,255,255,0.2);
-            box-shadow: 0 0 30px rgba(16, 124, 16, 0.5);
+            background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+            margin-bottom: 18px;
+            border: 2px solid rgba(255,255,255,0.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
+            font-size: 42px;
         }
 
         .lock-name {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin-bottom: 25px;
         }
 
         .unlock-btn {
-            padding: 15px 40px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 30px;
+            padding: 12px 32px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
             color: #fff;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--transition-fast);
+            backdrop-filter: blur(20px);
         }
 
         .unlock-btn:hover {
-            background: var(--xbox-accent);
-            border-color: var(--xbox-accent);
-            box-shadow: 0 0 20px var(--xbox-glow);
-            transform: scale(1.05);
+            background: var(--mac-accent);
+            border-color: var(--mac-accent);
+            box-shadow: 0 0 20px var(--mac-glow);
+            transform: scale(1.03);
         }
 
         /* =========================================================
-           6. MAIN OS LAYOUT (SIDEBAR + MAIN)
+           6. MAIN OS LAYOUT (macOS SIDEBAR + STAGE)
            ========================================================= */
         #os-wrapper {
             display: flex;
             height: 100vh;
             width: 100vw;
-            padding: 25px;
-            gap: 25px;
+            padding: 20px;
+            gap: 20px;
             opacity: 0;
-            transition: opacity 1s ease 0.5s;
+            transition: opacity 0.8s ease 0.3s;
         }
 
-        /* Sidebar Guide */
+        /* macOS Dock/Sidebar Guide */
         .xbox-guide {
-            width: 280px;
+            width: 260px;
             border-radius: var(--border-radius-lg);
-            padding: 30px 20px;
+            padding: 25px 16px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
             z-index: 10;
         }
 
         .guide-header {
-            font-size: 24px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            margin-bottom: 30px;
-            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 25px;
+            padding-left: 10px;
             color: #fff;
-            text-shadow: 0 0 15px var(--glass-highlight);
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
         }
 
         .guide-tab {
-            padding: 15px 20px;
-            border-radius: var(--border-radius-md);
-            font-size: 15px;
-            font-weight: 600;
+            padding: 12px 16px;
+            border-radius: var(--border-radius-sm);
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all var(--transition-fast) cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: all var(--transition-fast);
             display: flex;
             align-items: center;
-            gap: 15px;
-            border: 1px solid transparent;
+            gap: 14px;
             color: var(--text-muted);
+            border: 1px solid transparent;
         }
 
         .guide-tab:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(8px);
+            background: rgba(255, 255, 255, 0.06);
             color: var(--text-main);
         }
 
         .guide-tab.active {
-            background: rgba(16, 124, 16, 0.15);
-            border: 1px solid var(--xbox-accent);
-            box-shadow: inset 0 0 15px rgba(16, 124, 16, 0.2);
-            border-left: 5px solid var(--xbox-accent);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.12);
             color: var(--text-main);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .guide-tab-icon {
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .sys-info {
@@ -297,17 +294,18 @@
             font-size: 11px;
             color: var(--text-muted);
             text-align: center;
-            line-height: 1.8;
-            padding: 15px;
-            background: rgba(0,0,0,0.2);
+            line-height: 1.6;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.15);
             border-radius: var(--border-radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
-        /* Main Content Stage */
+        /* Main Desktop Stage */
         .main-stage {
             flex: 1;
             border-radius: var(--border-radius-lg);
-            padding: 40px;
+            padding: 35px;
             position: relative;
             overflow: hidden;
             z-index: 10;
@@ -319,49 +317,50 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .stage-title {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .stealth-badge {
             font-size: 12px;
-            font-weight: 600;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 20px;
             display: flex;
             align-items: center;
             gap: 8px;
+            backdrop-filter: blur(10px);
         }
         
         .stealth-dot {
-            width: 8px;
-            height: 8px;
-            background: #ff3366;
+            width: 7px;
+            height: 7px;
+            background: #30d158;
             border-radius: 50%;
-            box-shadow: 0 0 10px #ff3366;
+            box-shadow: 0 0 8px #30d158;
             animation: pulseDot 2s infinite;
         }
 
         @keyframes pulseDot {
-            0% { transform: scale(0.95); opacity: 0.5; }
+            0% { transform: scale(0.95); opacity: 0.6; }
             50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.5; }
+            100% { transform: scale(0.95); opacity: 0.6; }
         }
 
         .view-section {
             display: none;
             flex: 1;
             flex-direction: column;
-            animation: viewFadeIn var(--transition-medium) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: viewFadeIn var(--transition-medium);
             overflow-y: auto;
-            padding-right: 10px;
+            padding-right: 8px;
         }
 
         .view-section.active {
@@ -369,107 +368,88 @@
         }
 
         @keyframes viewFadeIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            from { opacity: 0; transform: translateY(10px) scale(0.99); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* =========================================================
-           7. GAME & APP GRID (XBOX TILES)
+           7. APP & GAME GRID (macOS LAUNCHPAD TILES)
            ========================================================= */
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 22px;
             width: 100%;
         }
 
         .app-tile {
-            height: 240px;
+            height: 220px;
             border-radius: var(--border-radius-md);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 20px;
+            padding: 18px;
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: all var(--transition-medium) cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            transition: all var(--transition-medium);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .app-tile::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.2), transparent 70%);
+            background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.12), transparent 70%);
             opacity: 0;
             transition: opacity var(--transition-fast);
         }
 
-        .app-tile::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: var(--border-radius-md);
-            border: 3px solid transparent;
-            transition: var(--transition-fast);
-            pointer-events: none;
-        }
-
         .app-tile:hover {
-            transform: scale(1.05) translateY(-8px);
-            background: rgba(255,255,255,0.15);
+            transform: translateY(-6px) scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             z-index: 10;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
         }
 
         .app-tile:hover::before {
             opacity: 1;
         }
 
-        .app-tile:hover::after {
-            border-color: var(--xbox-accent);
-            box-shadow: inset 0 0 30px var(--xbox-glow);
-        }
-
         .app-icon {
-            font-size: 60px;
+            font-size: 52px;
             position: absolute;
-            top: 35%;
+            top: 38%;
             left: 50%;
             transform: translate(-50%, -50%);
             transition: var(--transition-medium);
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.4));
         }
 
         .app-tile:hover .app-icon {
-            transform: translate(-50%, -65%) scale(1.2);
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.6));
+            transform: translate(-50%, -60%) scale(1.12);
         }
 
         .app-info {
             z-index: 2;
-            transform: translateY(10px);
-            transition: var(--transition-medium);
-        }
-
-        .app-tile:hover .app-info {
-            transform: translateY(0);
         }
 
         .app-name {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
         }
 
         .app-meta {
-            font-size: 12px;
-            color: var(--xbox-accent);
-            margin-top: 5px;
+            font-size: 11px;
+            color: var(--mac-accent);
+            margin-top: 3px;
             text-transform: uppercase;
-            font-weight: 900;
-            letter-spacing: 1px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
             opacity: 0;
             transition: opacity var(--transition-fast);
         }
@@ -479,246 +459,265 @@
         }
 
         /* =========================================================
-           8. SETTINGS PANEL (COMPLEX UI)
+           8. SETTINGS PANEL (macOS SYSTEM SETTINGS STYLE)
            ========================================================= */
         .settings-container {
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
         }
 
         .settings-section-title {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
             color: var(--text-muted);
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 14px;
         }
 
         .settings-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
         }
 
         .theme-card {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--glass-border);
-            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px;
             border-radius: var(--border-radius-md);
             cursor: pointer;
             transition: all var(--transition-fast);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .theme-card:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: var(--text-main);
-            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .theme-card.active {
-            border-color: var(--xbox-accent);
-            box-shadow: 0 0 20px rgba(16, 124, 16, 0.3);
+            border-color: var(--mac-accent);
+            box-shadow: 0 0 15px var(--mac-glow);
+            background: rgba(10, 132, 255, 0.08);
         }
 
         .theme-preview {
             width: 100%;
-            height: 70px;
-            border-radius: var(--border-radius-sm);
-            border: 1px solid rgba(255,255,255,0.2);
+            height: 60px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .theme-name {
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 500;
             text-align: center;
         }
 
-        /* Toggles & Controls */
+        /* macOS Style Toggles */
         .control-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            background: rgba(255,255,255,0.05);
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: var(--border-radius-md);
             margin-bottom: 10px;
         }
 
         .control-label {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 500;
         }
 
         .control-desc {
             font-size: 12px;
             color: var(--text-muted);
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .toggle-switch {
             position: relative;
-            width: 50px;
-            height: 26px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 30px;
+            width: 44px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
             cursor: pointer;
             transition: background var(--transition-fast);
         }
 
         .toggle-switch.on {
-            background: var(--xbox-accent);
+            background: var(--mac-accent);
         }
 
         .toggle-knob {
             position: absolute;
-            top: 3px;
-            left: 3px;
+            top: 2px;
+            left: 2px;
             width: 20px;
             height: 20px;
             background: #fff;
             border-radius: 50%;
             transition: transform var(--transition-fast);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .toggle-switch.on .toggle-knob {
-            transform: translateX(24px);
+            transform: translateX(20px);
         }
 
         /* =========================================================
-           9. NOTIFICATION CENTER (TOASTS)
+           9. NOTIFICATION CENTER (macOS BANNER TOASTS)
            ========================================================= */
         #notification-container {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            top: 25px;
+            right: 25px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             z-index: 10000;
             pointer-events: none;
         }
 
         .toast-notification {
-            background: rgba(20, 20, 30, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-left: 4px solid var(--xbox-accent);
-            padding: 15px 25px;
-            border-radius: var(--border-radius-md);
+            background: rgba(30, 30, 38, 0.75);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 14px 20px;
+            border-radius: 14px;
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            gap: 14px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            animation: slideInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             pointer-events: auto;
+            min-width: 280px;
         }
 
         .toast-notification.fade-out {
-            animation: fadeOutRight 0.4s ease forwards;
+            animation: fadeOutUp 0.3s ease forwards;
         }
 
         .toast-icon {
-            font-size: 24px;
+            font-size: 22px;
         }
 
         .toast-content h4 {
-            font-size: 15px;
-            margin-bottom: 3px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
         }
         .toast-content p {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
         }
 
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @keyframes slideInDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-        @keyframes fadeOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
+        @keyframes fadeOutUp {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-20px); opacity: 0; }
         }
 
         /* =========================================================
-           10. APP RUNNER OVERLAY (THE SANDBOX)
+           10. APP RUNNER OVERLAY (macOS WINDOW STYLE)
            ========================================================= */
         #app-runner {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #050508;
+            background: #0f0f13;
             z-index: 9995;
             display: none;
             flex-direction: column;
         }
 
         .runner-anim-enter {
-            animation: runnerZoomIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation: runnerZoomIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         
         .runner-anim-exit {
-            animation: runnerZoomOut 0.3s ease forwards;
+            animation: runnerZoomOut 0.25s ease forwards;
         }
 
         @keyframes runnerZoomIn {
-            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            from { opacity: 0; transform: scale(0.96) translateY(10px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
         @keyframes runnerZoomOut {
             from { opacity: 1; transform: scale(1); }
-            to { opacity: 0; transform: scale(1.05); }
+            to { opacity: 0; transform: scale(0.97); }
         }
 
         .runner-header {
-            height: 50px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 25px;
-            background: rgba(10,10,15,0.95);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 0 16px;
+            background: rgba(25, 25, 32, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
         }
 
         .runner-title {
-            font-weight: 800;
-            font-size: 14px;
-            letter-spacing: 1px;
+            font-weight: 500;
+            font-size: 13px;
             color: var(--text-muted);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .runner-title span {
-            color: var(--xbox-accent);
+            color: var(--text-main);
+            font-weight: 600;
         }
 
-        .xbox-home-btn {
-            background: var(--xbox-accent);
-            border: none;
+        /* macOS Traffic Light Buttons */
+        .mac-traffic-lights {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .traffic-btn {
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            color: #fff;
-            font-weight: 900;
+            border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px var(--xbox-glow);
-            transition: all 0.2s;
+            font-size: 8px;
+            color: rgba(0,0,0,0.6);
+            transition: filter var(--transition-fast);
         }
 
-        .xbox-home-btn:hover {
-            transform: scale(1.15) rotate(90deg);
-            background: var(--xbox-accent-hover);
+        .traffic-close { background: #ff5f56; border: 0.5px solid rgba(0,0,0,0.2); }
+        .traffic-minimize { background: #ffbd2e; border: 0.5px solid rgba(0,0,0,0.2); }
+        .traffic-maximize { background: #27c93f; border: 0.5px solid rgba(0,0,0,0.2); }
+
+        .traffic-btn:hover::after {
+            content: '×';
+            font-weight: bold;
         }
+        .traffic-close:hover::after { content: '×'; }
+        .traffic-minimize:hover::after { content: '−'; }
+        .traffic-maximize:hover::after { content: '+'; }
 
         #app-container {
             flex: 1;
@@ -743,36 +742,36 @@
     <!-- LOCK SCREEN -->
     <div id="lock-screen" style="display: none;">
         <div class="lock-avatar">👤</div>
-        <div class="lock-name">Welcome, phxntom</div>
-        <button class="unlock-btn" onclick="System.unlock()">Launch Orion Engine</button>
+        <div class="lock-name">phxntom</div>
+        <button class="unlock-btn" onclick="System.unlock()">Unlock Mac</button>
     </div>
 
     <!-- MAIN OS WRAPPER -->
     <div id="os-wrapper">
         
-        <!-- SIDEBAR (XBOX GUIDE) -->
+        <!-- SIDEBAR (macOS SIDEBAR MENU) -->
         <nav class="xbox-guide liquid-glass">
             <div class="guide-header">
-                <span style="font-size: 28px;">🌌</span> ORION
+                <span style="font-size: 20px;"></span> Orion OS
             </div>
             
             <div class="guide-tab active" onclick="CoreUI.switchView('games', this)">
-                <span class="guide-tab-icon">🎮</span> Library
+                <span class="guide-tab-icon">🎮</span> Applications
             </div>
             <div class="guide-tab" onclick="CoreUI.switchView('apps', this)">
-                <span class="guide-tab-icon">📱</span> Utilities
+                <span class="guide-tab-icon">🛠️</span> Utilities
             </div>
             <div class="guide-tab" onclick="CoreUI.switchView('settings', this)">
                 <span class="guide-tab-icon">⚙️</span> Settings
             </div>
             <div class="guide-tab" onclick="CoreUI.switchView('profile', this)">
-                <span class="guide-tab-icon">👤</span> Profile
+                <span class="guide-tab-icon">👤</span> Account
             </div>
             
             <div class="sys-info liquid-panel" style="margin-top: auto;">
-                <strong>OS Build:</strong> v4.0.750<br>
-                <strong>Kernel:</strong> Liquid Base<br>
-                <strong>Status:</strong> Encrypted
+                <strong>macOS Sequoia</strong><br>
+                <strong>Engine:</strong> Liquid Glass v4<br>
+                <strong>Status:</strong> Secure
             </div>
         </nav>
 
@@ -782,7 +781,7 @@
             <!-- VIEW: GAMES -->
             <div id="view-games" class="view-section active">
                 <div class="stage-title-bar">
-                    <div class="stage-title">Game Library</div>
+                    <div class="stage-title">Applications</div>
                     <div class="stealth-badge">
                         <div class="stealth-dot"></div>
                         Stealth Active (Alt+S)
@@ -796,7 +795,7 @@
             <!-- VIEW: APPS -->
             <div id="view-apps" class="view-section">
                 <div class="stage-title-bar">
-                    <div class="stage-title">System Utilities</div>
+                    <div class="stage-title">Utilities</div>
                 </div>
                 <div class="app-grid" id="apps-grid">
                     <!-- Apps injected here by JS Engine -->
@@ -806,17 +805,17 @@
             <!-- VIEW: PROFILE -->
             <div id="view-profile" class="view-section">
                 <div class="stage-title-bar">
-                    <div class="stage-title">User Profile</div>
+                    <div class="stage-title">User Account</div>
                 </div>
                 <div class="liquid-panel" style="display: flex; gap: 30px; align-items: center; margin-bottom: 30px;">
-                    <div class="lock-avatar" style="margin: 0; width: 150px; height: 150px; font-size: 60px;">👤</div>
+                    <div class="lock-avatar" style="margin: 0; width: 120px; height: 120px; font-size: 50px;">👤</div>
                     <div>
-                        <h2 style="font-size: 32px; margin-bottom: 10px;">phxntom</h2>
-                        <p style="color: var(--xbox-accent); font-weight: 700; margin-bottom: 15px;">Elite Rank</p>
-                        <p style="color: var(--text-muted); line-height: 1.5;">
-                            Hardware: Custom Build (M5 Virtualized)<br>
-                            Uptime: 99.9%<br>
-                            Securly Bypass: Active
+                        <h2 style="font-size: 28px; margin-bottom: 6px; font-weight: 600;">phxntom</h2>
+                        <p style="color: var(--mac-accent); font-weight: 600; margin-bottom: 12px; font-size: 14px;">Administrator</p>
+                        <p style="color: var(--text-muted); line-height: 1.5; font-size: 13px;">
+                            Hardware: Apple M5 Virtual Engine<br>
+                            Uptime: 100%<br>
+                            Network Security: Bypassed
                         </p>
                     </div>
                 </div>
@@ -825,26 +824,26 @@
             <!-- VIEW: SETTINGS -->
             <div id="view-settings" class="view-section">
                 <div class="stage-title-bar">
-                    <div class="stage-title">System Configuration</div>
+                    <div class="stage-title">System Settings</div>
                 </div>
                 
                 <div class="settings-container">
                     
                     <!-- Theme Selection -->
                     <div>
-                        <div class="settings-section-title">Visual Engine</div>
+                        <div class="settings-section-title">Wallpaper & Appearance</div>
                         <div class="settings-grid">
                             <div class="theme-card active" id="btn-theme-liquid" onclick="ThemeEngine.setTheme('theme-liquid')">
                                 <div class="theme-preview theme-liquid"></div>
-                                <div class="theme-name">macOS Liquid</div>
+                                <div class="theme-name">Sequoia Liquid</div>
                             </div>
                             <div class="theme-card" id="btn-theme-midnight" onclick="ThemeEngine.setTheme('theme-midnight')">
                                 <div class="theme-preview theme-midnight"></div>
-                                <div class="theme-name">Xbox Midnight</div>
+                                <div class="theme-name">Dark Mode</div>
                             </div>
                             <div class="theme-card" id="btn-theme-cyber" onclick="ThemeEngine.setTheme('theme-cyber')">
                                 <div class="theme-preview theme-cyber"></div>
-                                <div class="theme-name">Cyber Grid</div>
+                                <div class="theme-name">Cyber Gradient</div>
                             </div>
                             <div class="theme-card" id="btn-theme-cursed" onclick="ThemeEngine.setTheme('theme-cursed')">
                                 <div class="theme-preview theme-cursed"></div>
@@ -852,19 +851,19 @@
                             </div>
                             <div class="theme-card" id="btn-theme-dive" onclick="ThemeEngine.setTheme('theme-dive')">
                                 <div class="theme-preview theme-dive"></div>
-                                <div class="theme-name">FullDive Matrix</div>
+                                <div class="theme-name">Deep Matrix</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- System Toggles -->
                     <div>
-                        <div class="settings-section-title">Security & Network</div>
+                        <div class="settings-section-title">Security & Privacy</div>
                         
                         <div class="control-row">
                             <div>
                                 <div class="control-label">Web Filter Obfuscation</div>
-                                <div class="control-desc">Scrambles DOM signatures to prevent packet sniffing.</div>
+                                <div class="control-desc">Scrambles DOM signatures to prevent telemetry tracking.</div>
                             </div>
                             <div class="toggle-switch on" onclick="this.classList.toggle('on')">
                                 <div class="toggle-knob"></div>
@@ -874,7 +873,7 @@
                         <div class="control-row">
                             <div>
                                 <div class="control-label">Panic Keybind (Alt + S)</div>
-                                <div class="control-desc">Instantly overwrites screen with educational content.</div>
+                                <div class="control-desc">Instantly overwrites screen with educational material.</div>
                             </div>
                             <div class="toggle-switch on" onclick="this.classList.toggle('on')">
                                 <div class="toggle-knob"></div>
@@ -883,8 +882,8 @@
 
                         <div class="control-row">
                             <div>
-                                <div class="control-label">Local File System Mock</div>
-                                <div class="control-desc">Allows saving states to localStorage safely.</div>
+                                <div class="control-label">Local File System Sandbox</div>
+                                <div class="control-desc">Allows storing session states locally via localStorage.</div>
                             </div>
                             <div class="toggle-switch on" onclick="this.classList.toggle('on')">
                                 <div class="toggle-knob"></div>
@@ -901,10 +900,14 @@
     <!-- APP RUNNER OVERLAY -->
     <div id="app-runner">
         <div class="runner-header">
+            <div class="mac-traffic-lights">
+                <button class="traffic-btn traffic-close" onclick="Orion.closeApp()"></button>
+                <button class="traffic-btn traffic-minimize" onclick="Orion.closeApp()"></button>
+                <button class="traffic-btn traffic-maximize"></button>
+            </div>
             <div class="runner-title">
                 Running: <span id="runner-title-text">APP_NAME</span>
             </div>
-            <button class="xbox-home-btn" onclick="Orion.closeApp()">X</button>
         </div>
         <div id="app-container"></div>
     </div>
@@ -945,10 +948,9 @@
                 
                 this.container.appendChild(toast);
                 
-                // Remove after 4 seconds
                 setTimeout(() => {
                     toast.classList.add('fade-out');
-                    setTimeout(() => toast.remove(), 400); // Wait for animation
+                    setTimeout(() => toast.remove(), 300);
                 }, 4000);
             }
         };
@@ -958,23 +960,20 @@
          */
         const ThemeEngine = {
             setTheme: function(themeClass) {
-                // Update Background
                 const bgLayer = document.getElementById('bg-layer');
                 bgLayer.className = ''; 
                 bgLayer.classList.add(themeClass);
                 
-                // Update Settings UI
                 document.querySelectorAll('.theme-card').forEach(card => card.classList.remove('active'));
                 const activeBtn = document.getElementById(`btn-${themeClass}`);
                 if(activeBtn) activeBtn.classList.add('active');
 
-                // Save to Storage
-                localStorage.setItem('orion_theme_v4', themeClass);
-                Notify.show('Theme Applied', `Switched to ${themeClass.replace('theme-', '')}`, '🎨');
+                localStorage.setItem('orion_theme_mac_v4', themeClass);
+                Notify.show('Appearance Updated', `Switched theme profile.`, '🎨');
             },
 
             init: function() {
-                const savedTheme = localStorage.getItem('orion_theme_v4') || 'theme-liquid';
+                const savedTheme = localStorage.getItem('orion_theme_mac_v4') || 'theme-liquid';
                 this.setTheme(savedTheme);
             }
         };
@@ -984,11 +983,9 @@
          */
         const CoreUI = {
             switchView: function(viewId, tabElement) {
-                // Update Tabs
                 document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
                 tabElement.classList.add('active');
 
-                // Update Views
                 document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
                 document.getElementById(`view-${viewId}`).classList.add('active');
             }
@@ -999,12 +996,12 @@
          */
         const System = {
             bootText: [
-                "Initializing Orion Kernel v4.0...",
-                "Mounting local virtual drives... [OK]",
-                "Bypassing network filters... [OK]",
-                "Establishing secure DOM sandbox... [OK]",
-                "Loading Liquid Glass UI modules...",
-                "Fetching user profile: phxntom...",
+                "Initializing macOS Sequoia Kernel...",
+                "Mounting secure APFS volumes... [OK]",
+                "Bypassing network inspection filters... [OK]",
+                "Establishing isolated web container... [OK]",
+                "Loading Liquid Glass UI framework...",
+                "Authenticating user: phxntom...",
                 "System Ready."
             ],
             
@@ -1013,29 +1010,29 @@
                 
                 for(let i = 0; i < this.bootText.length; i++) {
                     log.innerHTML += `<div>> ${this.bootText[i]}</div>`;
-                    await Utils.sleep(300); // Fake loading delay
+                    await Utils.sleep(250);
                 }
                 
-                await Utils.sleep(500);
+                await Utils.sleep(400);
                 document.getElementById('boot-screen').style.opacity = '0';
                 
                 setTimeout(() => {
                     document.getElementById('boot-screen').style.display = 'none';
                     document.getElementById('lock-screen').style.display = 'flex';
-                }, 1000);
+                }, 800);
             },
 
             unlock: function() {
                 const lock = document.getElementById('lock-screen');
-                lock.style.transform = 'scale(1.1)';
+                lock.style.transform = 'scale(1.05)';
                 lock.style.opacity = '0';
                 
                 setTimeout(() => {
                     lock.style.display = 'none';
                     document.getElementById('os-wrapper').style.opacity = '1';
                     ThemeEngine.init();
-                    Notify.show('Welcome Back', 'Orion OS is online and secured.', '🔓');
-                }, 800);
+                    Notify.show('Welcome', 'macOS Liquid Glass session started.', '🔓');
+                }, 700);
             }
         };
 
@@ -1082,18 +1079,16 @@
                 const runner = document.getElementById('app-runner');
                 const container = document.getElementById('app-container');
                 
-                document.getElementById('runner-title-text').innerText = app.name.toUpperCase();
+                document.getElementById('runner-title-text').innerText = app.name;
                 
-                // Show Runner
                 runner.style.display = 'flex';
                 runner.classList.remove('runner-anim-exit');
                 runner.classList.add('runner-anim-enter');
                 
-                // Clean container and execute init
                 container.innerHTML = ''; 
                 if (typeof app.init === 'function') {
                     app.init(container);
-                    Notify.show('App Launched', `${app.name} is running in isolation.`, '🚀');
+                    Notify.show('Application Open', `${app.name} is running.`, '🚀');
                 } else {
                     container.innerHTML = `<h2 style="color:red; padding:40px;">Error: Execution failed.</h2>`;
                 }
@@ -1117,13 +1112,12 @@
         document.addEventListener('keydown', (e) => {
             if (e.altKey && e.key.toLowerCase() === 's') {
                 document.body.innerHTML = `
-                    <div style="background:#fff; color:#000; height:100vh; width:100vw; padding:50px; font-family:serif;">
-                        <h1>Chapter 7: Advanced Algebra & Trigonometry</h1>
-                        <p style="margin-top:20px; font-size:18px; line-height:1.6;">
-                            Trigonometry is a branch of mathematics that studies relationships between side lengths and angles of triangles. 
-                            The field emerged in the Hellenistic world during the 3rd century BC from applications of geometry to astronomical studies.
+                    <div style="background:#fff; color:#000; height:100vh; width:100vw; padding:60px; font-family:serif;">
+                        <h1 style="font-size:28px; margin-bottom:15px;">Chapter 4: Introduction to Macroeconomics</h1>
+                        <p style="font-size:16px; line-height:1.8;">
+                            Macroeconomics studies the behavior of an economy as a whole—focusing on economy-wide phenomena such as inflation, 
+                            price levels, rate of economic growth, national income, gross domestic product (GDP), and changes in unemployment.
                         </p>
-                        <p style="margin-top:20px; font-size:18px;">Solve for X: sin(θ) = opposite / hypotenuse.</p>
                     </div>
                 `;
             }
@@ -1133,7 +1127,6 @@
            PRE-LOADED MODULES (GAMES & APPS)
            ========================================================= */
 
-        // APP 1: JJK Domain Expansion Tracker
         Orion.register({
             name: 'Cursed Tracker',
             category: 'game',
@@ -1142,10 +1135,8 @@
             init: function(container) {
                 container.innerHTML = `
                     <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle, #2a0066, #000); color:#fff; position:relative; overflow:hidden;">
-                        <h1 style="font-size: 50px; font-weight:900; letter-spacing:10px; z-index:2; text-shadow: 0 0 30px #8e2de2; animation: pulse 2s infinite;">DOMAIN EXPANSION</h1>
-                        <p style="margin-top:20px; z-index:2; font-size:20px; opacity:0.8;">Malevolent Shrine Concept Test</p>
-                        
-                        <!-- CSS Effects for Domain -->
+                        <h1 style="font-size: 45px; font-weight:800; letter-spacing:8px; z-index:2; text-shadow: 0 0 30px #8e2de2; animation: pulse 2s infinite;">DOMAIN EXPANSION</h1>
+                        <p style="margin-top:15px; z-index:2; font-size:18px; opacity:0.8;">Malevolent Shrine Concept Test</p>
                         <div style="position:absolute; width: 200%; height: 200%; border-radius: 50%; border: 2px solid rgba(142, 45, 226, 0.5); animation: expand 3s ease-out forwards; pointer-events:none;"></div>
                     </div>
                     <style>
@@ -1156,7 +1147,6 @@
             }
         });
 
-        // APP 2: SAO NerveGear Link
         Orion.register({
             name: 'Link Start',
             category: 'game',
@@ -1164,16 +1154,16 @@
             developer: 'Argus Corp',
             init: function(container) {
                 container.innerHTML = `
-                    <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#fff; font-family: Arial, sans-serif;">
-                        <div id="sao-sequence" style="font-size:40px; font-weight:bold; letter-spacing:5px; color:#00d2ff; text-shadow: 0 0 20px #00d2ff;">INITIATING DIVE...</div>
+                    <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#fff; font-family: -apple-system, sans-serif;">
+                        <div id="sao-sequence" style="font-size:36px; font-weight:bold; letter-spacing:4px; color:#0a84ff; text-shadow: 0 0 20px rgba(10,132,255,0.6);">INITIATING DIVE...</div>
                     </div>
                 `;
                 
                 const seq = document.getElementById('sao-sequence');
                 setTimeout(() => { seq.innerText = "SENSORY CHECK: OK"; }, 1000);
-                setTimeout(() => { seq.innerText = "COGNITIVE SYNC: OK"; }, 2000);
+                setTimeout(() => { seq.innerText = "NEURAL SYNC: OK"; }, 2000);
                 setTimeout(() => { 
-                    seq.style.fontSize = "80px";
+                    seq.style.fontSize = "72px";
                     seq.style.color = "#fff";
                     seq.style.textShadow = "0 0 40px #fff";
                     seq.innerText = "LINK START!"; 
@@ -1181,7 +1171,6 @@
             }
         });
 
-        // APP 3: MHA Hero Registry
         Orion.register({
             name: 'Hero Registry',
             category: 'app',
@@ -1189,26 +1178,25 @@
             developer: 'UA High',
             init: function(container) {
                 container.innerHTML = `
-                    <div style="padding: 40px; height: 100%; background: #1a1a1a; color: #fff;">
-                        <h1 style="color: #ff3333; margin-bottom: 20px; font-size:36px; border-bottom: 2px solid #ff3333; padding-bottom:10px;">PRO HERO DATABASE</h1>
+                    <div style="padding: 40px; height: 100%; background: #16161c; color: #fff;">
+                        <h1 style="color: #ff453a; margin-bottom: 20px; font-size:32px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom:12px;">PRO HERO DATABASE</h1>
                         
                         <div style="display:flex; gap: 20px; margin-bottom: 20px;">
-                            <div style="flex:1; background: #2a2a2a; padding: 20px; border-radius: 10px; border-left: 5px solid #ffcc00;">
+                            <div style="flex:1; background: rgba(255,255,255,0.04); padding: 20px; border-radius: 12px; border-left: 4px solid #ffd60a; border: 1px solid rgba(255,255,255,0.06);">
                                 <h3>No. 1 - All Might</h3>
-                                <p style="color:#aaa; margin-top:5px;">Quirk: One For All</p>
+                                <p style="color:var(--text-muted); margin-top:6px;">Quirk: One For All</p>
                             </div>
-                            <div style="flex:1; background: #2a2a2a; padding: 20px; border-radius: 10px; border-left: 5px solid #ff3333;">
+                            <div style="flex:1; background: rgba(255,255,255,0.04); padding: 20px; border-radius: 12px; border-left: 4px solid #ff453a; border: 1px solid rgba(255,255,255,0.06);">
                                 <h3>No. 2 - Endeavor</h3>
-                                <p style="color:#aaa; margin-top:5px;">Quirk: Hellflame</p>
+                                <p style="color:var(--text-muted); margin-top:6px;">Quirk: Hellflame</p>
                             </div>
                         </div>
-                        <p style="opacity:0.5;">Secure local database connection established.</p>
+                        <p style="opacity:0.5; font-size:13px;">Secure local database connection established.</p>
                     </div>
                 `;
             }
         });
 
-        // APP 4: System Terminal
         Orion.register({
             name: 'Root Terminal',
             category: 'app',
@@ -1216,14 +1204,15 @@
             developer: 'System',
             init: function(container) {
                 container.innerHTML = `
-                    <div style="padding: 20px; font-family: 'Courier New', monospace; color: #107C10; height: 100%; background: #050505;">
-                        <p>root@orion:~# ls -la /secured_games</p>
-                        <p>drwxr-xr-x 2 root root 4096 Aug 12 19:35 .</p>
-                        <p>-rw-r--r-- 1 root root 8192 Aug 12 19:35 jjk_domain.js</p>
-                        <p>-rw-r--r-- 1 root root 4048 Aug 12 19:35 sao_dive.js</p>
+                    <div style="padding: 24px; font-family: 'SF Mono', Menlo, monospace; color: #30d158; height: 100%; background: #0c0c10; font-size: 13px;">
+                        <p>phxntom@macos-engine ~ % ls -la /secured_games</p>
+                        <p>total 24</p>
+                        <p>drwxr-xr-x  4 root  wheel  128 Aug 13 12:00 .</p>
+                        <p>-rw-r--r--  1 root  wheel  8192 Aug 13 12:00 jjk_domain.js</p>
+                        <p>-rw-r--r--  1 root  wheel  4048 Aug 13 12:00 sao_dive.js</p>
                         <br>
-                        <p>root@orion:~# echo "Ready for code injection..."</p>
-                        <p>Ready for code injection...</p>
+                        <p>phxntom@macos-engine ~ % echo "Ready for script execution..."</p>
+                        <p>Ready for script execution...</p>
                         <p class="blink" style="margin-top:10px;">_</p>
                     </div>
                     <style>.blink { animation: blinker 1s linear infinite; } @keyframes blinker { 50% { opacity: 0; } }</style>
@@ -1236,7 +1225,7 @@
          */
         window.onload = () => {
             Orion.renderGrids();
-            System.runBootSequence(); // Kicks off the visual bootup
+            System.runBootSequence();
         };
 
     </script>
